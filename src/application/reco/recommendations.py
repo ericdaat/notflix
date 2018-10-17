@@ -12,5 +12,5 @@ class Recommendations(object):
         }
 
     def to_string(self):
-        return "{1} recommendations for engine {0}".format(self.engine_name,
-                                                           len(self.ids))
+        return "{1} recommendations for {0}".format(self.engine_name,
+                                                    len(self.ids))

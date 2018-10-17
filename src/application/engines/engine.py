@@ -9,7 +9,7 @@ class Engine(ABC):
         self.cache = Cache()
 
     @abstractmethod
-    def recommend(self):
+    def recommend(self, context=None):
         r = Recommendations()
         r.engine_name = type(self).__name__
         r.ids = []

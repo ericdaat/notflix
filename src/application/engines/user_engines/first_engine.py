@@ -6,8 +6,8 @@ class FirstEngine(Engine):
     def __init__(self):
         super(FirstEngine, self).__init__()
 
-    def recommend(self):
-        r = super(FirstEngine, self).recommend()
+    def recommend(self, context=None):
+        r = super(FirstEngine, self).recommend(context)
 
         logging.debug(r.to_string())
 
