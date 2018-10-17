@@ -1,5 +1,6 @@
-from application.reco.recommender import Recommender
+from application.recommender import Recommender
+
 
 if __name__ == "__main__":
     r = Recommender()
-    print(r.recommend())
+    r.recommend()

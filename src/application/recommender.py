@@ -1,5 +1,6 @@
 from application.engines import FirstEngine
 from application.utils.logging import setup_logging
+from application.templates.context import Context
 
 
 class Recommender(object):
@@ -8,4 +9,8 @@ class Recommender(object):
         self.engines = [FirstEngine()]
 
     def recommend(self):
-        return self.engines[0].recommend()
+        c = Context()
+        c.item_id = 100
+
+        for e in self.engines:
+            print(e.recommend(c))
