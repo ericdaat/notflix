@@ -10,7 +10,7 @@ class Cache(object):
         logging.debug("initialized cache.")
 
     def get(self, key):
-        self.redis_cache.get(key)
+        return self.redis_cache.get(key)
 
     def set(self, key, value):
-        self.redis_cache.set(key, value, ex=self.ex)
+        return self.redis_cache.set(key, value, ex=self.ex)

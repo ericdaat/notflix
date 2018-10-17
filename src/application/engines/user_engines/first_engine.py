@@ -9,7 +9,6 @@ class FirstEngine(Engine):
     def recommend(self):
         r = super(FirstEngine, self).recommend()
 
-        self.cache.get("foo")
         logging.debug(r.to_string())
 
         return r.to_dict()

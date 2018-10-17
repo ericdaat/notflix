@@ -1,4 +1,4 @@
-from application.engines.first_engine import FirstEngine
+from application.engines import FirstEngine
 from application.utils.logging import setup_logging
 
 
