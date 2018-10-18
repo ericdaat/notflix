@@ -11,12 +11,17 @@ def setup_db():
     Base.metadata.create_all(engine)
 
 
-def insert_in_db(item):
+def get_session():
     engine = create_engine(DB_HOST)
     Base.metadata.bind = engine
     DBSession = sessionmaker(bind=engine)
     session = DBSession()
 
+    return session
+
+
+def insert_in_db(item):
+    session = get_session()
     session.add(item)
     session.commit()
 
