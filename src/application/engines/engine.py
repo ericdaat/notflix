@@ -2,8 +2,9 @@ from abc import ABC, abstractmethod
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+from config import DB_HOST
 from application.templates.recommendations import Recommendations
-from application.data_connector.db import Engine as DBEngine
+from data_connector.db import Engine as EngineTable
 
 
 class Engine(ABC):
@@ -17,13 +18,13 @@ class Engine(ABC):
         r.ids = []
         r.scores = []
 
-        engine = create_engine("mysql://root@localhost/recommender")
+        engine = create_engine(DB_HOST)
         DBSession = sessionmaker(bind=engine)
         session = DBSession()
 
-        name, priority = session.query(DBEngine.display_name,
-                                       DBEngine.priority)\
-                                .filter(DBEngine.type == self.type)\
+        name, priority = session.query(EngineTable.display_name,
+                                       EngineTable.priority)\
+                                .filter(EngineTable.type == self.type)\
                                 .one()
 
         r.display_name = name

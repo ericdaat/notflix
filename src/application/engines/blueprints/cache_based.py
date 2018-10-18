@@ -1,6 +1,6 @@
 import logging
 from application.engines.engine import Engine
-from application.data_connector.cache import Cache
+from data_connector.cache import Cache
 
 
 class CacheBasedEngine(Engine):

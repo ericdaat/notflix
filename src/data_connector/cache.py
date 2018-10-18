@@ -1,6 +1,6 @@
 import logging
 from redis import StrictRedis
-from application.config import CACHE_TIMEOUT, CACHE_HOST
+from config import CACHE_TIMEOUT, CACHE_HOST
 
 
 class Cache(object):
