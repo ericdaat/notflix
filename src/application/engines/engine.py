@@ -1,4 +1,5 @@
 from abc import ABC, abstractmethod
+import logging
 
 from application.templates.recommendations import Recommendations
 from data_connector.db import Engine as EngineTable
@@ -8,6 +9,7 @@ from data_connector.utils import get_session
 class Engine(ABC):
     def __init__(self):
         self.type = type(self).__name__
+        logging.debug("Creating instance of {0}".format(self.type))
 
     @abstractmethod
     def recommend(self, context=None):
