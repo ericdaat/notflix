@@ -2,6 +2,8 @@ import os
 
 from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
+from .db import db_session
+
 
 
 def create_app(test_config=None):
@@ -26,13 +28,13 @@ def create_app(test_config=None):
     # proxy fix
     app.wsgi_app = ProxyFix(app.wsgi_app)
 
-    # init database
-    from . import db
-    db.init_app(app)
-
     # register index
     @app.route('/')
     def index():
         return render_template("index.html")
+
+    @app.teardown_appcontext
+    def shutdown_session(exception=None):
+        db_session.remove()
 
     return app
