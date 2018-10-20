@@ -10,6 +10,10 @@ def setup_logging(default_path='logging.yml',
     """Setup logging configuration
     https://fangpenlin.com/posts/2012/08/26/good-logging-practice-in-python/
     """
+    LOG_DIR = os.path.join("application", "logs")
+    if not os.path.exists(LOG_DIR):
+        os.mkdir(LOG_DIR)
+
     path = default_path
     value = os.getenv(env_key, None)
     if value:
@@ -22,3 +26,4 @@ def setup_logging(default_path='logging.yml',
     else:
         logging.basicConfig(level=default_level)
         logging.debug('Loaded default config.')
+

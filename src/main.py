@@ -1,7 +1,7 @@
 from application.recommender import Recommender
 from application.templates.context import Context
 from data_connector.utils import setup_db, insert_in_db
-from data_connector.db import Engine, Product
+from data_connector.models import Engine, Product
 
 
 if __name__ == "__main__":
