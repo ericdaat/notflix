@@ -1,10 +1,12 @@
-from flask import (
-    Blueprint, flash, g, redirect, render_template, request, url_for
-)
-from werkzeug.exceptions import abort
-import re
+from flask import Blueprint, render_template
+from web.db import db_session
+from data_connector.models import Product
 
-from .auth import login_required
-from .db import get_db
 
 bp = Blueprint('home', __name__)
+
+
+@bp.route('/')
+def index():
+    db_session.query(Product).all()
+    return render_template('home/index.html')

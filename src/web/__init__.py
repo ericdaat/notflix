@@ -6,6 +6,7 @@ from .db import db_session
 
 
 
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -29,12 +30,16 @@ def create_app(test_config=None):
     app.wsgi_app = ProxyFix(app.wsgi_app)
 
     # register index
-    @app.route('/')
+    @app.route('/hello')
     def index():
-        return render_template("index.html")
+        return '<p>hello world!</p>'
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()
+
+    from web import home
+    app.register_blueprint(home.bp)
+    app.add_url_rule('/', endpoint='index')
 
     return app
