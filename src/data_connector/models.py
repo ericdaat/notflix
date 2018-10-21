@@ -26,3 +26,4 @@ class Product(Base):
     name = Column(String(256), nullable=False)
     price = Column(Float, nullable=True)
     genres = Column(String(256), nullable=True)
+    year = Column(DateTime, nullable=True)

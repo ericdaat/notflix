@@ -2,8 +2,18 @@
 
 {% block content %}
 
-{% for product in products %}
-  <p> {{product.name }} </p>
-{% endfor %}
+<div class="container-fluid mt-4">
+  <div class="card-columns">
+    {% for product in products %}
+    <div class="card">
+      <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+      <div class="card-body">
+        <h5 class="card-title">{{ product.name }}</h5>
+        <p class="card-text"> Movie description.</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
 {% endblock %}

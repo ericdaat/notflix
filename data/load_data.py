@@ -8,9 +8,11 @@ def main():
         products = []
         for line in f.readlines():
             line = line.split('::')
+            name = line[1]
+            genres = line[2].strip()
 
-            product = Product(**{'name': line[1],
-                                 'genres': line[2].strip()})
+            product = Product(**{'name': name,
+                                 'genres': genres})
             products.append(product)
 
         insert_in_db(products)
