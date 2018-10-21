@@ -23,5 +23,6 @@ class Product(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
-    name = Column(String(50), nullable=False)
-    price = Column(Float, nullable=False)
+    name = Column(String(256), nullable=False)
+    price = Column(Float, nullable=True)
+    genres = Column(String(256), nullable=True)

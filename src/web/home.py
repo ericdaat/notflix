@@ -8,5 +8,5 @@ bp = Blueprint('home', __name__)
 
 @bp.route('/')
 def index():
-    db_session.query(Product).all()
-    return render_template('home/index.html')
+    products = db_session.query(Product).all()
+    return render_template('home/index.html', products=products)

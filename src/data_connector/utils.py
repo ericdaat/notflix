@@ -23,9 +23,11 @@ def get_session():
     return session
 
 
-def insert_in_db(item):
+def insert_in_db(to_insert):
     session = get_session()
-    session.add(item)
-    session.commit()
+    if isinstance(to_insert, list):
+        session.bulk_save_objects(to_insert)
+    else:
+        session.add(to_insert)
 
-    return 0
+    return session.commit()
