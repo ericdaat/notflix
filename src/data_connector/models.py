@@ -19,7 +19,7 @@ class Engine(Base):
 
 class Product(Base):
     __tablename__ = "product"
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True)  # TODO: let users use their own ids
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)

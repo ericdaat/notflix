@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="container-fluid mt-4">
+<h1> {{ active_product.name }}</h1>
+
+<h2> Recommended </h2>
+  <div class="card-columns">
+  {% for p in recommended_products %}
+  <a href="{{ url_for('product.index', product_id=p.id) }}">
+  <div class="card">
+    <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+    <div class="card-body">
+        <h5 class="card-title">{{ p.name }}</h5>
+        <p class="card-text"> Movie description.</p>
+    </div>
+  </div>
+  </a>
+  {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

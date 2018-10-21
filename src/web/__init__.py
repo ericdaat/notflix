@@ -38,8 +38,9 @@ def create_app(test_config=None):
     def shutdown_session(exception=None):
         db_session.remove()
 
-    from web import home
+    from web import home, product
     app.register_blueprint(home.bp)
+    app.register_blueprint(product.bp)
     app.add_url_rule('/', endpoint='index')
 
     return app
