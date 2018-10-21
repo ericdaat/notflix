@@ -18,5 +18,10 @@ class Recommender(object):
             self.engines.append(instance)
 
     def recommend(self, context=None):
+        recommendation_list = []
         for e in self.engines:
-            print(e.recommend(context))
+            recommendations = e.recommend(context)
+            if len(recommendations["ids"]) > 0:
+                recommendation_list.append(recommendations)
+
+        return recommendation_list

@@ -1,6 +1,8 @@
 from flask import Blueprint, render_template
 from web.db import db_session
 from data_connector.models import Product
+from application.recommender import Recommender
+from application.templates.context import Context
 
 
 bp = Blueprint('product', __name__)
@@ -11,7 +13,14 @@ def index(product_id):
     active_product = db_session.query(Product)\
                                .filter(Product.id == product_id)\
                                .one()
-    recommended_products = db_session.query(Product).limit(3).all()
+    r = Recommender()
+    c = Context(**{'item_id': product_id})
+
+    recommendations = r.recommend(c)[0]
+
+    recommended_products = db_session.query(Product)\
+                                     .filter(Product.id.in_(recommendations["ids"]))\
+                                     .all()
 
     return render_template('product/index.html',
                            active_product=active_product,

@@ -11,6 +11,10 @@ if __name__ == "__main__":
                            "display_name": "You might also like",
                            "priority": 0}))
 
+    insert_in_db(Engine(**{"type": "SQLBasedEngine",
+                           "display_name": "Check this out",
+                           "priority": 0}))
+
     r = Recommender()
     c = Context(item_id=100, user_id=3)
     r.recommend(c)
