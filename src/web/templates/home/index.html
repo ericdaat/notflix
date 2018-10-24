@@ -3,14 +3,14 @@
 {% block content %}
 
 <div class="container-fluid mt-4">
-  <div class="card-columns">
+  <div class="card-deck">
     {% for p in products %}
     <a href="{{ url_for('product.index', product_id=p.id) }}">
-    <div class="card">
-      <!--<img class="card-img-top" src="..." alt="Card image cap">-->
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="{{ p.image }}" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">{{ p.name }}</h5>
-        <p class="card-text"> Movie description.</p>
+        <p class="card-text"> {{ p.description }}</p>
       </div>
     </div>
     </a>

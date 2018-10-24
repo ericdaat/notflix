@@ -19,11 +19,13 @@ class Engine(Base):
 
 class Product(Base):
     __tablename__ = "product"
-    id = Column(Integer, primary_key=True)  # TODO: let users use their own ids
+    id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
     name = Column(String(256), nullable=False)
     price = Column(Float, nullable=True)
     genres = Column(String(256), nullable=True)
+    image = Column(String(256), nullable=True)
+    description = Column(String(512), nullable=True)
     year = Column(DateTime, nullable=True)
