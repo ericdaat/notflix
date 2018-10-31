@@ -12,7 +12,7 @@ class Engine(ABC):
         logging.debug("Creating instance of {0}".format(self.type))
 
     @abstractmethod
-    def recommend(self, context=None):
+    def recommend(self, active_product):
         r = Recommendations()
         r.type = self.type
         r.ids = []

@@ -2,6 +2,7 @@ import importlib
 from application.utils.logging import setup_logging
 from data_connector.utils import get_session
 from data_connector.models import Engine as EngineTable
+from data_connector.models import Product as ProductTable
 
 
 class Recommender(object):
@@ -19,8 +20,15 @@ class Recommender(object):
 
     def recommend(self, context=None):
         recommendation_list = []
+
+        if context.item_id:
+            s = get_session()
+            active_product = s.query(ProductTable)\
+                              .filter(ProductTable.id == context.item_id)\
+                              .one()
+
         for e in self.engines:
-            recommendations = e.recommend(context)
+            recommendations = e.recommend(active_product)
             if len(recommendations["ids"]) > 0:
                 recommendation_list.append(recommendations)
 
