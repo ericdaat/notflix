@@ -19,4 +19,4 @@ def index(product_id):
 
     return render_template('product/index.html',
                            active_product=active_product,
-                           recommendedations=recommendations)
+                           recommendations=recommendations)

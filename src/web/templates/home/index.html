@@ -2,20 +2,19 @@
 
 {% block content %}
 
-<div class="container-fluid mt-4">
-  <div class="card-columns">
-    {% for p in products %}
-    <a href="{{ url_for('product.index', product_id=p.id) }}">
-    <div class="card">
-      <img class="card-img-top" src="{{ p.image }}">
-      <div class="card-body">
-        <h5 class="card-title">{{ p.name }}</h5>
-        <p class="card-text"> {{ p.description }}</p>
-      </div>
-    </div>
-    </a>
-    {% endfor %}
+<div class="card-columns">
+{% for p in products %}
+<a href="{{ url_for('product.index', product_id=p.id) }}"
+   style="text-decoration:none; color: inherit;">
+<div class="card">
+  <img class="card-img-top" src="{{ p.image }}">
+  <div class="card-body">
+    <h5 class="card-title">{{ p.name }}</h5>
+    <p class="card-text"> {{ p.description }}</p>
   </div>
+</div>
+</a>
+{% endfor %}
 </div>
 
 {% endblock %}
