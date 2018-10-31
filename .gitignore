@@ -117,3 +117,4 @@ dmypy.json
 data/ml-1m
 *.key
 *.txt
+bin
