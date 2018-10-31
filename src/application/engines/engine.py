@@ -15,8 +15,6 @@ class Engine(ABC):
     def recommend(self, active_product):
         r = Recommendations()
         r.type = self.type
-        r.ids = []
-        r.scores = []
 
         session = get_session()
 

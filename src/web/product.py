@@ -15,12 +15,8 @@ def index(product_id):
     r = current_app.reco
     c = Context(**{'item_id': product_id})
 
-    recommendations = r.recommend(c)[0]
-
-    recommended_products = db_session.query(Product)\
-                                     .filter(Product.id.in_(recommendations["ids"]))\
-                                     .all()
+    recommendations = r.recommend(c)
 
     return render_template('product/index.html',
                            active_product=active_product,
-                           recommended_products=recommended_products)
+                           recommendedations=recommendations)

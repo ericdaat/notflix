@@ -12,15 +12,12 @@ class DBBasedEngine(Engine):
         r = super(DBBasedEngine, self).recommend(active_product)
 
         s = get_session()
-        recommendations = s.query(ProductTable.id)\
+        recommendations = s.query(ProductTable)\
                            .filter(ProductTable.genres == active_product.genres)\
                            .filter(ProductTable.id != active_product.id)\
                            .limit(10).all()
 
-        r.ids = recommendations
-        r.scores = []
-
-        logging.debug(r.to_string())
+        r.items = recommendations
 
         return r.to_dict()
 

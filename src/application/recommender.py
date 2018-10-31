@@ -29,7 +29,7 @@ class Recommender(object):
 
         for e in self.engines:
             recommendations = e.recommend(active_product)
-            if len(recommendations["ids"]) > 0:
+            if len(recommendations["items"]) > 0:
                 recommendation_list.append(recommendations)
 
         return recommendation_list
