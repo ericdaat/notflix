@@ -10,7 +10,7 @@ if __name__ == "__main__":
     #                        "priority": 0}))
 
     # insert_in_db(Engine(**{"type": "MLBasedEngine",
-    #                        "display_name": "Check this out",
+    #                        "display_name": "Machine Learning says this",
     #                        "priority": 0}))
 
     # insert_in_db(Engine(**{"type": "DBBasedEngine",

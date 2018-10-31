@@ -6,7 +6,12 @@ from data_connector.models import Product as ProductTable
 
 
 class Recommender(object):
+    """ Recommender System base class.
+    """
     def __init__(self):
+        """ Recommender constructor.
+        Instantiates all the active engines.
+        """
         setup_logging(default_path='application/logging.yml')
 
         self.engines = []
@@ -19,6 +24,11 @@ class Recommender(object):
             self.engines.append(instance)
 
     def recommend(self, context=None):
+        """ Make recommendations
+        :param templates.Context context:
+        :return: List of recommendations
+        :rtype: list(dict)
+        """
         recommendation_list = []
 
         if context.item_id:
