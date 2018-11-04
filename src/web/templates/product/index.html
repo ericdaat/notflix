@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div class="row">
+<div class="row mb-3">
     <div class="col-sm">
         <h1> {{ active_product.name }}</h1>
     </div>
@@ -11,15 +11,43 @@
     <div class="col-sm-3">
         <img class="card-img-top" src="{{ active_product.image }}">
     </div>
-    <div class="col-sm-3">
+    <div class="col-sm-4">
         <h5>Description</h5>
         <p>{{ active_product.description }}</p>
-        <h5>Genres</h5>
-        <p>{{ active_product.genres }}</p>
-        <h5>Rating</h5>
-        {% for i in range(4) %}
-        <span class="fa fa-star checked"></span>
-        {% endfor %}
+    </div>
+    <div class="col-sm-5">
+        <table class="table">
+          <tbody>
+            <tr>
+              <th scope="row">Genres</th>
+              <td>{{active_product.genres}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Rating</th>
+                <td>{{active_product.rating}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Director</th>
+                <td>{{active_product.director}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Actors</th>
+                <td>{{active_product.actors}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Awards</th>
+                <td>{{active_product.awards}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Year</th>
+                <td>{{active_product.year}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Country</th>
+                <td>{{active_product.country}}</td>
+            </tr>
+          </tbody>
+        </table>
     </div>
 </div>
 
@@ -42,11 +70,6 @@
                     <img class="card-img-top" src="{{i.image}}" alt="Card image cap">
                     <div class="card-body">
                       <h5 class="card-title"> {{ i.name }}</h5>
-                      <p class="card-text">
-                          {% for i in range(4) %}
-                          <span class="fa fa-star checked"></span>
-                          {% endfor %}
-                      </p>
                     </div>
                 </div>
                 </a>
