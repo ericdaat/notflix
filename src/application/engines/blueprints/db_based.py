@@ -1,3 +1,4 @@
+import logging
 from application.engines.engine import Engine
 from data_connector.utils import get_session
 from data_connector.models import Product as ProductTable
@@ -17,6 +18,8 @@ class DBBasedEngine(Engine):
                            .limit(10).all()
 
         r.products = recommendations
+
+        logging.debug(r.to_string())
 
         return r.to_dict()
 
