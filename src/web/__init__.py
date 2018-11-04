@@ -3,6 +3,7 @@ import os
 from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
 from application.recommender import Recommender
+from application.tracker.tracker import Tracker
 from .db import db_session
 
 
@@ -42,6 +43,10 @@ def create_app(test_config=None):
     app.register_blueprint(product.bp)
     app.add_url_rule('/', endpoint='index')
 
+    # register Recommender
     app.reco = Recommender()
+
+    # register Tracker
+    app.tracker = Tracker()
 
     return app

@@ -17,6 +17,8 @@ def index(product_id):
 
     recommendations = r.recommend(c)
 
+    current_app.tracker.store_item_viewed("foo", "baz")
+
     return render_template('product/index.html',
                            active_product=active_product,
                            recommendations=recommendations)

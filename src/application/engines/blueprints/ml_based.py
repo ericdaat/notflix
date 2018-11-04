@@ -1,3 +1,4 @@
+import logging
 from gensim.models import Word2Vec
 from application.engines.engine import Engine
 from data_connector.utils import get_session
@@ -21,6 +22,8 @@ class MLBasedEngine(Engine):
             .limit(10).all()
 
         r.products = recommendations
+
+        logging.debug(r.to_string())
 
         return r.to_dict()
 
