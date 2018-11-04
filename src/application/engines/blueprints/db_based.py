@@ -18,6 +18,7 @@ class DBBasedEngine(Engine):
                            .limit(10).all()
 
         r.products = recommendations
+        r.display_name = r.display_name.format(active_product.name)  # dynamic name
 
         logging.debug(r.to_string())
 
