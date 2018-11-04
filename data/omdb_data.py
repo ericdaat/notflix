@@ -2,12 +2,13 @@ import os
 import requests
 import re
 import json
+from datetime import datetime
 
 from data_connector.models import Product
 from data_connector.utils import insert_in_db, setup_db
 
-UPPER_BOUND = 1500
-LOWER_BOUND = 1000
+UPPER_BOUND = 2500
+LOWER_BOUND = 1500
 OUTPUT_FILE = "data.txt"
 
 
@@ -48,7 +49,14 @@ def insert_data_to_db():
                  "name": movie["Title"],
                  "genres": movie["Genre"],
                  "description": movie["Plot"],
-                 "year": None}
+                 "year": datetime.strptime(movie["Released"], "%d %b %Y") if movie["Released"] != "N/A" else None,
+                 "rating": movie["imdbRating"] if movie["imdbRating"] != "N/A" else None,
+                 "director": movie["Director"],
+                 "actors": movie["Actors"],
+                 "awards": movie["Awards"],
+                 "language": movie["Language"],
+                 "country": movie["Country"],
+                 "duration": int(movie["Runtime"].split(" min")[0]) if movie["Runtime"] != "N/A" else None}
 
             product = Product(**d)
             ds.append(product)

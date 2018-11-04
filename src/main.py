@@ -13,9 +13,9 @@ if __name__ == "__main__":
     #                        "display_name": "Machine Learning says this",
     #                        "priority": 0}))
 
-    # insert_in_db(Engine(**{"type": "DBBasedEngine",
-    #                        "display_name": "Check this out",
-    #                        "priority": 0}))
+    insert_in_db(Engine(**{"type": "DBBasedEngine",
+                           "display_name": "Similar to {0}",
+                           "priority": 0}))
 
     r = Recommender()
     c = Context(item_id=100, user_id=3)

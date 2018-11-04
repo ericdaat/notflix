@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Float
+from sqlalchemy import Column, Integer, String, DateTime, Date, Float
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -28,4 +28,11 @@ class Product(Base):
     genres = Column(String(256), nullable=True)
     image = Column(String(256), nullable=True)
     description = Column(String(512), nullable=True)
-    year = Column(DateTime, nullable=True)
+    year = Column(Date, nullable=True)
+    rating = Column(Float, nullable=True)
+    director = Column(String(256), nullable=True)
+    actors = Column(String(256), nullable=True)
+    awards = Column(String(256), nullable=True)
+    language = Column(String(256), nullable=True)
+    country = Column(String(256), nullable=True)
+    duration = Column(Integer, nullable=True)

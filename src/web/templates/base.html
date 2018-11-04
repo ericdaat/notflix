@@ -26,14 +26,18 @@
         integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy"
         crossorigin="anonymous"></script>
 
-<nav class="navbar navbar-light" style="background-color:black;">
-  <h1 style="color:#E50914">
-    <a href="{{ url_for('home.index') }}" style="text-decoration:none; color: inherit;">
-      Not-Flix Recommender System</a>
-  </h1>
+<!-- Navbar -->
+<nav class="navbar navbar-dark bg-dark">
+  <a class="navbar-brand" href="{{ url_for('home.index') }}">
+    <img src=""
+         width="30"
+         height="30"
+         class="d-inline-block align-top" alt="">
+    Not-Flix Recommender System
+  </a>
 </nav>
 
 
-<div class="container mt-5">
+<div class="container mt-5 mb-5">
   {% block content %}{% endblock %}
 </div>
