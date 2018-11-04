@@ -7,20 +7,26 @@
         <h1> {{ active_product.name }}</h1>
     </div>
 </div>
+
 <div class="row">
     <div class="col-sm-3">
         <img class="card-img-top" src="{{ active_product.image }}">
     </div>
     <div class="col-sm-4">
-        <h5>Description</h5>
+        <h5 class="mb-3">Movie Description</h5>
         <p>{{ active_product.description }}</p>
     </div>
     <div class="col-sm-5">
-        <table class="table">
+        <h5 class="mb-3">Movie Details</h5>
+        <table class="table table-sm">
           <tbody>
             <tr>
               <th scope="row">Genres</th>
-              <td>{{active_product.genres}}</td>
+              <td>
+                  {% for genre in active_product.genres.split(',') %}
+                  <span class="badge badge-dark">{{ genre }}</span>
+                  {% endfor %}
+              </td>
             </tr>
             <tr>
                 <th scope="row">Rating</th>
@@ -33,6 +39,10 @@
             <tr>
                 <th scope="row">Actors</th>
                 <td>{{active_product.actors}}</td>
+            </tr>
+            <tr>
+                <th scope="row">Duration</th>
+                <td>{{active_product.duration}} minutes</td>
             </tr>
             <tr>
                 <th scope="row">Awards</th>
