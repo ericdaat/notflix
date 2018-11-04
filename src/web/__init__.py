@@ -1,9 +1,9 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
 from application.recommender import Recommender
-from application.tracker.tracker import Tracker
+from tracker.tracker import Tracker
 from .db import db_session
 
 
