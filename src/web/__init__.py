@@ -38,10 +38,10 @@ def create_app(test_config=None):
         db_session.remove()
 
     # blueprints
-    from web import home, product, genre
+    from web import home, product, genres
     app.register_blueprint(home.bp)
     app.register_blueprint(product.bp)
-    app.register_blueprint(genre.bp)
+    app.register_blueprint(genres.bp)
 
     app.add_url_rule('/', endpoint='index')
 
