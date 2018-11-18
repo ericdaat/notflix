@@ -28,7 +28,7 @@
 
 <!-- Navbar -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-  <a class="navbar-brand" href="">
+  <a class="navbar-brand" href="{{ url_for('home.index') }}">
     <img src=""
          width="30"
          height="30"
@@ -73,7 +73,66 @@
   </div>
 </nav>
 
-
 <div class="container mt-5 mb-5">
   {% block content %}{% endblock %}
 </div>
+
+
+<!-- Footer -->
+<footer class="page-footer font-small bg-light pt-4">
+
+    <!-- Footer Links -->
+    <div class="container-fluid text-center text-md-left">
+
+      <!-- Grid row -->
+      <div class="row">
+
+        <!-- Grid column -->
+        <div class="col-md-4 mt-md-0 mt-3">
+
+          <!-- Content -->
+          <h5 class="text-uppercase">About</h5>
+          <p>NotFlix is an open source movie database and recommendation system,
+          inspired by a famous movie company.</p>
+
+        </div>
+        <!-- Grid column -->
+
+        <hr class="clearfix w-100 d-md-none pb-3">
+
+          <!-- Grid column -->
+          <div class="col-md-3 mb-md-0 mb-3">
+
+            <!-- Links -->
+            <h5 class="text-uppercase">Links</h5>
+
+            <ul class="list-unstyled">
+              <li>
+                <a href="#!">Github</a>
+              </li>
+              <li>
+                <a href="#!">Blog</a>
+              </li>
+              <li>
+                <a href="#!">About the Author</a>
+              </li>
+            </ul>
+
+          </div>
+          <!-- Grid column -->
+
+      </div>
+      <!-- Grid row -->
+
+    </div>
+    <!-- Footer Links -->
+
+    <!-- Copyright -->
+    <div class="footer-copyright text-center py-3">© 2018 Copyright:
+        Eric Daoud Attoyan
+    </div>
+    <!-- Copyright -->
+
+  </footer>
+  <!-- Footer -->
+
