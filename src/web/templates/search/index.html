@@ -17,12 +17,18 @@
                 <img src="{{ p.image }}" style="max-height:200px;">
             </td>
             <td>
-                <a href="{{ url_for('product.index', product_id=p.id) }}"> {{ p.name }} </a>
+                <p class="font-weight-bold">
+                    <a href="{{ url_for('product.index', product_id=p.id) }}"> {{ p.name }} </a>
+                </p>
                 <p> {{ p.description }}</p>
-                <p>{{p.rating}} <i class="fa fa-star"></i></p>
-                {% for genre in p.genres.split(',') %}
+                <p> Actors: {{ p.actors }}</p>
+                <p> Rating: {{p.rating}} <i class="fa fa-star"></i></p>
+                <p>
+                    Genres:
+                    {% for genre in p.genres.split(',') %}
                     <span class="badge badge-dark">{{ genre }}</span>
-                {% endfor %}
+                    {% endfor %}
+                </p>
             </td>
         </tr>
         {% endfor %}

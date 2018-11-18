@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
 from application.recommender import Recommender
 from .db import db_session
@@ -30,8 +30,12 @@ def create_app(test_config=None):
 
     # register index
     @app.route('/status')
-    def index():
+    def status():
         return 'So far so good'
+
+    @app.route('/about')
+    def about():
+        return render_template('about/index.html')
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
