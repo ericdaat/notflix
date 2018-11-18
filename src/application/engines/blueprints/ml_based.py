@@ -1,7 +1,7 @@
 from gensim.models import Word2Vec
 from application.engines.engine import Engine
-from data_connector.utils import get_session
-from data_connector.models import Product as ProductTable
+from data.db import get_session
+from data.db import Product as ProductTable
 
 
 class MLBasedEngine(Engine):

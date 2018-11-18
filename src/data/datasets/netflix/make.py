@@ -1,14 +1,13 @@
 import re
-from collections import defaultdict
 from glob import glob
 import csv
 
-with open("netflix_dataset.csv", "a") as output:
+with open("netflix.csv", "a") as output:
     writer = csv.writer(output,
                         delimiter=',',
                         quoting=csv.QUOTE_MINIMAL)
     
-    for filename in glob("netflix/combined_data_*.txt"):
+    for filename in glob("raw/combined_data_*.txt"):
         print(filename)
 
         movie_id = None

@@ -2,7 +2,7 @@ from config import DB_HOST
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 
-from data_connector.models import Base
+from data.db import Base
 
 
 engine = create_engine(DB_HOST, convert_unicode=True)

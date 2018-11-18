@@ -1,8 +1,8 @@
 import importlib
 from application.utils.logging import setup_logging
-from data_connector.utils import get_session
-from data_connector.models import Engine as EngineTable
-from data_connector.models import Product as ProductTable
+from data.db import get_session
+from data.db import Engine as EngineTable
+from data.db import Product as ProductTable
 
 
 class Recommender(object):

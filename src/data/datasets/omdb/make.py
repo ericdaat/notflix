@@ -4,12 +4,12 @@ import re
 import json
 from datetime import datetime
 
-from data_connector.models import Product
-from data_connector.utils import insert_in_db, setup_db
+from data.db import Product
+from data.db import insert, setup
 
 UPPER_BOUND = 2500
 LOWER_BOUND = 1500
-OUTPUT_FILE = "data.txt"
+OUTPUT_FILE = "omdb.csv"
 
 
 def get_data_from_omdb(api_key):
@@ -61,12 +61,12 @@ def insert_data_to_db():
             product = Product(**d)
             ds.append(product)
 
-        insert_in_db(ds)
+        insert(ds)
 
 
 if __name__ == "__main__":
     with open('omdb.key') as f:
         api_key = f.read().strip()
     get_data_from_omdb(api_key)
-    setup_db()
+    setup()
     insert_data_to_db()

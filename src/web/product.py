@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, current_app
 from web.db import db_session
-from data_connector.models import Product
+from data.db import Product
 from application.helpers import Context
 
 

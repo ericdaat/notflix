@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from web.db import db_session
-from data_connector.models import Product
+from data.db import Product
 
 
 bp = Blueprint('home', __name__)

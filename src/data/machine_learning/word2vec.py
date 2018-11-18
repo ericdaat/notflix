@@ -3,7 +3,7 @@ from gensim.models import Word2Vec
 
 # Dataset
 
-dataset = pd.read_csv("netflix_dataset.csv", header=None)
+dataset = pd.read_csv("../datasets/netflix/netflix.csv", header=None)
 dataset.columns = ["movie_id", "user_id", "rating", "date"]
 
 dataset["movie_id"] = dataset["movie_id"].astype(str)
@@ -22,6 +22,4 @@ m.train(corpus,
         total_examples=m.corpus_count,
         epochs=4)
 
-m.save('../src/bin/word2vec.pkl')
-
-Word2Vec.load('../src/bin/word2vec.pkl')
+m.save('./bin/word2vec.pkl')

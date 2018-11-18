@@ -114,7 +114,7 @@ dmypy.json
 .idea
 
 # data
-data/ml-1m
+*.csv
 *.key
 *.txt
 bin
