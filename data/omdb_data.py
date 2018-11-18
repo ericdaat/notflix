@@ -22,9 +22,9 @@ def get_data_from_omdb(api_key):
                 elif i > UPPER_BOUND:
                     break
 
-                line = line.split('::')
+                line = line.split(',')
                 id = line[0]
-                name = line[1]
+                name = line[2]
                 genres = line[2].strip()
                 match = re.search('\(([0-9]{4})\)', name)
                 year = match.group(1) if match else None
@@ -67,6 +67,6 @@ def insert_data_to_db():
 if __name__ == "__main__":
     with open('omdb.key') as f:
         api_key = f.read().strip()
-    # get_data_from_omdb(api_key)
+    get_data_from_omdb(api_key)
     setup_db()
     insert_data_to_db()
