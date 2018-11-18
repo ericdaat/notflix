@@ -117,4 +117,4 @@ dmypy.json
 *.csv
 *.key
 *.txt
-bin
+*.dat
