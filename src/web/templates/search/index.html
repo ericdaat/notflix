@@ -6,6 +6,9 @@
   <h1>Search</h1>
 </div>
 
+<div class="row mb-4">
+    <h4>Matching results for "{{request.args.get("query") }}"</h4>
+</div>
 
 
 {% if products %}
@@ -35,7 +38,7 @@
         </tbody>
     </table>
 {% else %}
-    <p>No matching results...</p>
+    <h6>Sorry we could not find anything ...</h6>
 {% endif %}
 
 
