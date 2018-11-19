@@ -7,21 +7,14 @@ from datetime import datetime
 from data.db import Product
 from data.db import insert, setup
 
-UPPER_BOUND = 3500
-LOWER_BOUND = 2500
 OUTPUT_FILE = "omdb.csv"
 
 
 def get_data_from_omdb(api_key):
     with open(OUTPUT_FILE, 'a') as output:
         output.write("\n")
-        with open(os.path.join('..', 'netflix', 'raw', 'movies.dat'), 'r', encoding='latin1') as input:
+        with open(os.path.join('..', 'netflix', 'raw', 'movie_titles.csv'), 'r', encoding='latin1') as input:
             for i, line in enumerate(input.readlines()):
-                if i < LOWER_BOUND + 1:
-                    continue
-                elif i > UPPER_BOUND:
-                    break
-
                 line = line.split(',')
                 id = line[0]
                 name = line[2]
@@ -65,8 +58,8 @@ def insert_data_to_db():
 
 
 if __name__ == "__main__":
-    # with open('omdb.key') as f:
-    #     api_key = f.read().strip()
-    # get_data_from_omdb(api_key)
+    with open('omdb.key') as f:
+        api_key = f.read().strip()
+    get_data_from_omdb(api_key)
     setup()
     insert_data_to_db()
