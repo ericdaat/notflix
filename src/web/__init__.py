@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask
+from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
 from application.recommender import Recommender
 from tracker.tracker import Tracker
@@ -43,11 +43,12 @@ def create_app(test_config=None):
         db_session.remove()
 
     # blueprints
-    from web import home, product, genres, search
+    from web import home, product, genres, search, for_you
     app.register_blueprint(home.bp)
     app.register_blueprint(product.bp)
     app.register_blueprint(genres.bp)
     app.register_blueprint(search.bp)
+    app.register_blueprint(for_you.bp)
 
     app.add_url_rule('/', endpoint='index')
 
