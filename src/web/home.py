@@ -11,15 +11,15 @@ bp = Blueprint('home', __name__)
 def index():
     products = db_session.query(Product).limit(10).all()
 
-    views_history = current_app.tracker.get_views_history("foo", 1)
+    # views_history = current_app.tracker.get_views_history("foo", 1)
 
-    r = current_app.reco
-    recommendations = []
+    # r = current_app.reco
+    # recommendations = []
 
-    for item_id in views_history:
-        c = Context(**{'item_id': item_id})
-        recommendations.append(r.recommend(c))
+    # for item_id in views_history:
+    #     c = Context(**{'item_id': item_id})
+    #     recommendations.append(r.recommend(c))
 
     return render_template('home/index.html',
                            products=products,
-                           recommendations=recommendations)
+                           recommendations=None)
