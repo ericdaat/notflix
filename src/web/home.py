@@ -1,14 +1,15 @@
 from flask import Blueprint, render_template, current_app
 from web.db import db_session
-from data_connector.models import Product as ProductTable
-from application.templates.context import Context
+from application.helpers import Context
+from data.db import Product
+
 
 bp = Blueprint('home', __name__)
 
 
 @bp.route('/')
 def index():
-    products = db_session.query(ProductTable).limit(10).all()
+    products = db_session.query(Product).limit(10).all()
 
     views_history = current_app.tracker.get_views_history("foo", 1)
 

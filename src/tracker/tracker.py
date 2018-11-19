@@ -1,5 +1,5 @@
 import logging
-from data_connector.cache import Cache
+from data.cache import Cache
 
 
 class Tracker(object):

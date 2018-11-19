@@ -1,14 +1,14 @@
 import logging
 from gensim.models import Word2Vec
 from application.engines.engine import Engine
-from data_connector.utils import get_session
-from data_connector.models import Product as ProductTable
+from data.db import get_session
+from data.db import Product as ProductTable
 
 
 class MLBasedEngine(Engine):
     def __init__(self):
         super(MLBasedEngine, self).__init__()
-        self.model = Word2Vec.load('bin/word2vec.pkl')
+        self.model = Word2Vec.load('data/ml/bin/word2vec.pkl')
 
     def recommend(self, active_product):
         r = super(MLBasedEngine, self).recommend(active_product)

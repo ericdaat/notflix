@@ -30,17 +30,25 @@ def create_app(test_config=None):
     app.wsgi_app = ProxyFix(app.wsgi_app)
 
     # register index
-    @app.route('/hello')
-    def index():
-        return '<p>hello world!</p>'
+    @app.route('/status')
+    def status():
+        return 'So far so good'
+
+    @app.route('/about')
+    def about():
+        return render_template('about/index.html')
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()
 
-    from web import home, product
+    # blueprints
+    from web import home, product, genres, search
     app.register_blueprint(home.bp)
     app.register_blueprint(product.bp)
+    app.register_blueprint(genres.bp)
+    app.register_blueprint(search.bp)
+
     app.add_url_rule('/', endpoint='index')
 
     # register Recommender

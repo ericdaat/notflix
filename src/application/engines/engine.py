@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 import logging
 
-from application.templates.recommendations import Recommendations
-from data_connector.models import Engine as EngineTable
-from data_connector.utils import get_session
+from application.helpers import Recommendations
+from data.db import Engine as EngineTable
+from data.db import get_session
 
 
 class Engine(ABC):
