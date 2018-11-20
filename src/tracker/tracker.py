@@ -11,5 +11,7 @@ class Tracker(object):
         return self.cache.append(key, item)
 
     def get_views_history(self, key, n):
-        return self.cache.get(key, start=0, end=n-1)
+        history = self.cache.get(key, start=0, end=n-1)
+        history_set = set(history)
 
+        return history_set
