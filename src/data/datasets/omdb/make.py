@@ -17,10 +17,8 @@ def get_data_from_omdb(api_key):
             for i, line in enumerate(input.readlines()):
                 line = line.split(',')
                 id = line[0]
+                year = line[1]
                 name = line[2]
-                genres = line[2].strip()
-                match = re.search('\(([0-9]{4})\)', name)
-                year = match.group(1) if match else None
 
                 url = 'http://www.omdbapi.com/?t={0}&y={1}&apikey={2}'
                 movie_json = requests.get(url.format(name.split('(')[0].strip(), year, api_key)).json()
