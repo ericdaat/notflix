@@ -3,6 +3,7 @@ import requests
 import re
 import json
 from datetime import datetime
+import csv
 
 from data.db import Product
 from data.db import insert, setup
@@ -11,22 +12,33 @@ OUTPUT_FILE = "omdb.csv"
 
 
 def get_data_from_omdb(api_key):
+    url = 'http://www.omdbapi.com/'
+
     with open(OUTPUT_FILE, 'a') as output:
         output.write("\n")
-        with open(os.path.join('..', 'netflix', 'raw', 'movie_titles.csv'), 'r', encoding='latin1') as input:
-            for i, line in enumerate(input.readlines()):
-                line = line.split(',')
-                id = line[0]
-                year = line[1]
-                name = line[2]
+        with open(os.path.join('..', 'movielens', 'raw', 'movies.csv'), 'r', encoding='latin1') as input:
+            
+            reader = csv.reader(input, delimiter=',', quotechar='"')
+            
+            for i, (id, name, genres) in enumerate(reader):
+                match = re.search('\(([0-9]{4})\)', name)
+                year = match.group(1) if match else None
+                name = name.split(',')[0].strip()
+                name = name.split('(')[0].strip()
 
-                url = 'http://www.omdbapi.com/?t={0}&y={1}&apikey={2}'
-                movie_json = requests.get(url.format(name.split('(')[0].strip(), year, api_key)).json()
-                print(movie_json)
+                params = {"t": name, "apikey": api_key}
+                if year:
+                    params["year"] = year
+
+                movie_json = requests.get(url=url, params=params).json()
+                
                 movie_json["id"] = id
 
                 if eval(movie_json["Response"]):
                     output.write(json.dumps(movie_json) + "\n")
+                    print("got movie {0}".format(name))
+                else:
+                    print("failed for movie {0}, at index {1}".format(name, i))
 
 
 def insert_data_to_db():
