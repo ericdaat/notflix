@@ -15,5 +15,5 @@ if __name__ == "__main__":
                           "priority": 0}))
 
     r = Recommender()
-    c = Context(item_id=1502, user_id=3)
+    c = Context(item_id=1, user_id=3)
     print(r.recommend(c))

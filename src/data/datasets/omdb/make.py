@@ -47,6 +47,18 @@ def insert_data_to_db():
 
         for line in f.readlines():
             movie = json.loads(line)
+
+            if movie["id"] == "movieId":
+                continue
+
+            # duration
+            if re.match(pattern=r"[1-9]\sh", string=movie["Runtime"]):
+                duration = int(movie["Runtime"].split(" h")[0]) * 60
+            elif re.match(pattern=r"[0-9]+\smin", string=movie["Runtime"]):
+                duration = int(movie["Runtime"].split(" min")[0])
+            else:
+                duration = None
+
             d = {"id": movie["id"],
                  "image": movie["Poster"],
                  "name": movie["Title"],
@@ -59,7 +71,7 @@ def insert_data_to_db():
                  "awards": movie["Awards"],
                  "language": movie["Language"],
                  "country": movie["Country"],
-                 "duration": int(movie["Runtime"].split(" min")[0]) if movie["Runtime"] != "N/A" else None}
+                 "duration": duration}
 
             product = Product(**d)
             ds.append(product)
@@ -68,8 +80,8 @@ def insert_data_to_db():
 
 
 if __name__ == "__main__":
-    with open('omdb.key') as f:
-        api_key = f.read().strip()
-    get_data_from_omdb(api_key)
+    # with open('omdb.key') as f:
+    #     api_key = f.read().strip()
+    # get_data_from_omdb(api_key)
     setup()
     insert_data_to_db()
