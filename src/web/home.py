@@ -9,7 +9,10 @@ bp = Blueprint('home', __name__)
 
 @bp.route('/')
 def index():
-    products = db_session.query(Product).limit(10).all()
+    products = db_session.query(Product)\
+                         .order_by(Product.rating.desc())\
+                         .limit(10)\
+                         .all()
 
     # views_history = current_app.tracker.get_views_history("foo", 1)
 

@@ -7,7 +7,7 @@ bp = Blueprint('for_you', __name__)
 
 @bp.route('/for_you')
 def index():
-    views_history = current_app.tracker.get_views_history("foo", 3)
+    views_history = current_app.tracker.get_views_history("history:foo", 3)
 
     r = current_app.reco
     recommendations = []

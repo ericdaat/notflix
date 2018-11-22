@@ -15,30 +15,22 @@ def get_data_from_omdb(api_key):
     url = 'http://www.omdbapi.com/'
 
     with open(OUTPUT_FILE, 'a') as output:
-        output.write("\n")
-        with open(os.path.join('..', 'movielens', 'raw', 'movies.csv'), 'r', encoding='latin1') as input:
-            
+        with open(os.path.join('..', 'movielens', 'raw', 'links.csv'), 'r', encoding='latin1') as input:
+
             reader = csv.reader(input, delimiter=',', quotechar='"')
             
-            for i, (id, name, genres) in enumerate(reader):
-                match = re.search('\(([0-9]{4})\)', name)
-                year = match.group(1) if match else None
-                name = name.split(',')[0].strip()
-                name = name.split('(')[0].strip()
+            for i, (id, imdb_id, tmdb_id) in enumerate(reader):
+                if i == 0:  # skip header
+                    continue
 
-                params = {"t": name, "apikey": api_key}
-                if year:
-                    params["year"] = year
-
+                params = {"i": "tt{0}".format(imdb_id), "apikey": api_key}
                 movie_json = requests.get(url=url, params=params).json()
-                
                 movie_json["id"] = id
 
                 if eval(movie_json["Response"]):
                     output.write(json.dumps(movie_json) + "\n")
-                    print("got movie {0}".format(name))
                 else:
-                    print("failed for movie {0}, at index {1}".format(name, i))
+                    print("failed for movie index {0}".format(i))
 
 
 def insert_data_to_db():
@@ -80,8 +72,8 @@ def insert_data_to_db():
 
 
 if __name__ == "__main__":
-    # with open('omdb.key') as f:
-    #     api_key = f.read().strip()
-    # get_data_from_omdb(api_key)
-    setup()
-    insert_data_to_db()
+    with open('omdb.key') as f:
+        api_key = f.read().strip()
+    get_data_from_omdb(api_key)
+    #setup()
+    #insert_data_to_db()
