@@ -5,13 +5,13 @@ from data.db import get_session
 from data.db import Product as ProductTable
 
 
-class MLBasedEngine(Engine):
+class Word2Vec(Engine):
     def __init__(self):
-        super(MLBasedEngine, self).__init__()
+        super(Word2Vec, self).__init__()
         self.model = Word2Vec.load('data/ml/bin/word2vec.pkl')
 
     def recommend(self, active_product):
-        r = super(MLBasedEngine, self).recommend(active_product)
+        r = super(Word2Vec, self).recommend(active_product)
 
         recommendations = self.model.most_similar(str(active_product.id))
         ids = [r[0] for r in recommendations]

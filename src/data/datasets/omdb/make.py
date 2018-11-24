@@ -74,6 +74,6 @@ def insert_data_to_db():
 if __name__ == "__main__":
     with open('omdb.key') as f:
         api_key = f.read().strip()
-    get_data_from_omdb(api_key)
-    #setup()
-    #insert_data_to_db()
+    # get_data_from_omdb(api_key)
+    setup()
+    insert_data_to_db()

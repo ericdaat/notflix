@@ -44,6 +44,19 @@ class Product(Base):
     duration = Column(Integer, nullable=True)
 
 
+class Recommendations(Base):
+    __tablename__ = "recommendations"
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
+
+    engine_name = Column(String(56), nullable=False)
+    source_product_id = Column(Integer, nullable=False)
+    recommended_product_id = Column(Integer, nullable=False)
+    score = Column(Float, nullable=False)
+
+
 def setup():
     engine = create_engine(DB_HOST)
     if not database_exists(engine.url):
