@@ -6,7 +6,7 @@ from datetime import datetime
 import csv
 
 from data.db import Product
-from data.db import insert, setup
+from data.db import insert, DB_HOST, create_engine
 
 OUTPUT_FILE = "omdb.csv"
 
@@ -15,7 +15,7 @@ def get_data_from_omdb(api_key):
     url = 'http://www.omdbapi.com/'
 
     with open(OUTPUT_FILE, 'a') as output:
-        with open(os.path.join('..', 'movielens', 'raw', 'links.csv'), 'r', encoding='latin1') as input:
+        with open(os.path.join('./ml-20m/links.csv'), 'r', encoding='latin1') as input:
 
             reader = csv.reader(input, delimiter=',', quotechar='"')
             
@@ -75,5 +75,8 @@ if __name__ == "__main__":
     with open('omdb.key') as f:
         api_key = f.read().strip()
     # get_data_from_omdb(api_key)
-    setup()
+
+    engine = create_engine(DB_HOST)
+    Product.__table__.drop(bind=engine)
+    Product.__table__.create(bind=engine)
     insert_data_to_db()

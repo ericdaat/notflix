@@ -10,10 +10,6 @@ if __name__ == "__main__":
     EngineTable.__table__.drop(bind=engine)
     EngineTable.__table__.create(bind=engine)
 
-    insert(EngineTable(**{"type": "SameGenres",
-                          "display_name": "Similar to {0}",
-                          "priority": 0}))
-
     insert(EngineTable(**{"type": "TfidfGenres",
                           "display_name": "You might also like",
                           "priority": 1}))
