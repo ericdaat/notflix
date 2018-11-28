@@ -11,7 +11,7 @@ if __name__ == "__main__":
     EngineTable.__table__.create(bind=engine)
 
     insert(EngineTable(**{"type": "TfidfGenres",
-                          "display_name": "You might also like",
+                          "display_name": "Similar to {0}",
                           "priority": 1}))
 
     r = Recommender()

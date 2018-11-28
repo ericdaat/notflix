@@ -8,14 +8,16 @@
 <div class="row">
     <div class="card-columns">
         {% for genre in genres %}
-        <a href="{{ url_for('genres.genre', genre=genre.lower()) }}"
-           style="text-decoration:none; color: inherit;">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h5 class="card-title">{{ genre }}</h5>
-                </div>
-            </div>
-        </a>
+            {% if genre.name != "N/A"%}
+                <a href="{{ url_for('genres.genre', genre=genre.name.lower()) }}"
+                   style="text-decoration:none; color: inherit;">
+                    <div class="card text-center">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ genre.name }}</h5>
+                        </div>
+                    </div>
+                </a>
+            {% endif %}
         {% endfor %}
     </div>
 </div>

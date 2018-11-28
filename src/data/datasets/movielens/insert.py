@@ -4,21 +4,22 @@ import re
 import json
 from datetime import datetime
 import csv
+from collections import defaultdict
 
-from data.db import Product
-from data.db import insert, DB_HOST, create_engine
+from data.db import Product, Genre
+from data.db import insert, DB_HOST, create_engine, get_session
 
 OUTPUT_FILE = "omdb.csv"
 
 
-def get_data_from_omdb(api_key):
+def get_from_omdb(api_key):
     url = 'http://www.omdbapi.com/'
 
     with open(OUTPUT_FILE, 'a') as output:
         with open(os.path.join('./ml-20m/links.csv'), 'r', encoding='latin1') as input:
 
             reader = csv.reader(input, delimiter=',', quotechar='"')
-            
+
             for i, (id, imdb_id, tmdb_id) in enumerate(reader):
                 if i == 0:  # skip header
                     continue
@@ -33,9 +34,10 @@ def get_data_from_omdb(api_key):
                     print("failed for movie index {0}".format(i))
 
 
-def insert_data_to_db():
+def insert_movies():
     with open(OUTPUT_FILE, "r") as f:
-        ds = []
+        products = []
+        genre_dict = defaultdict(int)
 
         for line in f.readlines():
             movie = json.loads(line)
@@ -50,6 +52,12 @@ def insert_data_to_db():
                 duration = int(movie["Runtime"].split(" min")[0])
             else:
                 duration = None
+
+            # genres
+            genres_array = movie["Genre"].replace(' ', '').split(',')
+            for genre in genres_array:
+                if genre not in genre_dict:
+                    genre_dict[genre] = len(genre_dict) + 1
 
             d = {"id": movie["id"],
                  "image": movie["Poster"],
@@ -66,9 +74,11 @@ def insert_data_to_db():
                  "duration": duration}
 
             product = Product(**d)
-            ds.append(product)
+            products.append(product)
 
-        insert(ds)
+        genres = [Genre(**{"id": id, "name": name}) for name, id in genre_dict.items()]
+        insert(genres)
+        insert(products)
 
 
 if __name__ == "__main__":
@@ -77,6 +87,8 @@ if __name__ == "__main__":
     # get_data_from_omdb(api_key)
 
     engine = create_engine(DB_HOST)
-    Product.__table__.drop(bind=engine)
-    Product.__table__.create(bind=engine)
-    insert_data_to_db()
+    for table in [Product, Genre]:
+        table.__table__.drop(bind=engine, checkfirst=True)
+        table.__table__.create(bind=engine)
+
+    insert_movies()

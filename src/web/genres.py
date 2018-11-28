@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template
 from web.db import db_session
-from data.db import Product
+from data.db import Product, Genre
 
 
 bp = Blueprint('genres', __name__)
@@ -8,16 +8,9 @@ bp = Blueprint('genres', __name__)
 
 @bp.route('/genres', methods=('GET',))
 def index():
-    genres = db_session.query(Product.genres)\
-                       .distinct()\
-                       .all()
-    genres_1 = list(sum(genres, ()))
-    genres_2 = list(map(lambda r: r.replace(' ', '').split(','), genres_1))
-    genres_3 = list(sum(genres_2, []))
+    genres = db_session.query(Genre).all()
 
-    genres_set = set(genres_3)
-
-    return render_template('genres/genres.html', genres=genres_set)
+    return render_template('genres/genres.html', genres=genres)
 
 
 @bp.route('/genres/<genre>', methods=('GET',))
