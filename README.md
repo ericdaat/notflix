@@ -12,6 +12,17 @@ NotFlix based on data from the following sources:
 
 ## Installation
 
+### On Linux
+```
+sudo apt-get install git
+sudo apt-get install python3
+sudo apt-get install python-pip3
+
+sudo apt-get install mysql-server
+sudo apt-get install libmariadbclient-dev
+```
+
+
 ### Virtual Environment
 ``` bash
 virtualenv venv;

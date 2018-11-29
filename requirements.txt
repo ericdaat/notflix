@@ -12,7 +12,7 @@ Flask==1.0.2
 gensim==3.6.0
 idna==2.7
 imagesize==1.1.0
-ItsDangerous==1.0.0
+ItsDangerous==1.1.0
 Jinja2==2.10
 jmespath==0.9.3
 m2r==0.2.1
