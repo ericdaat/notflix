@@ -1,6 +1,7 @@
-from flask import Blueprint, render_template, current_app
+from flask import Blueprint, render_template, current_app, abort
 from web.db import db_session
 from data.db import Product
+import sqlalchemy
 from application.helpers import Context
 
 
@@ -9,9 +10,13 @@ bp = Blueprint('product', __name__)
 
 @bp.route('/product/<int:product_id>', methods=('GET', 'POST'))
 def index(product_id):
-    active_product = db_session.query(Product)\
-                               .filter(Product.id == product_id)\
-                               .one()
+    try:
+        active_product = db_session.query(Product)\
+                                   .filter(Product.id == product_id)\
+                                   .one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        abort(404)
+
     r = current_app.reco
     c = Context(**{'item_id': product_id})
 

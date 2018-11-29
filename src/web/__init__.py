@@ -5,6 +5,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from application.recommender import Recommender
 from tracker.tracker import Tracker
 from .db import db_session
+from .errors import page_not_found
 
 
 def create_app(test_config=None):
@@ -41,6 +42,9 @@ def create_app(test_config=None):
     @app.teardown_appcontext
     def shutdown_session(exception=None):
         db_session.remove()
+
+    # HTTP errors
+    app.register_error_handler(404, page_not_found)
 
     # blueprints
     from web import home, product, genres, search, for_you
