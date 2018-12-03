@@ -1,6 +1,6 @@
 import logging
 from gensim.models import Word2Vec
-from application.engines.engine import Engine
+from application.engines.engine import Engine, OfflineEngine
 from data.db import get_session
 from data.db import Product as ProductTable
 
@@ -29,3 +29,8 @@ class Word2Vec(Engine):
 
     def update(self):
         pass
+
+
+class CosineMovies(OfflineEngine):
+    def __init__(self):
+        super(CosineMovies, self).__init__()

@@ -14,18 +14,27 @@ NotFlix based on data from the following sources:
 
 ### On Linux
 ```
-sudo apt-get install git
-sudo apt-get install python3
-sudo apt-get install python-pip3
+sudo apt-get install git;
 
-sudo apt-get install mysql-server
-sudo apt-get install libmariadbclient-dev
+sudo apt-get install python3;
+sudo apt-get install python-pip3;
+
+sudo apt-get install mysql-server;
+sudo apt-get install libmariadbclient-dev;
+
+sudo apt-get install redis-server;
 ```
 
 
 ### Virtual Environment
-``` bash
+```
 virtualenv venv;
 source venv/bin/activate;
 pip install -r requirements;
+```
+
+
+### Database
+``` sql
+GRANT ALL PRIVILEGES ON *.* TO 'notflix'@'localhost' IDENTIFIED BY 'password'
 ```
