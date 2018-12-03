@@ -30,10 +30,6 @@ class Engine(ABC):
 
         return r
 
-    @abstractmethod
-    def update(self):
-        return
-
 
 class QueryBasedEngine(Engine):
     def __init__(self):
@@ -56,9 +52,6 @@ class QueryBasedEngine(Engine):
 
         return r.to_dict()
 
-    def update(self):
-        pass
-
 
 class OfflineEngine(QueryBasedEngine):
     def __init__(self):
@@ -74,7 +67,41 @@ class OfflineEngine(QueryBasedEngine):
 
         return recommendations
 
-    def update(self):
+
+class OnlineEngine(Engine):
+    def __init__(self):
+        super(OnlineEngine, self).__init__()
+        self.model = self.load_model()
+
+    @abstractmethod
+    def load_model(self):
         pass
+
+    @abstractmethod
+    def predict(self, active_product):
+        pass
+
+    @abstractmethod
+    def train(self):
+        pass
+
+    def recommend(self, active_product):
+        r = super(OnlineEngine, self).recommend(active_product)
+
+        ids = self.predict(active_product)  # online prediction
+
+        s = get_session()
+        recommendations = s.query(ProductTable) \
+            .filter(ProductTable.id.in_(ids)) \
+            .filter(ProductTable.id != active_product.id) \
+            .limit(10).all()
+
+        r.products = recommendations
+
+        logging.debug(r.to_string())
+
+        return r.to_dict()
+
+
 
 
