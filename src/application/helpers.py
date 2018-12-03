@@ -12,6 +12,7 @@ class Recommendations(object):
         self.priority = 0
 
     def to_dict(self):
+        self.products = [r.as_dict() for r in self.products]
         return vars(self)
 
     def to_string(self):

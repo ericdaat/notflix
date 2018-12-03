@@ -43,6 +43,9 @@ class Product(Base):
     country = Column(String(256), nullable=True)
     duration = Column(Integer, nullable=True)
 
+    def as_dict(self):
+        return {c.name: getattr(self, c.name) for c in self.__table__.columns}
+
 
 class Recommendations(Base):
     __tablename__ = "recommendations"
