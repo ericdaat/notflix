@@ -1,5 +1,5 @@
-from flask import Blueprint, render_template, current_app
-from application.helpers import Context
+from flask import Blueprint, render_template, abort
+import requests
 
 
 bp = Blueprint('for_you', __name__)
@@ -7,14 +7,15 @@ bp = Blueprint('for_you', __name__)
 
 @bp.route('/for_you')
 def index():
-    views_history = current_app.tracker.get_views_history("history:foo", 3)
+    user_id = "foo"
+    res = requests.get("http://localhost:5001/recommend/user/{0}".format(user_id))
 
-    r = current_app.reco
-    recommendations = []
+    if res.status_code != 200:
+        abort(res.status_code)
 
-    for item_id in views_history:
-        c = Context(**{'item_id': item_id})
-        recommendations.append(r.recommend(c))
+    res_json = res.json()
+
+    recommendations = res_json["recommendations"]
 
     return render_template('for_you/index.html',
                            recommendations=recommendations)

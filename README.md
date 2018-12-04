@@ -38,3 +38,12 @@ pip install -r requirements;
 ``` sql
 GRANT ALL PRIVILEGES ON *.* TO 'notflix'@'localhost' IDENTIFIED BY 'password'
 ```
+
+
+## Launch
+
+``` bash
+cd src;
+FLASK_APP=api FLASK_DEBUG=True flask run --port 5001;
+FLASK_APP=web FLASK_DEBUG=True flask run --port 5000;
+```

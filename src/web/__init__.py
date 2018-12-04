@@ -2,8 +2,6 @@ import os
 
 from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
-from application.recommender import Recommender
-from tracker.tracker import Tracker
 from data.db import Session
 from .errors import page_not_found
 
@@ -58,11 +56,5 @@ def create_app(test_config=None):
     app.register_blueprint(for_you.bp)
 
     app.add_url_rule('/', endpoint='index')
-
-    # register Recommender
-    app.reco = Recommender()
-
-    # register Tracker
-    app.tracker = Tracker()
 
     return app
