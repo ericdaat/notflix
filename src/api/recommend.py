@@ -2,7 +2,7 @@ from flask import Blueprint, current_app, abort, jsonify
 from data.db import Session
 from data.db import Product
 import sqlalchemy
-from application.helpers import Context
+from recommender.helpers import Context
 import logging
 
 

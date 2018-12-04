@@ -2,7 +2,7 @@ import os
 
 from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
-from application.recommender import Recommender
+from recommender.recommender import Recommender
 from tracker.tracker import Tracker
 from data.db import Session
 from .errors import page_not_found

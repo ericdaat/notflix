@@ -1,5 +1,5 @@
 import importlib
-from application.utils.logging import setup_logging
+from recommender.utils.logging import setup_logging
 from data.db import get_session
 from data.db import Engine as EngineTable
 from data.db import Product as ProductTable
@@ -12,13 +12,13 @@ class Recommender(object):
         """ Recommender constructor.
         Instantiates all the active engines.
         """
-        setup_logging(default_path='application/logging.yml')
+        setup_logging(default_path='recommender/logging.yml')
 
         self.engines = []
 
         session = get_session()
         for engine_type in session.query(EngineTable.type).all():
-            module = importlib.import_module("application.engines")
+            module = importlib.import_module("recommender.engines")
             class_ = getattr(module, engine_type[0])
             instance = class_()
             self.engines.append(instance)

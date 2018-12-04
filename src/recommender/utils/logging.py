@@ -10,7 +10,7 @@ def setup_logging(default_path='logging.yml',
     """Setup logging configuration
     https://fangpenlin.com/posts/2012/08/26/good-logging-practice-in-python/
     """
-    LOG_DIR = os.path.join("application", "logs")
+    LOG_DIR = os.path.join("recommender", "logs")
     if not os.path.exists(LOG_DIR):
         os.mkdir(LOG_DIR)
 

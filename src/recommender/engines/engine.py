@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 import logging
 
-from application.helpers import Recommendations
+from recommender.helpers import Recommendations
 from data.db import Engine as EngineTable
 from data.db import get_session
 from data.db import Recommendations as RecommendationsTable

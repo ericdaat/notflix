@@ -1,5 +1,5 @@
 from gensim import models
-from application.engines.engine import OnlineEngine, OfflineEngine
+from recommender.engines.engine import OnlineEngine, OfflineEngine
 
 
 class Word2Vec(OnlineEngine):

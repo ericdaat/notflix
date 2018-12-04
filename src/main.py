@@ -1,6 +1,6 @@
 from sqlalchemy import create_engine
-from application.recommender import Recommender
-from application.helpers import Context
+from recommender.recommender import Recommender
+from recommender.helpers import Context
 from data.db import insert, DB_HOST
 from data.db import Engine as EngineTable
 

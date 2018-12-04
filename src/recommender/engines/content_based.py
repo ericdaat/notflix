@@ -1,4 +1,4 @@
-from application.engines.engine import QueryBasedEngine, OfflineEngine
+from recommender.engines.engine import QueryBasedEngine, OfflineEngine
 from data.db import Product as ProductTable
 
 
