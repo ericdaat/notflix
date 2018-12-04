@@ -24,7 +24,8 @@ def product(product_id):
 
     recommendations = r.recommend(c)
 
-    current_app.tracker.store_item_viewed("history:foo", active_product.id)
+    user_id = "foo"
+    current_app.tracker.store_item_viewed("history:{0}".format(user_id), active_product.id)
 
     return jsonify(active_product=active_product.as_dict(),
                    recommendations=recommendations)
