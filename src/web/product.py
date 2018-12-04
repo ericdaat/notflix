@@ -1,6 +1,5 @@
 from flask import Blueprint, render_template, current_app, abort
-from web.db import db_session
-from data.db import Product
+from data.db import Product, Session
 import sqlalchemy
 from application.helpers import Context
 
@@ -11,9 +10,10 @@ bp = Blueprint('product', __name__)
 @bp.route('/product/<int:product_id>', methods=('GET', 'POST'))
 def index(product_id):
     try:
-        active_product = db_session.query(Product)\
-                                   .filter(Product.id == product_id)\
-                                   .one()
+        session = Session()
+        active_product = session.query(Product)\
+                                .filter(Product.id == product_id)\
+                                .one()
     except sqlalchemy.orm.exc.NoResultFound:
         abort(404)
 

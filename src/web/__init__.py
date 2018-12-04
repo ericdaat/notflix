@@ -4,7 +4,7 @@ from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
 from application.recommender import Recommender
 from tracker.tracker import Tracker
-from .db import db_session
+from data.db import Session
 from .errors import page_not_found
 
 
@@ -42,7 +42,9 @@ def create_app(test_config=None):
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
-        db_session.remove()
+        pass
+        # session = Session()
+        # session.remove()
 
     # HTTP errors
     app.register_error_handler(404, page_not_found)

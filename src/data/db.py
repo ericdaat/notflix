@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
+from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy_utils import database_exists, create_database
 
 from config import DB_HOST
@@ -9,6 +9,10 @@ from sqlalchemy import Column, Integer, String, DateTime, Date, Float
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+engine = create_engine(DB_HOST, convert_unicode=True)
+Session = scoped_session(sessionmaker(autocommit=False,
+                                      autoflush=False,
+                                      bind=engine))
 
 
 class Engine(Base):
