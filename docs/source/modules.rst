@@ -7,6 +7,7 @@ src
    api
    application
    config
-   data_connector
+   data
    main
+   tracker
    web

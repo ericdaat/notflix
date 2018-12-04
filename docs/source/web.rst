@@ -4,10 +4,26 @@ web package
 Submodules
 ----------
 
-web.db module
--------------
+web.errors module
+-----------------
 
-.. automodule:: web.db
+.. automodule:: web.errors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+web.for\_you module
+-------------------
+
+.. automodule:: web.for_you
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+web.genres module
+-----------------
+
+.. automodule:: web.genres
     :members:
     :undoc-members:
     :show-inheritance:
@@ -24,6 +40,14 @@ web.product module
 ------------------
 
 .. automodule:: web.product
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+web.search module
+-----------------
+
+.. automodule:: web.search
     :members:
     :undoc-members:
     :show-inheritance:
