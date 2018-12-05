@@ -8,7 +8,8 @@ and provide recommendations about other movies to watch.
 
 NotFlix based on data from the following sources:
  * [OMDB](http://www.omdbapi.com/): The Open Movie DataBase
- * [MovieLens](https://grouplens.org/datasets/movielens/): Datasets behind [MovieLens](https://movielens.org/).
+ * [Grouplens' MovieLens](https://grouplens.org/datasets/movielens/): 
+    Datasets behind [MovieLens] project(https://movielens.org/).
 
 ## Installation
 

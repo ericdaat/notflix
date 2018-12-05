@@ -1,0 +1,63 @@
+version: "3"
+services:
+  python:
+    build: .
+
+  web:
+    image: recommender-system_python:latest
+    ports:
+     - 5000:5000
+    volumes:
+     - ./src:/src
+    working_dir: /src
+    environment:
+      PYTHONPATH: /src
+      FLASK_APP: web
+      FLASK_DEBUG: "true"
+    env_file:
+      - db-credentials.env
+    links:
+      - api
+    command: ["flask", "run", "--host=0.0.0.0"]
+
+  api:
+    image: recommender-system_python:latest
+    ports:
+      - 5001:5000
+    volumes:
+      - ./src:/src
+    working_dir: /src
+    environment:
+      PYTHONPATH: /src
+      FLASK_APP: api
+      FLASK_DEBUG: "true"
+    env_file:
+      - db-credentials.env
+    links:
+      - mysql
+      - redis
+    command: ["flask", "run", "--host=0.0.0.0"]
+
+  redis:
+    image: redis:alpine
+    restart: always
+    volumes:
+      - ./src/data/mount/redis:/data
+
+  mysql:
+    image: mariadb
+    restart: always
+    env_file:
+      - db-credentials.env
+    volumes:
+      - ./src/data/mount/mysql:/var/lib/mysql
+    links:
+      - phpmyadmin
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+    restart: always
+    ports:
+      - 8080:80

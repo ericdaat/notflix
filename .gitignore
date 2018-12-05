@@ -119,3 +119,7 @@ dmypy.json
 *.txt
 *.dat
 *.pkl
+src/data/mount
+
+# credentials
+db-credentials.env

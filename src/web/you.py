@@ -2,13 +2,13 @@ from flask import Blueprint, render_template, abort
 import requests
 
 
-bp = Blueprint('for_you', __name__)
+bp = Blueprint('you', __name__)
 
 
-@bp.route('/for_you')
+@bp.route('/you')
 def index():
     user_id = "foo"
-    res = requests.get("http://localhost:5001/recommend/user/{0}".format(user_id))
+    res = requests.get("http://api:5000/recommend/user/{0}".format(user_id))
 
     if res.status_code != 200:
         abort(res.status_code)
@@ -17,5 +17,5 @@ def index():
 
     recommendations = res_json["recommendations"]
 
-    return render_template('for_you/index.html',
+    return render_template('you/index.html',
                            recommendations=recommendations)

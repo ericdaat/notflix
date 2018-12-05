@@ -6,7 +6,7 @@ bp = Blueprint('product', __name__)
 
 @bp.route('/product/<int:product_id>', methods=('GET', 'POST'))
 def index(product_id):
-    res = requests.get("http://localhost:5001/recommend/product/{0}".format(product_id))
+    res = requests.get("http://api:5000/recommend/product/{0}".format(product_id))
 
     if res.status_code != 200:
         abort(res.status_code)

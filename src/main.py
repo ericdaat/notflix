@@ -14,9 +14,9 @@ if __name__ == "__main__":
                           "display_name": "Similar to {0}",
                           "priority": 1}))
 
-    insert(EngineTable(**{"type": "CosineMovies",
-                          "display_name": "People also liked",
-                          "priority": 1}))
+    # insert(EngineTable(**{"type": "CosineMovies",
+    #                       "display_name": "People also liked",
+    #                       "priority": 1}))
 
     r = Recommender()
     c = Context(item_id=1, user_id=3)

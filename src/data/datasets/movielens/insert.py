@@ -7,7 +7,7 @@ import csv
 from collections import defaultdict
 
 from data.db import Product, Genre
-from data.db import insert, DB_HOST, create_engine, get_session
+from data.db import insert, DB_HOST, create_engine, setup, get_session
 
 OUTPUT_FILE = "omdb.csv"
 
@@ -82,13 +82,15 @@ def insert_movies():
 
 
 if __name__ == "__main__":
-    with open('omdb.key') as f:
-        api_key = f.read().strip()
+    # with open('omdb.key') as f:
+    #     api_key = f.read().strip()
     # get_data_from_omdb(api_key)
 
+    setup()
     engine = create_engine(DB_HOST)
+
     for table in [Product, Genre]:
         table.__table__.drop(bind=engine, checkfirst=True)
-        table.__table__.create(bind=engine)
+        table.__table__.create(bind=engine, checkfirst=True)
 
     insert_movies()
