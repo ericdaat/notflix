@@ -61,3 +61,17 @@ services:
     restart: always
     ports:
       - 8080:80
+
+  datasets:
+    image: recommender-system_python:latest
+    volumes:
+      - ./src:/src
+    working_dir: /src
+    environment:
+      PYTHONPATH: /src
+    env_file:
+      - db-credentials.env
+    links:
+      - mysql
+    command: ["python", "admin/datasets.py"]
+

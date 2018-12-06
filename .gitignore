@@ -119,6 +119,7 @@ dmypy.json
 *.txt
 *.dat
 *.pkl
+data/datasets
 src/data/mount
 
 # credentials

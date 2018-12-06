@@ -73,7 +73,7 @@ class Genre(Base):
     name = Column(String(56), nullable=False, unique=True)
 
 
-def setup():
+def init():
     engine = create_engine(DB_HOST)
     if not database_exists(engine.url):
         create_database(engine.url)
