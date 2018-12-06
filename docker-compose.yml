@@ -45,7 +45,7 @@ services:
       - ./src/data/mount/redis:/data
 
   mysql:
-    image: mariadb
+    image: mariadb:latest
     restart: always
     env_file:
       - db-credentials.env
