@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import logging
 
 from recommender.helpers import Recommendations
+from config import MAX_RECOMMENDATIONS
 from data.db import Engine as EngineTable
 from data.db import get_session
 from data.db import Recommendations as RecommendationsTable
@@ -63,9 +64,17 @@ class OfflineEngine(QueryBasedEngine):
             .filter(RecommendationsTable.engine_name == self.type) \
             .filter(ProductTable.id == RecommendationsTable.recommended_product_id) \
             .order_by(RecommendationsTable.score) \
-            .limit(10).all()
+            .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
+
+    @abstractmethod
+    def train(self):
+        pass
+
+    @abstractmethod
+    def upload(self):
+        pass
 
 
 class OnlineEngine(Engine):
@@ -94,7 +103,7 @@ class OnlineEngine(Engine):
         recommendations = s.query(ProductTable) \
             .filter(ProductTable.id.in_(ids)) \
             .filter(ProductTable.id != active_product.id) \
-            .limit(10).all()
+            .limit(MAX_RECOMMENDATIONS).all()
 
         r.products = recommendations
 

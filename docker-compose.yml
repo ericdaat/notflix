@@ -75,3 +75,16 @@ services:
       - mysql
     command: ["python", "admin/datasets.py"]
 
+  engines:
+    image: recommender-system_python:latest
+    volumes:
+      - ./src:/src
+    working_dir: /src
+    environment:
+      PYTHONPATH: /src
+    env_file:
+      - db-credentials.env
+    links:
+      - mysql
+    command: ["python", "admin/recommendations.py"]
+

@@ -11,3 +11,6 @@ DB_HOST = "mysql://{user}:{password}@{host}/{db}".format(
     db=os.environ.get("MYSQL_DATABASE"),
     host=os.environ.get("MYSQL_HOST")
 )
+
+# recommender
+MAX_RECOMMENDATIONS = 25

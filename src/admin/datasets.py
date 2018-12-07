@@ -1,6 +1,6 @@
+from utils.logging import setup_logging
 from data import db
 from data.downloader import OMDBDownloader
-import logging
 
 
 def make_movielens(with_download=False):
@@ -15,8 +15,7 @@ def make_movielens(with_download=False):
 
 
 if __name__ == "__main__":
-    logging.basicConfig(level=logging.INFO)
-
+    setup_logging("admin/logs/")
     for table in [db.Product, db.Genre]:
         table.__table__.drop(bind=db.engine, checkfirst=True)
         table.__table__.create(bind=db.engine, checkfirst=True)
