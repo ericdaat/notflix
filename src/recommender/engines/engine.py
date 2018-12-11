@@ -4,7 +4,7 @@ import logging
 from recommender.helpers import Recommendations
 from config import MAX_RECOMMENDATIONS
 from data.db import Engine as EngineTable
-from data.db import get_session
+from data.db import session
 from data.db import Recommendations as RecommendationsTable
 from data.db import Product as ProductTable
 
@@ -18,8 +18,6 @@ class Engine(ABC):
     def recommend(self, active_product):
         r = Recommendations()
         r.type = self.type
-
-        session = get_session()
 
         name, priority = session.query(EngineTable.display_name,
                                        EngineTable.priority)\
@@ -47,8 +45,7 @@ class QueryBasedEngine(Engine):
     def recommend(self, active_product):
         r = super(QueryBasedEngine, self).recommend(active_product)
 
-        s = get_session()
-        recommendations = self.compute_query(s, active_product)
+        recommendations = self.compute_query(session, active_product)
 
         r.products = recommendations
 
@@ -102,8 +99,7 @@ class OnlineEngine(Engine):
 
         ids = self.predict(active_product)  # online prediction
 
-        s = get_session()
-        recommendations = s.query(ProductTable) \
+        recommendations = session.query(ProductTable) \
             .filter(ProductTable.id.in_(ids)) \
             .filter(ProductTable.id != active_product.id) \
             .limit(MAX_RECOMMENDATIONS).all()

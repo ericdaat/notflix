@@ -1,5 +1,5 @@
 from flask import Blueprint, current_app, abort, jsonify
-from data.db import Session
+from data.db import session
 from data.db import Product
 import sqlalchemy
 from recommender.helpers import Context
@@ -11,7 +11,6 @@ bp = Blueprint("recommend", __name__)
 @bp.route("/recommend/product/<int:product_id>", methods=("GET",))
 def product(product_id):
     try:
-        session = Session()
         active_product = session.query(Product)\
                                 .filter(Product.id == product_id)\
                                 .one()

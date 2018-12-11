@@ -8,11 +8,13 @@ from datetime import datetime
 from sqlalchemy import Column, Integer, String, DateTime, Date, Float, ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 
-Base = declarative_base()
 engine = create_engine(DB_HOST, convert_unicode=True)
-Session = scoped_session(sessionmaker(autocommit=False,
+session = scoped_session(sessionmaker(autocommit=False,
                                       autoflush=False,
                                       bind=engine))
+
+Base = declarative_base()
+Base.query = session.query_property()
 
 
 class Engine(Base):

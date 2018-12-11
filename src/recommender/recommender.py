@@ -1,6 +1,6 @@
 import importlib
 from utils.logging import setup_logging
-from data.db import get_session
+from data.db import session
 from data.db import Engine as EngineTable
 from data.db import Product as ProductTable
 
@@ -17,7 +17,6 @@ class Recommender(object):
 
         self.engines = []
 
-        session = get_session()
         for engine_type in session.query(EngineTable.type).all():
             module = importlib.import_module("recommender.engines")
             class_ = getattr(module, engine_type[0])
@@ -34,10 +33,9 @@ class Recommender(object):
         recommendation_list = []
 
         if context.item_id:
-            s = get_session()
-            active_product = s.query(ProductTable)\
-                              .filter(ProductTable.id == context.item_id)\
-                              .one()
+            active_product = session.query(ProductTable)\
+                                    .filter(ProductTable.id == context.item_id)\
+                                    .one()
         else:
             active_product = None
 
