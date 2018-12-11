@@ -8,25 +8,6 @@
     <h2>Home</h2>
 </div>
 
-<div class="row mt-5">
-    <h3>Top Rated</h3>
-</div>
-
-<div class="row mt-2">
-    <div class="card-deck">
-        {% for p in products %}
-        <a href="{{ url_for('product.index', product_id=p.id) }}"
-           style="text-decoration:none; color: inherit;">
-            <div class="card border-0" style="width: 10rem;">
-                <img class="card-img-top" src="{{ p.image }}">
-                <div class="card-body">
-                    <h5 class="card-title">{{ p.name }}</h5>
-                    <h7>{{ p.rating }} <i class="fa fa-star"></i></h7>
-                </div>
-            </div>
-        </a>
-        {% endfor %}
-    </div>
-</div>
+{% include "recommendations/banner.html" %}
 
 {% endblock %}

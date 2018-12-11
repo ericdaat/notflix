@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from data.db import insert, DB_HOST
 from data.db import Engine as EngineTable
-from recommender.engines.content_based import TfidfGenres
+from recommender.engines.content_based import TfidfGenres, TopRated
 
 
 def register():
@@ -23,5 +23,5 @@ def train():
 
 
 if __name__ == "__main__":
-    # register()
-    train()
+    register()
+    # train()

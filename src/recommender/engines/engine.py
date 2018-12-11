@@ -26,7 +26,11 @@ class Engine(ABC):
                                 .filter(EngineTable.type == self.type)\
                                 .one()
 
-        r.display_name = name
+        if active_product and True:  # TODO: add dynamic name option in DB
+            r.display_name = name.format(active_product.name)
+        else:
+            r.display_name = name
+
         r.priority = priority
 
         return r
@@ -47,7 +51,6 @@ class QueryBasedEngine(Engine):
         recommendations = self.compute_query(s, active_product)
 
         r.products = recommendations
-        r.display_name = r.display_name.format(active_product.name)  # dynamic name
 
         logging.debug(r.to_string())
 

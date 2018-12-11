@@ -1,17 +1,18 @@
-from flask import Blueprint, render_template
-from data.db import Product, Session
+import requests
+from flask import Blueprint, render_template, abort
 
 bp = Blueprint('home', __name__)
 
 
 @bp.route('/')
 def index():
-    session = Session()
-    products = session.query(Product)\
-                      .order_by(Product.rating.desc())\
-                      .limit(10)\
-                      .all()
+    res = requests.get("http://api:5000/recommend/generic")
+
+    if res.status_code != 200:
+        abort(res.status_code)
+
+    res_json = res.json()
+    recommendations = res_json["recommendations"]
 
     return render_template('home/index.html',
-                           products=products,
-                           recommendations=None)
+                           recommendations=recommendations)

@@ -24,9 +24,10 @@ class Recommender(object):
             instance = class_()
             self.engines.append(instance)
 
-    def recommend(self, context=None):
+    def recommend(self, context=None, specific_engines=None):
         """ Make recommendations
         :param templates.Context context:
+        :param list<str> specific_engines:
         :return: List of recommendations
         :rtype: list(dict)
         """
@@ -37,8 +38,13 @@ class Recommender(object):
             active_product = s.query(ProductTable)\
                               .filter(ProductTable.id == context.item_id)\
                               .one()
+        else:
+            active_product = None
 
         for e in self.engines:
+            if specific_engines and e.type not in specific_engines:
+                continue
+
             recommendations = e.recommend(active_product)
             if len(recommendations["products"]) > 0:
                 recommendation_list.append(recommendations)
