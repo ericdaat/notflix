@@ -34,7 +34,7 @@ services:
     env_file:
       - db-credentials.env
     links:
-      - mysql
+      - postgres
       - redis
     command: ["flask", "run", "--host=0.0.0.0"]
 
@@ -44,22 +44,20 @@ services:
     volumes:
       - ./src/data/mount/redis:/data
 
-  mysql:
-    image: mariadb:latest
+  postgres:
+    image: postgres:latest
     restart: always
     env_file:
       - db-credentials.env
     volumes:
-      - ./src/data/mount/mysql:/var/lib/mysql
+      - ./src/data/mount/postgresql/data:/var/lib/postgresql/data
     ports:
-      - 3306:3306
+      - 5432:5432
     links:
-      - phpmyadmin
+      - adminer
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin
-    environment:
-      - PMA_ARBITRARY=1
+  adminer:
+    image: adminer
     restart: always
     ports:
-      - 8080:80
+      - 8080:8080

@@ -12,6 +12,8 @@ class Tracker(object):
 
     def get_views_history(self, key, n):
         history = self.cache.get(key, start=0, end=n-1)
+        history = map(int, history)
         history_set = set(history)
+        logging.error(history_set)
 
         return history_set

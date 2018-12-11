@@ -9,7 +9,7 @@ class TopRated(QueryBasedEngine):
 
     def compute_query(self, session, active_product):
         recommendations = session.query(Product) \
-            .order_by(Product.rating.desc()) \
+            .order_by(Product.rating.desc().nullslast()) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
@@ -21,7 +21,7 @@ class MostRecent(QueryBasedEngine):
 
     def compute_query(self, session, active_product):
         recommendations = session.query(Product) \
-            .order_by(Product.year.desc()) \
+            .order_by(Product.year.desc().nullslast()) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations

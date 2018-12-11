@@ -5,7 +5,7 @@ from sqlalchemy_utils import database_exists, create_database
 from config import DB_HOST
 
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Date, Float
+from sqlalchemy import Column, Integer, String, DateTime, Date, Float, ARRAY
 from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
@@ -16,7 +16,7 @@ Session = scoped_session(sessionmaker(autocommit=False,
 
 
 class Engine(Base):
-    __tablename__ = "engine"
+    __tablename__ = "engines"
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False,
                         default=datetime.utcnow)
@@ -28,13 +28,12 @@ class Engine(Base):
 
 
 class Product(Base):
-    __tablename__ = "product"
+    __tablename__ = "products"
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
     name = Column(String(256), nullable=False)
-    price = Column(Float, nullable=True)
     genres = Column(String(256), nullable=True)
     image = Column(String(256), nullable=True)
     description = Column(String(512), nullable=True)
@@ -65,12 +64,22 @@ class Recommendations(Base):
 
 
 class Genre(Base):
-    __tablename__ = "genre"
+    __tablename__ = "genres"
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow,
                         onupdate=datetime.utcnow)
     name = Column(String(56), nullable=False, unique=True)
+
+
+class Page(Base):
+    __tablename__ = "pages"
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow,
+                        onupdate=datetime.utcnow)
+    name = Column(String(56), nullable=False, unique=True)
+    engines = Column(ARRAY(String(56)))
 
 
 def init():

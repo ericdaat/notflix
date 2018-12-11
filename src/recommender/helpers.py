@@ -2,6 +2,7 @@ class Context(object):
     def __init__(self, **kwargs):
         self.item_id = kwargs.get("item_id")
         self.user_id = kwargs.get("user_id")
+        self.page_type = kwargs.get("page_type")
 
 
 class Recommendations(object):
@@ -13,6 +14,7 @@ class Recommendations(object):
 
     def to_dict(self):
         self.products = [r.as_dict() for r in self.products]
+
         return vars(self)
 
     def to_string(self):

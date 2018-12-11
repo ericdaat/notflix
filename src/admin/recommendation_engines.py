@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from data.db import insert, DB_HOST
 from data.db import Engine as EngineTable
-from recommender.engines.content_based import TfidfGenres, TopRated
+from recommender.engines.content_based import TfidfGenres
 
 
 def register():
@@ -11,6 +11,14 @@ def register():
 
     insert(EngineTable(**{"type": "SameGenres",
                           "display_name": "Similar to {0}",
+                          "priority": 1}))
+
+    insert(EngineTable(**{"type": "TopRated",
+                          "display_name": "Top rated movies",
+                          "priority": 1}))
+
+    insert(EngineTable(**{"type": "MostRecent",
+                          "display_name": "Recent movies",
                           "priority": 1}))
 
 
