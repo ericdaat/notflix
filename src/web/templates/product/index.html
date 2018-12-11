@@ -69,33 +69,7 @@
     </div>
 </div>
 
-{% for r in recommendations %}
-    <div class="row mt-3">
-        <div class="col-sm">
-            <h3 class="mb-3">{{ r.display_name }}</h3>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card-deck">
-            {% for i in r.products %}
-                <a href="{{ url_for('product.index', product_id=i.id) }}"
-                    style="text-decoration:none; color: inherit;">
-                <div class="card h-100 mb-10 border-0" style="width: 10rem;">
-                    <img class="card-img-top"
-                         src="{{i.image}}"
-                         style="width: 100%;height: 15vw;object-fit: cover;"
-                         alt="Card image cap">
-                    <div class="card-body">
-                      <h5 class="card-title"> {{ i.name }}</h5>
-                    </div>
-                </div>
-                </a>
-            {% endfor %}
-            </div>
-        </div>
-    </div>
-{% endfor %}
+{% include "recommendations/banner.html" %}
 
 {% endblock %}
 

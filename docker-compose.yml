@@ -51,6 +51,8 @@ services:
       - db-credentials.env
     volumes:
       - ./src/data/mount/mysql:/var/lib/mysql
+    ports:
+      - 3306:3306
     links:
       - phpmyadmin
 
@@ -61,30 +63,3 @@ services:
     restart: always
     ports:
       - 8080:80
-
-  datasets:
-    image: recommender-system_python:latest
-    volumes:
-      - ./src:/src
-    working_dir: /src
-    environment:
-      PYTHONPATH: /src
-    env_file:
-      - db-credentials.env
-    links:
-      - mysql
-    command: ["python", "admin/datasets.py"]
-
-  engines:
-    image: recommender-system_python:latest
-    volumes:
-      - ./src:/src
-    working_dir: /src
-    environment:
-      PYTHONPATH: /src
-    env_file:
-      - db-credentials.env
-    links:
-      - mysql
-    command: ["python", "admin/recommendations.py"]
-
