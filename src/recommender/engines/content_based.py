@@ -22,18 +22,6 @@ class SameGenres(QueryBasedEngine):
         return recommendations
 
 
-class TopRated(QueryBasedEngine):
-    def __init__(self):
-        super(TopRated, self).__init__()
-
-    def compute_query(self, session, active_product):
-        recommendations = session.query(Product) \
-            .order_by(Product.rating.desc())\
-            .limit(MAX_RECOMMENDATIONS).all()
-
-        return recommendations
-
-
 class TfidfGenres(OfflineEngine):
     def __init__(self):
         super(TfidfGenres, self).__init__()

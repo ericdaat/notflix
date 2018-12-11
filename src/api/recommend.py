@@ -50,6 +50,6 @@ def generic():
     r = current_app.reco
     c = Context()
     recommendations = r.recommend(context=c,
-                                  specific_engines=("TopRated",))
+                                  specific_engines=("TopRated", "MostRecent"))
 
     return jsonify(recommendations=recommendations)
