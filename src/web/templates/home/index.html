@@ -7,7 +7,11 @@
 <div class="row mt-5">
     <div class="col-sm">
         <h2>Home</h2>
-        <p>Welcome home!</p>
+        {% if session["username"] %}
+            <p>Welcome home {{ session["username"] }}</p>
+        {% else %}
+            <p>Hi, you are not logged in, you're missing out!</p>
+        {% endif %}
     </div>
 </div>
 
