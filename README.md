@@ -1,5 +1,8 @@
 # NotFlix
 
+[![Documentation Status](https://readthedocs.org/projects/notflix/badge/?version=latest)](https://notflix.readthedocs.io/en/latest/?badge=latest)
+
+
 ## About
 You have just met NotFlix, a free movie database and recommendation website.
 
