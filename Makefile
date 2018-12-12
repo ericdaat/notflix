@@ -1,8 +1,7 @@
-MYSQL_ROOT_PASSWORD=Pa$$w0rD
-MYSQL_USER=user
-MYSQL_PASSWORD=password
-MYSQL_DATABASE=recommender
-MYSQL_HOST=localhost
+POSTGRES_USER=
+POSTGRES_PASSWORD=
+POSTGRES_DB=
+HOST=
 
 install:
 	rm -rf venv; \
@@ -14,7 +13,7 @@ install:
 
 init-db: export PYTHONPATH="$(shell pwd)/src/"
 init-db:
-	docker-compose up -d mysql; \
+	docker-compose up -d postgres; \
     source venv/bin/activate; \
 	cd src; \
 	python admin/init_db.py; \
