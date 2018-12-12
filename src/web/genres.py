@@ -14,7 +14,7 @@ def index():
 @bp.route('/genres/<genre>', methods=('GET',))
 def genre(genre):
     products = session.query(Product)\
-                      .filter(Product.genres.like("%{0}%".format(genre)))\
+                      .filter(Product.genres.ilike("%{0}%".format(genre)))\
                       .limit(50)\
                       .all()
 
