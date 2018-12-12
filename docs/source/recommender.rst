@@ -1,4 +1,4 @@
-application package
+recommender package
 ===================
 
 Subpackages
@@ -6,24 +6,23 @@ Subpackages
 
 .. toctree::
 
-    application.engines
-    application.utils
+    recommender.engines
 
 Submodules
 ----------
 
-application.helpers module
+recommender.helpers module
 --------------------------
 
-.. automodule:: application.helpers
+.. automodule:: recommender.helpers
     :members:
     :undoc-members:
     :show-inheritance:
 
-application.recommender module
+recommender.recommender module
 ------------------------------
 
-.. automodule:: application.recommender
+.. automodule:: recommender.recommender
     :members:
     :undoc-members:
     :show-inheritance:
@@ -32,7 +31,7 @@ application.recommender module
 Module contents
 ---------------
 
-.. automodule:: application
+.. automodule:: recommender
     :members:
     :undoc-members:
     :show-inheritance:

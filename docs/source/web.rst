@@ -12,14 +12,6 @@ web.errors module
     :undoc-members:
     :show-inheritance:
 
-web.for\_you module
--------------------
-
-.. automodule:: web.for_you
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 web.genres module
 -----------------
 
@@ -36,6 +28,14 @@ web.home module
     :undoc-members:
     :show-inheritance:
 
+web.login module
+----------------
+
+.. automodule:: web.login
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 web.product module
 ------------------
 
@@ -48,6 +48,14 @@ web.search module
 -----------------
 
 .. automodule:: web.search
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+web.you module
+--------------
+
+.. automodule:: web.you
     :members:
     :undoc-members:
     :show-inheritance:

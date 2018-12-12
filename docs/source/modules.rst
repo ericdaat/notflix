@@ -4,10 +4,11 @@ src
 .. toctree::
    :maxdepth: 4
 
+   admin
    api
-   application
    config
    data
-   main
+   recommender
    tracker
+   utils
    web

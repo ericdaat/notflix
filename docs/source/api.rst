@@ -4,6 +4,14 @@ api package
 Submodules
 ----------
 
+api.errors module
+-----------------
+
+.. automodule:: api.errors
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 api.recommend module
 --------------------
 
