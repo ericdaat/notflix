@@ -11,7 +11,7 @@ def search():
 
     query = request.args.get("query")
     products = session.query(Product) \
-                      .filter(Product.name.like('%{0}%'.format(query))) \
+                      .filter(Product.name.ilike('%{0}%'.format(query))) \
                       .limit(50) \
                       .all()
 
