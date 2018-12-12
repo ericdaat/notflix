@@ -6,7 +6,8 @@ bp = Blueprint('home', __name__)
 
 @bp.route('/')
 def index():
-    res = requests.get("http://api:5000/recommend/generic")
+    res = requests.get(url="http://api:5000/recommend/generic",
+                       params={"page_type": "home"})
 
     if res.status_code != 200:
         abort(res.status_code)

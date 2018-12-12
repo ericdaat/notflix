@@ -1,4 +1,4 @@
-from flask import Blueprint, current_app, abort, jsonify
+from flask import Blueprint, current_app, abort, jsonify, request
 from data.db import session
 from data.db import Product
 import sqlalchemy
@@ -18,7 +18,7 @@ def product(product_id):
         abort(404)
 
     r = current_app.reco
-    c = Context(**{"item_id": product_id})
+    c = Context(**{"item_id": product_id, "page_type": request.args.get("page_type")})
 
     recommendations = r.recommend(context=c)
 
@@ -37,7 +37,7 @@ def user(user_id):
     recommendations = []
 
     for item_id in views_history:
-        c = Context(**{"item_id": item_id})
+        c = Context(**{"item_id": item_id, "page_type": request.args.get("page_type")})
         recommendations.append(r.recommend(context=c))
 
     return jsonify(active_user=user_id,
@@ -47,8 +47,7 @@ def user(user_id):
 @bp.route("/recommend/generic", methods=("GET",))
 def generic():
     r = current_app.reco
-    c = Context()
-    recommendations = r.recommend(context=c,
-                                  specific_engines=("TopRated", "MostRecent"))
+    c = Context(**{"page_type": request.args.get("page_type")})
+    recommendations = r.recommend(context=c)
 
     return jsonify(recommendations=recommendations)
