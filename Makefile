@@ -20,3 +20,6 @@ init-db:
 
 start:
 	docker-compose up -d web;
+
+stop:
+	docker-compose down;

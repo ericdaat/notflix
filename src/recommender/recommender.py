@@ -1,5 +1,7 @@
 import importlib
 from sqlalchemy.orm.exc import NoResultFound
+
+import data.db
 from utils.logging import setup_logging
 from data.db import session, notflix
 
@@ -39,8 +41,8 @@ class Recommender(object):
         active_engines = []
         if context.page_type:
             try:
-                active_engines = session.query(notflix.Page.engines) \
-                                        .filter(notflix.Page.name == context.page_type) \
+                active_engines = session.query(data.db.Page.engines) \
+                                        .filter(data.db.Page.name == context.page_type) \
                                         .one()[0]
             except NoResultFound:
                 pass
