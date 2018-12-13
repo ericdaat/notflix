@@ -69,10 +69,10 @@ class TfidfGenres(OfflineEngine):
                                 quoting=csv.QUOTE_MINIMAL)
 
             for line in reader:
-                r = notflix.Recommendations(**{"engine_name": "TfidfGenres",
-                                               "source_product_id": line[0],
-                                               "recommended_product_id": line[1],
-                                               "score": line[2]})
+                r = notflix.Recommendation(**{"engine_name": "TfidfGenres",
+                                              "source_product_id": line[0],
+                                              "recommended_product_id": line[1],
+                                              "score": line[2]})
                 recommendations.append(r)
 
             insert(recommendations)

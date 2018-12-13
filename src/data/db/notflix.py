@@ -38,7 +38,7 @@ class Product(Base):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
-class Recommendations(Base):
+class Recommendation(Base):
     __tablename__ = "recommendations"
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)

@@ -1,7 +1,6 @@
-POSTGRES_USER=user
-POSTGRES_PASSWORD=password
-POSTGRES_DB=recommender
-HOST=127.0.0.1
+#!make
+include db-credentials.env
+export $(shell sed 's/=.*//' db-credentials.env)
 
 install:
 	rm -rf venv; \
@@ -11,11 +10,13 @@ install:
 	echo "done"; \
 
 
-init-db: export PYTHONPATH="$(shell pwd)/src/"
 init-db:
 	docker-compose up -d postgres; \
 	source venv/bin/activate; \
 	cd src; \
-	python admin/init-db.py; \
+	PYTHONPATH="." HOST="127.0.0.1" python admin/init_notflix.py; \
 	echo "done"; \
 
+
+start:
+	docker-compose up -d web;

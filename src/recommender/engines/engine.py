@@ -56,10 +56,10 @@ class OfflineEngine(QueryBasedEngine):
 
     def compute_query(self, session, active_product):
         recommendations = session.query(notflix.Product) \
-            .filter(notflix.Recommendations.source_product_id == active_product.id) \
-            .filter(notflix.Recommendations.engine_name == self.type) \
-            .filter(notflix.Product.id == notflix.Recommendations.recommended_product_id) \
-            .order_by(notflix.Recommendations.score) \
+            .filter(notflix.Recommendation.source_product_id == active_product.id) \
+            .filter(notflix.Recommendation.engine_name == self.type) \
+            .filter(notflix.Product.id == notflix.Recommendation.recommended_product_id) \
+            .order_by(notflix.Recommendation.score) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
