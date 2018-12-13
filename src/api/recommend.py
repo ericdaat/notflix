@@ -1,6 +1,6 @@
 import sqlalchemy
 from flask import Blueprint, current_app, abort, jsonify, request
-from recommender.helpers import Context
+from recommender.wrappers import Context
 from data.db import session, notflix
 
 

@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 import logging
-from recommender.helpers import Recommendations
+from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
 from data.db import session, notflix
 
