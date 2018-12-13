@@ -1,25 +1,24 @@
 from sqlalchemy import create_engine
-from data.db import insert, DB_HOST
-from data.db import Engine as EngineTable
+from data.db import insert, DB_HOST, notflix
 from recommender.engines.content_based import TfidfGenres
 
 
 def register():
     engine = create_engine(DB_HOST)
-    EngineTable.__table__.drop(bind=engine, checkfirst=True)
-    EngineTable.__table__.create(bind=engine, checkfirst=True)
+    notflix.Engine.__table__.drop(bind=engine, checkfirst=True)
+    notflix.Engine.__table__.create(bind=engine, checkfirst=True)
 
-    insert(EngineTable(**{"type": "SameGenres",
-                          "display_name": "Similar to {0}",
-                          "priority": 1}))
+    insert(notflix.Engine(**{"type": "SameGenres",
+                             "display_name": "Similar to {0}",
+                             "priority": 1}))
 
-    insert(EngineTable(**{"type": "TopRated",
-                          "display_name": "Top rated movies",
-                          "priority": 1}))
+    insert(notflix.Engine(**{"type": "TopRated",
+                             "display_name": "Top rated movies",
+                             "priority": 1}))
 
-    insert(EngineTable(**{"type": "MostRecent",
-                          "display_name": "Recent movies",
-                          "priority": 1}))
+    insert(notflix.Engine(**{"type": "MostRecent",
+                             "display_name": "Recent movies",
+                             "priority": 1}))
 
 
 def train():

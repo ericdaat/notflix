@@ -1,12 +1,8 @@
 from abc import ABC, abstractmethod
 import logging
-
 from recommender.helpers import Recommendations
 from config import MAX_RECOMMENDATIONS
-from data.db import Engine as EngineTable
-from data.db import session
-from data.db import Recommendations as RecommendationsTable
-from data.db import Product as ProductTable
+from data.db import session, notflix
 
 
 class Engine(ABC):
@@ -19,9 +15,9 @@ class Engine(ABC):
         r = Recommendations()
         r.type = self.type
 
-        name, priority = session.query(EngineTable.display_name,
-                                       EngineTable.priority)\
-                                .filter(EngineTable.type == self.type)\
+        name, priority = session.query(notflix.Engine.display_name,
+                                       notflix.Engine.priority)\
+                                .filter(notflix.Engine.type == self.type)\
                                 .one()
 
         if active_product and True:  # TODO: add dynamic name option in DB
@@ -59,11 +55,11 @@ class OfflineEngine(QueryBasedEngine):
         super(OfflineEngine, self).__init__()
 
     def compute_query(self, session, active_product):
-        recommendations = session.query(ProductTable) \
-            .filter(RecommendationsTable.source_product_id == active_product.id) \
-            .filter(RecommendationsTable.engine_name == self.type) \
-            .filter(ProductTable.id == RecommendationsTable.recommended_product_id) \
-            .order_by(RecommendationsTable.score) \
+        recommendations = session.query(notflix.Product) \
+            .filter(notflix.Recommendations.source_product_id == active_product.id) \
+            .filter(notflix.Recommendations.engine_name == self.type) \
+            .filter(notflix.Product.id == notflix.Recommendations.recommended_product_id) \
+            .order_by(notflix.Recommendations.score) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
@@ -99,9 +95,9 @@ class OnlineEngine(Engine):
 
         ids = self.predict(active_product)  # online prediction
 
-        recommendations = session.query(ProductTable) \
-            .filter(ProductTable.id.in_(ids)) \
-            .filter(ProductTable.id != active_product.id) \
+        recommendations = session.query(notflix.Product) \
+            .filter(notflix.Product.id.in_(ids)) \
+            .filter(notflix.Product.id != active_product.id) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         r.products = recommendations

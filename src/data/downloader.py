@@ -8,7 +8,7 @@ from datetime import datetime
 from collections import defaultdict
 from abc import abstractmethod, ABC
 
-from data.db import Product, Genre
+from data.db import notflix
 from data.db import insert
 
 
@@ -101,9 +101,9 @@ class OMDBDownloader(Downloader):
                      "country": movie["Country"],
                      "duration": duration}
 
-                product = Product(**d)
+                product = notflix.Product(**d)
                 products.append(product)
 
-            genres = [Genre(**{"id": id, "name": name}) for name, id in genre_dict.items()]
+            genres = [notflix.Genre(**{"id": id, "name": name}) for name, id in genre_dict.items()]
             insert(genres)
             insert(products)

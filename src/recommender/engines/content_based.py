@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import linear_kernel
 
 from recommender.engines.engine import QueryBasedEngine, OfflineEngine
 from config import MAX_RECOMMENDATIONS
-from data.db import Product, Recommendations, insert
+from data.db import insert, notflix
 
 
 class SameGenres(QueryBasedEngine):
@@ -14,9 +14,9 @@ class SameGenres(QueryBasedEngine):
         super(SameGenres, self).__init__()
 
     def compute_query(self, session, active_product):
-        recommendations = session.query(Product)\
-                           .filter(Product.genres == active_product.genres)\
-                           .filter(Product.id != active_product.id)\
+        recommendations = session.query(notflix.Product)\
+                           .filter(notflix.Product.genres == active_product.genres)\
+                           .filter(notflix.Product.id != active_product.id)\
                            .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
@@ -69,10 +69,10 @@ class TfidfGenres(OfflineEngine):
                                 quoting=csv.QUOTE_MINIMAL)
 
             for line in reader:
-                r = Recommendations(**{"engine_name": "TfidfGenres",
-                                       "source_product_id": line[0],
-                                       "recommended_product_id": line[1],
-                                       "score": line[2]})
+                r = notflix.Recommendations(**{"engine_name": "TfidfGenres",
+                                               "source_product_id": line[0],
+                                               "recommended_product_id": line[1],
+                                               "score": line[2]})
                 recommendations.append(r)
 
             insert(recommendations)

@@ -1,20 +1,6 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-from sqlalchemy_utils import database_exists, create_database
-
-from config import DB_HOST
-
 from datetime import datetime
-from sqlalchemy import Column, Integer, String, DateTime, Date, Float, ARRAY
-from sqlalchemy.ext.declarative import declarative_base
-
-engine = create_engine(DB_HOST, convert_unicode=True)
-session = scoped_session(sessionmaker(autocommit=False,
-                                      autoflush=False,
-                                      bind=engine))
-
-Base = declarative_base()
-Base.query = session.query_property()
+from sqlalchemy import Column, Integer, DateTime, String, Date, Float, ARRAY
+from data.db import Base
 
 
 class Engine(Base):
@@ -82,30 +68,3 @@ class Page(Base):
                         onupdate=datetime.utcnow)
     name = Column(String(56), nullable=False, unique=True)
     engines = Column(ARRAY(String(56)))
-
-
-def init():
-    engine = create_engine(DB_HOST)
-    if not database_exists(engine.url):
-        create_database(engine.url)
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
-
-
-def get_session():
-    engine = create_engine(DB_HOST)
-    Base.metadata.bind = engine
-    DBSession = sessionmaker(bind=engine)
-    session = DBSession()
-
-    return session
-
-
-def insert(to_insert):
-    session = get_session()
-    if isinstance(to_insert, list):
-        session.bulk_save_objects(to_insert)
-    else:
-        session.add(to_insert)
-
-    return session.commit()

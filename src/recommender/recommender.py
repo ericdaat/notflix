@@ -1,8 +1,6 @@
 import importlib
-import logging
 from utils.logging import setup_logging
-from data.db import session
-from data.db import Engine, Product, Page
+from data.db import session, notflix
 
 
 class Recommender(object):
@@ -17,7 +15,7 @@ class Recommender(object):
 
         self.engines = []
 
-        for engine_type in session.query(Engine.type).all():
+        for engine_type in session.query(notflix.Engine.type).all():
             module = importlib.import_module("recommender.engines")
             class_ = getattr(module, engine_type[0])
             instance = class_()
@@ -33,14 +31,14 @@ class Recommender(object):
         active_product = None
 
         if context.item_id:
-            active_product = session.query(Product)\
-                                    .filter(Product.id == context.item_id)\
+            active_product = session.query(notflix.Product)\
+                                    .filter(notflix.Product.id == context.item_id)\
                                     .one()
 
         active_engines = []
         if context.page_type:
-            active_engines = session.query(Page.engines) \
-                                    .filter(Page.name == context.page_type) \
+            active_engines = session.query(notflix.Page.engines) \
+                                    .filter(notflix.Page.name == context.page_type) \
                                     .one()[0]
 
         for e in self.engines:

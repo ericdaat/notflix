@@ -14,7 +14,7 @@
 <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 <!-- Font Awesome -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
 
 <title>Notflix {% block title %}{% endblock %} </title>
 
@@ -33,39 +33,38 @@
   </button>
 
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
-    <ul class="navbar-nav mr-auto">
-      <li class="nav-item">
-        <a class="nav-link" href="{{ url_for('home.index') }}">Home <span class="sr-only">(current)</span></a>
-      </li>
-      <li class="nav-item dropdown">
-        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          Browse
-        </a>
-        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-item" href="{{ url_for('genres.index') }}">Genres</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="{{ url_for('you.index') }}">Recommended for You</a>
-        </div>
-      </li>
-    </ul>
-    <form class="form-inline my-2 my-lg-0" method="post" action="/search">
-      <input class="form-control mr-sm-4"
-             type="search"
-             name="query"
-             id="query"
-             placeholder="Search"
-             aria-label="Search"
-             value="{{ request.form.query }}">
-      <button class="btn btn-outline-success my-2 my-sm-0" type="submit"> Search</button>
-    </form>
-  {% if not session["username"] %}
-  <a class="nav-link" href="{{ url_for('login.signin') }}"> Log In <span class="sr-only">(current)</span></a>
-  {% else %}
-  <form class="form-inline my-2 my-lg-0" method="post" action="{{ url_for('login.signout') }}">
-    <button class="btn btn-outline-danger my-2 my-sm-0" type="submit"> Logout </button>
-  </form>
-  {% endif %}
-  </div>
+     <ul class="navbar-nav mr-auto">
+        <li class="nav-item">
+          <a class="nav-link" href="{{ url_for('home.index') }}">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Browse
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="{{ url_for('genres.index') }}">Genres</a>
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" href="{{ url_for('you.index') }}">Recommended for You</a>
+          </div>
+        </li>
+     </ul>
+     <form class="form-inline my-2 my-lg-0" method="post" action="/search">
+        <input class="form-control mr-sm-4"
+               type="search"
+               name="query"
+               id="query"
+               placeholder="Search"
+               aria-label="Search"
+               value="{{ request.form.query }}">
+     </form>
+     {% if not session["username"] %}
+     <a class="nav-link" href="{{ url_for('login.signin') }}"> Log In <span class="sr-only">(current)</span></a>
+      {% else %}
+     <form class="form-inline my-2 my-lg-0" method="post" action="{{ url_for('login.signout') }}">
+       <button class="btn btn-outline-danger my-2 my-sm-0" type="submit"> Logout </button>
+     </form>
+     {% endif %}
+     </div>
 </nav>
 
 

@@ -1,8 +1,7 @@
-from flask import Blueprint, current_app, abort, jsonify, request
-from data.db import session
-from data.db import Product
 import sqlalchemy
+from flask import Blueprint, current_app, abort, jsonify, request
 from recommender.helpers import Context
+from data.db import session, notflix
 
 
 bp = Blueprint("recommend", __name__)
@@ -11,8 +10,8 @@ bp = Blueprint("recommend", __name__)
 @bp.route("/recommend/product/<int:product_id>", methods=("GET",))
 def product(product_id):
     try:
-        active_product = session.query(Product)\
-                                .filter(Product.id == product_id)\
+        active_product = session.query(notflix.Product)\
+                                .filter(notflix.Product.id == product_id)\
                                 .one()
     except sqlalchemy.orm.exc.NoResultFound:
         abort(404)
