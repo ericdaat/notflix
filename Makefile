@@ -7,10 +7,12 @@ install:
 	virtualenv venv; \
 	source venv/bin/activate; \
  	pip install -r requirements.txt; \
+ 	docker-compose build;
 	echo "done"; \
 
 
 init-db:
+	docker-compose stop api web; \
 	docker-compose up -d postgres; \
 	source venv/bin/activate; \
 	cd src; \
