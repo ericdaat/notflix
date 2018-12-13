@@ -1,13 +1,13 @@
-admin package
-=============
+data.db package
+===============
 
 Submodules
 ----------
 
-admin.init\_notflix module
---------------------------
+data.db.notflix module
+----------------------
 
-.. automodule:: admin.init_notflix
+.. automodule:: data.db.notflix
     :members:
     :undoc-members:
     :show-inheritance:
@@ -16,7 +16,7 @@ admin.init\_notflix module
 Module contents
 ---------------
 
-.. automodule:: admin
+.. automodule:: data.db
     :members:
     :undoc-members:
     :show-inheritance:

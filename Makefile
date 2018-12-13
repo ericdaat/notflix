@@ -7,7 +7,8 @@ install:
 	virtualenv venv; \
 	source venv/bin/activate; \
  	pip install -r requirements.txt; \
- 	docker-compose build;
+ 	docker-compose build; \
+ 	cp -n db-credentials.env.dist db-credentials.env; \
 	echo "done"; \
 
 
@@ -25,3 +26,11 @@ start:
 
 stop:
 	docker-compose down;
+
+docs:
+	cd docs; \
+	make clean; \
+	find source/*.rst ! -name 'index.rst' -type f -exec rm -f {} +; \
+	sphinx-apidoc ../src -o source; \
+	sphinx-build source build; \
+	echo "done"; \

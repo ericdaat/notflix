@@ -16,25 +16,24 @@ NotFlix based on data from the following sources:
 
 ## Installation
 
-*Note: This is a work in progress*
+*Note: This is a work in progress.*
 
-### Pre-requisite
 You need to have [Docker](https://www.docker.com/get-started) and [docker-compose](https://docs.docker.com/compose/) installed.
 
-
-### Building containers
-
-Build the required containers:
+Then, run:
 
 ```
-docker-compose build
+make install;
+make init-db;
 ```
 
 
-### Database
-
-Initialize the Database:
+## Running
 
 ```
-make init-db
+make start;
 ```
+
+The following calls should work:
+ * Web: `localhost:5000/status`
+ * API: `localhost:5001/status`
