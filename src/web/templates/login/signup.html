@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %} - Sign Up {% endblock %}
+
+{% block content %}
+
+<div class="row justify-content-md-center">
+  <div class="col-lg-5">
+    <h2>Sign Up</h2>
+    <p>Yay you're signing up!</p>
+  </div>
+  <div class="col-lg-5">
+    {% if error %}
+    <div class="alert alert-danger" role="alert"> {{ error }}</div>
+    {% endif %}
+
+     <form action="{{ url_for('login.signup') }}" method="post">
+       <div class="form-row">
+         <div class="form-group col-md-6">
+           <label for="inputEmail">Email</label>
+           <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email">
+         </div>
+         <div class="form-group col-md-6">
+           <label for="inputPassword4">Password</label>
+           <input type="password" name="password" class="form-control" id="inputPassword4" placeholder="Password">
+         </div>
+       </div>
+       <div class="form-row">
+         <div class="form-group col-md-6">
+           <label for="inputUsername">Username</label>
+           <input name="username" class="form-control" id="inputUsername" placeholder="username">
+         </div>
+       </div>
+       {% if countries %}
+       <div class="form-row">
+          <div class="form-group col-md-4">
+             <label for="inputCountry">Country</label>
+             <select id="inputCountry" class="form-control">
+               <option selected>Choose...</option>
+               {% for country in countries %}
+               <option>{{ country }}</option>
+               {% endfor %}
+             </select>
+          </div>
+       </div>
+       {% endif %}
+       <button type="submit" class="btn btn-primary">Sign Up</button>
+       <p>Already have an account? Neat! Just <a href="{{ url_for('login.signin') }}">sign in</a> then.</p>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

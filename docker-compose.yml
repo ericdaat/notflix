@@ -4,7 +4,7 @@ services:
     build: .
 
   web:
-    image: recommender-system_python:latest
+    image: notflix_python:latest
     ports:
      - 5000:5000
     volumes:
@@ -21,7 +21,7 @@ services:
     command: ["flask", "run", "--host=0.0.0.0"]
 
   api:
-    image: recommender-system_python:latest
+    image: notflix_python:latest
     ports:
       - 5001:5000
     volumes:
@@ -40,13 +40,11 @@ services:
 
   redis:
     image: redis:alpine
-    restart: always
     volumes:
       - ./src/data/mount/redis:/data
 
   postgres:
     image: postgres:latest
-    restart: always
     env_file:
       - db-credentials.env
     volumes:
@@ -58,6 +56,5 @@ services:
 
   adminer:
     image: adminer
-    restart: always
     ports:
       - 8080:8080
