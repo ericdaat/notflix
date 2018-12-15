@@ -1,7 +1,9 @@
 import bcrypt
+import logging
 from sqlalchemy.orm.exc import NoResultFound
 from flask import Blueprint, render_template, request, session, redirect, url_for
 from data import db
+from data.db import notflix
 
 
 bp = Blueprint("login", __name__)
@@ -10,13 +12,13 @@ bp = Blueprint("login", __name__)
 def valid_signin(username, password):
     is_valid = False
     try:
-        hashed_password = session.query(db.User.password)\
-                                 .filter(db.User.username == username)\
-                                 .one()[0]
+        hashed_password = db.session.query(db.User.password)\
+                                    .filter(db.User.username == username)\
+                                    .one()[0]
     except NoResultFound:
         return is_valid
 
-    if bcrypt.checkpw(password.encode("utf8"), hashed_password.encode("utf8")):
+    if bcrypt.checkpw(password.encode("utf8"), hashed_password):
         is_valid = True
 
     return is_valid
@@ -55,9 +57,8 @@ def signup():
                            username=username,
                            password=hashed_password)
             db.insert(user, db.DB_HOST)
-            session["username"] = username
 
-            return redirect(url_for('home.index'))
+            return redirect(url_for('login.signin'))
 
     return render_template("login/signup.html")
 
@@ -67,4 +68,10 @@ def signout():
     session.pop("username")
 
     return redirect(url_for('home.index'))
+
+
+@bp.route("/taste", methods=("GET",))
+def taste():
+    genres = db.session.query(notflix.Genre).all()
+    return render_template("login/taste.html", genres=genres)
 

@@ -1,7 +1,7 @@
 import os
 from datetime import datetime
 
-from sqlalchemy import create_engine, Column, Integer, DateTime, String, Float, ARRAY
+from sqlalchemy import create_engine, Column, Integer, DateTime, String, Float, ARRAY, Binary
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy_utils import database_exists, create_database
@@ -76,4 +76,4 @@ class User(Base):
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     email = Column(String(255), nullable=False, unique=True)
     username = Column(String(255), nullable=False, unique=True)
-    password = Column(String(255), nullable=False)
+    password = Column(Binary(60), nullable=False)
