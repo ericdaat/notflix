@@ -14,10 +14,10 @@ class SameGenres(QueryBasedEngine):
     def __init__(self):
         super(SameGenres, self).__init__()
 
-    def compute_query(self, session, active_product):
+    def compute_query(self, session, context):
         recommendations = session.query(notflix.Product)\
-                           .filter(notflix.Product.genres == active_product.genres)\
-                           .filter(notflix.Product.id != active_product.id)\
+                           .filter(notflix.Product.genres == context.item.genres)\
+                           .filter(notflix.Product.id != context.item.id)\
                            .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations

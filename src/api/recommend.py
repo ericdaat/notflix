@@ -1,7 +1,8 @@
 import sqlalchemy
-from flask import Blueprint, current_app, abort, jsonify, request
+from flask import Blueprint, current_app, abort, jsonify, request, session
 from recommender.wrappers import Context
-from data.db import session, notflix
+from data import db
+import logging
 
 
 bp = Blueprint("recommend", __name__)
@@ -10,14 +11,14 @@ bp = Blueprint("recommend", __name__)
 @bp.route("/recommend/product/<int:product_id>", methods=("GET",))
 def product(product_id):
     try:
-        active_product = session.query(notflix.Product)\
-                                .filter(notflix.Product.id == product_id)\
-                                .one()
+        active_product = db.session.query(db.notflix.Product)\
+                                   .filter(db.notflix.Product.id == product_id)\
+                                   .one()
     except sqlalchemy.orm.exc.NoResultFound:
         abort(404)
 
     r = current_app.reco
-    c = Context(**{"item_id": product_id, "page_type": request.args.get("page_type")})
+    c = Context(**{"item": active_product, "page_type": request.args.get("page_type")})
 
     recommendations = r.recommend(context=c)
 
@@ -30,14 +31,18 @@ def product(product_id):
 
 @bp.route("/recommend/user/<user_id>", methods=("GET",))
 def user(user_id):
-    views_history = current_app.tracker.get_views_history("history:{0}".format(user_id), 3)
-
     r = current_app.reco
-    recommendations = []
+    c = Context(**{"page_type": request.args.get("page_type")})
 
-    for item_id in views_history:
-        c = Context(**{"item_id": item_id, "page_type": request.args.get("page_type")})
-        recommendations.append(r.recommend(context=c))
+    try:
+        user = db.session.query(db.User).filter(db.User.username == user_id).one()
+    except sqlalchemy.orm.exc.NoResultFound:
+        user = None
+
+    if user:
+        c.user = user
+
+    recommendations = r.recommend(context=c)
 
     return jsonify(active_user=user_id,
                    recommendations=recommendations)
@@ -47,6 +52,7 @@ def user(user_id):
 def generic():
     r = current_app.reco
     c = Context(**{"page_type": request.args.get("page_type")})
+
     recommendations = r.recommend(context=c)
 
     return jsonify(recommendations=recommendations)

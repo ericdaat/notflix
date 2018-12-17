@@ -1,5 +1,6 @@
 import importlib
 from sqlalchemy.orm.exc import NoResultFound
+import logging
 
 import data.db
 from utils.logging import setup_logging
@@ -24,19 +25,13 @@ class Recommender(object):
             instance = class_()
             self.engines.append(instance)
 
-    def recommend(self, context=None):
+    def recommend(self, context):
         """ Make recommendations
         :param templates.Context context:
         :return: List of recommendations
         :rtype: list(dict)
         """
         recommendation_list = []
-        active_product = None
-
-        if context.item_id:
-            active_product = session.query(notflix.Product)\
-                                    .filter(notflix.Product.id == context.item_id)\
-                                    .one()
 
         active_engines = []
         if context.page_type:
@@ -47,11 +42,13 @@ class Recommender(object):
             except NoResultFound:
                 pass
 
+        logging.debug("active engines: {0}".format(active_engines))
+
         for e in self.engines:
             if e.type not in active_engines:
                 continue
 
-            recommendations = e.recommend(active_product)
+            recommendations = e.recommend(context)
             if len(recommendations["products"]) > 0:
                 recommendation_list.append(recommendations)
 

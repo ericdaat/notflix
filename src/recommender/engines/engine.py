@@ -13,7 +13,7 @@ class Engine(ABC):
         logging.debug("Creating instance of {0}".format(self.type))
 
     @abstractmethod
-    def recommend(self, active_product):
+    def recommend(self, context):
         r = Recommendations()
         r.type = self.type
 
@@ -22,8 +22,8 @@ class Engine(ABC):
                                 .filter(notflix.Engine.type == self.type)\
                                 .one()
 
-        if active_product and True:  # TODO: add dynamic name option in DB
-            r.display_name = name.format(active_product.name)
+        if context.item and True:  # TODO: add dynamic name option in DB
+            r.display_name = name.format(context.item.name)
         else:
             r.display_name = name
 
@@ -37,13 +37,13 @@ class QueryBasedEngine(Engine):
         super(QueryBasedEngine, self).__init__()
 
     @abstractmethod
-    def compute_query(self, session, active_product):
+    def compute_query(self, session, context):
         pass
 
-    def recommend(self, active_product):
-        r = super(QueryBasedEngine, self).recommend(active_product)
+    def recommend(self, context):
+        r = super(QueryBasedEngine, self).recommend(context)
 
-        recommendations = self.compute_query(session, active_product)
+        recommendations = self.compute_query(session, context)
 
         r.products = recommendations
 
@@ -56,9 +56,9 @@ class OfflineEngine(QueryBasedEngine):
     def __init__(self):
         super(OfflineEngine, self).__init__()
 
-    def compute_query(self, session, active_product):
+    def compute_query(self, session, context):
         recommendations = session.query(notflix.Product) \
-            .filter(db.Recommendation.source_product_id == active_product.id) \
+            .filter(db.Recommendation.source_product_id == context.item.id) \
             .filter(db.Recommendation.engine_name == self.type) \
             .filter(notflix.Product.id == db.Recommendation.recommended_product_id) \
             .order_by(db.Recommendation.score) \
@@ -85,21 +85,21 @@ class OnlineEngine(Engine):
         pass
 
     @abstractmethod
-    def predict(self, active_product):
+    def predict(self, context):
         pass
 
     @abstractmethod
     def train(self):
         pass
 
-    def recommend(self, active_product):
-        r = super(OnlineEngine, self).recommend(active_product)
+    def recommend(self, context):
+        r = super(OnlineEngine, self).recommend(context)
 
-        ids = self.predict(active_product)  # online prediction
+        ids = self.predict(context)  # online prediction
 
         recommendations = session.query(notflix.Product) \
             .filter(notflix.Product.id.in_(ids)) \
-            .filter(notflix.Product.id != active_product.id) \
+            .filter(notflix.Product.id != context.item.id) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         r.products = recommendations

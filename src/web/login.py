@@ -58,7 +58,7 @@ def signup():
                            password=hashed_password)
             db.insert(user, db.DB_HOST)
 
-            return redirect(url_for('you.taste'))
+            return redirect(url_for('login.signin'))
 
     return render_template("login/signup.html")
 

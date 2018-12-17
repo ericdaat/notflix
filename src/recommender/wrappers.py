@@ -1,7 +1,7 @@
 class Context(object):
     def __init__(self, **kwargs):
-        self.item_id = kwargs.get("item_id")
-        self.user_id = kwargs.get("user_id")
+        self.item = kwargs.get("item")
+        self.user = kwargs.get("user")
         self.page_type = kwargs.get("page_type")
 
 
