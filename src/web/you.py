@@ -1,5 +1,8 @@
-from flask import Blueprint, render_template, abort
+import logging
 import requests
+from flask import Blueprint, render_template, abort, request, session
+from data import db
+from data.db import notflix
 
 
 bp = Blueprint('you', __name__)
@@ -20,3 +23,26 @@ def index():
 
     return render_template('you/index.html',
                            recommendations=recommendations)
+
+
+@bp.route("/you/taste", methods=("GET", "POST"))
+def taste():
+    if request.method == "POST":
+        form_data = request.form.to_dict(flat=False)
+        user_genres = form_data["genre"]
+
+        db.session.query(db.User)\
+                  .filter(db.User.username == session["username"])\
+                  .update({"favorite_genres": map(int, user_genres)})
+
+        db.session.commit()
+
+    genres = db.session.query(notflix.Genre).all()
+    user_genres = db.session.query(db.User.favorite_genres)\
+                            .filter(db.User.username == session["username"])\
+                            .one()[0]
+
+    return render_template("you/taste.html",
+                           genres=genres,
+                           user_genres=user_genres)
+

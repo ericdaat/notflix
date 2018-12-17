@@ -58,7 +58,7 @@ def signup():
                            password=hashed_password)
             db.insert(user, db.DB_HOST)
 
-            return redirect(url_for('login.signin'))
+            return redirect(url_for('you.taste'))
 
     return render_template("login/signup.html")
 
@@ -68,10 +68,3 @@ def signout():
     session.pop("username")
 
     return redirect(url_for('home.index'))
-
-
-@bp.route("/taste", methods=("GET",))
-def taste():
-    genres = db.session.query(notflix.Genre).all()
-    return render_template("login/taste.html", genres=genres)
-

@@ -1,9 +1,9 @@
 from abc import ABC, abstractmethod
 import logging
 
-import data.db
 from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
+from data import db
 from data.db import session, notflix
 
 
@@ -58,10 +58,10 @@ class OfflineEngine(QueryBasedEngine):
 
     def compute_query(self, session, active_product):
         recommendations = session.query(notflix.Product) \
-            .filter(data.db.Recommendation.source_product_id == active_product.id) \
-            .filter(data.db.Recommendation.engine_name == self.type) \
-            .filter(notflix.Product.id == data.db.Recommendation.recommended_product_id) \
-            .order_by(data.db.Recommendation.score) \
+            .filter(db.Recommendation.source_product_id == active_product.id) \
+            .filter(db.Recommendation.engine_name == self.type) \
+            .filter(notflix.Product.id == db.Recommendation.recommended_product_id) \
+            .order_by(db.Recommendation.score) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations

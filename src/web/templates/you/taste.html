@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %} - Your likings{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-lg-8">
+    <h1>Help us know you better</h1>
+    <p>Please tell us which genres you like the most</p>
+    </div>
+</div>
+
+<div class="row justify-content-md-center">
+    <form action="{{ url_for('you.taste') }}" method="post">
+        {% for genre in genres %}
+            {% if genre.name != "N/A"%}
+                <div class="checkbox">
+                    <label>
+                        <input value="{{ genre.id }}"
+                               id="genre-{{ genre.id }}"
+                               type="checkbox"
+                               name="genre"
+                               {% if genre.id in user_genres %} checked {% endif %}
+                        > {{ genre.name }}
+                    </label>
+                </div>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary">Save</button>
+    </form>
+</div>
+
+{% endblock %}

@@ -6,6 +6,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from sqlalchemy_utils import database_exists, create_database
 
+
 DB_HOST = "postgresql://{user}:{password}@{host}/{db}".format(
     user=os.environ.get("POSTGRES_USER"),
     password=os.environ.get("POSTGRES_PASSWORD"),
@@ -77,3 +78,5 @@ class User(Base):
     email = Column(String(255), nullable=False, unique=True)
     username = Column(String(255), nullable=False, unique=True)
     password = Column(Binary(60), nullable=False)
+
+    favorite_genres = Column(ARRAY(Integer))
