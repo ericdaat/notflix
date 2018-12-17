@@ -7,6 +7,15 @@ class Tracker(object):
         self.cache = Cache()
 
     def store_item_viewed(self, key, item):
+        """ Store item viewed in cache
+
+        Args:
+            key (str): cache key
+            item (str): value
+
+        Returns:
+
+        """
         logging.debug("tracking {item} viewed for key {key}".format(key=key, item=item))
         return self.cache.append(key, item)
 

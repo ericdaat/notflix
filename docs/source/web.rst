@@ -1,6 +1,11 @@
 web package
 ===========
 
+.. automodule:: web
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -61,10 +66,3 @@ web.you module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: web
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -1,6 +1,11 @@
 data package
 ============
 
+.. automodule:: data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
@@ -30,10 +35,3 @@ data.downloader module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: data
-    :members:
-    :undoc-members:
-    :show-inheritance:

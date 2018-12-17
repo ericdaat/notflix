@@ -1,5 +1,5 @@
 import importlib
-from sqlalchemy.orm.exc import NoResultFound
+import sqlalchemy
 import logging
 
 import data.db
@@ -12,7 +12,6 @@ class Recommender(object):
     """
     def __init__(self):
         """ Recommender constructor.
-        Instantiates all the active engines.
         """
         setup_logging(log_dir="recommender",
                       config_path='recommender/logging.yml')
@@ -27,9 +26,12 @@ class Recommender(object):
 
     def recommend(self, context):
         """ Make recommendations
-        :param templates.Context context:
-        :return: List of recommendations
-        :rtype: list(dict)
+
+        Args:
+            context (recommender.wrappers.Context): the context
+
+        Returns:
+            list(dict): List of recommendations as dictionaries
         """
         recommendation_list = []
 
@@ -39,7 +41,7 @@ class Recommender(object):
                 active_engines = session.query(data.db.Page.engines) \
                                         .filter(data.db.Page.name == context.page_type) \
                                         .one()[0]
-            except NoResultFound:
+            except sqlalchemy.orm.exc.NoResultFound:
                 pass
 
         logging.debug("active engines: {0}".format(active_engines))

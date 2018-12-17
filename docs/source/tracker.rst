@@ -1,6 +1,11 @@
 tracker package
 ===============
 
+.. automodule:: tracker
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -13,10 +18,3 @@ tracker.tracker module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: tracker
-    :members:
-    :undoc-members:
-    :show-inheritance:

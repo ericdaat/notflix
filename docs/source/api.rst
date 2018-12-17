@@ -1,6 +1,11 @@
 api package
 ===========
 
+.. automodule:: api
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -21,10 +26,3 @@ api.recommend module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: api
-    :members:
-    :undoc-members:
-    :show-inheritance:

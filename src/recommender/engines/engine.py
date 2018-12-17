@@ -8,12 +8,23 @@ from data.db import session, notflix
 
 
 class Engine(ABC):
+    """ Abstract class for all engines.
+    """
     def __init__(self):
         self.type = type(self).__name__
         logging.debug("Creating instance of {0}".format(self.type))
 
     @abstractmethod
     def recommend(self, context):
+        """ Abstract method for all engines for recommending items.
+
+        Args:
+            context (recommender.wrappers.Context): the context
+
+        Returns:
+            recommender.wrappers.Recommendations: the recommendation object
+
+        """
         r = Recommendations()
         r.type = self.type
 
@@ -33,20 +44,38 @@ class Engine(ABC):
 
 
 class QueryBasedEngine(Engine):
+    """ Abstract class for an engine based on a SQL query
+    """
     def __init__(self):
         super(QueryBasedEngine, self).__init__()
 
     @abstractmethod
     def compute_query(self, session, context):
+        """ Abstract method that computes the SQL query using SQLAlchemy
+
+        Args:
+            session: SQL Alchemy Session
+            context (recommender.wrappers.Context): context
+
+        Returns:
+            query result
+
+        """
         pass
 
     def recommend(self, context):
+        """ Method for recommending items, by calling `self.compute_query`.
+
+        Args:
+            context (recommender.wrappers.Context): context
+
+        Returns:
+            list(dict): recommendations as list of dict
+
+        """
         r = super(QueryBasedEngine, self).recommend(context)
-
         recommendations = self.compute_query(session, context)
-
         r.products = recommendations
-
         logging.debug(r.to_string())
 
         return r.to_dict()

@@ -1,6 +1,11 @@
 utils package
 =============
 
+.. automodule:: utils
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -13,10 +18,3 @@ utils.logging module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: utils
-    :members:
-    :undoc-members:
-    :show-inheritance:

@@ -9,10 +9,14 @@ class Cache(object):
 
     def get(self, key, start=None, end=None):
         """ Get an object from cache by its key
-        :param str key: cache key
-        :param int n: when querying a redis list, how many items we want
-        :return: cached object
-        :rtype: str
+
+        Args:
+            key (str): cache key
+            start (int): when querying a redis list, starting range of the list.
+            end (int): when querying a redis list, ending range of the list.
+
+        Returns:
+            str: cached object
         """
 
         if not (start is None or end is None):
@@ -24,16 +28,18 @@ class Cache(object):
 
     def set(self, key, value):
         """ Set an object in cache by its key
-        :param str key: cache key
-        :param str value: object to store in cache
-        :return: None
+
+        Args:
+            key (str): cache key
+            value (str): object to store in cache
         """
         return self.redis_cache.set(key, value, ex=self.ex)
 
     def append(self, key, value):
         """ Append to a redis list
-        :param str key: cache key
-        :param list value: object to store in cache
-        :return: None
+
+        Args:
+            key (str): cache key
+            value (str): object to store in cache
         """
         return self.redis_cache.lpush(key, value)

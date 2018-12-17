@@ -1,6 +1,11 @@
 recommender package
 ===================
 
+.. automodule:: recommender
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Subpackages
 -----------
 
@@ -28,10 +33,3 @@ recommender.wrappers module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: recommender
-    :members:
-    :undoc-members:
-    :show-inheritance:

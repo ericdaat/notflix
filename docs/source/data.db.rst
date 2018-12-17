@@ -1,6 +1,11 @@
 data.db package
 ===============
 
+.. automodule:: data.db
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -13,10 +18,3 @@ data.db.notflix module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: data.db
-    :members:
-    :undoc-members:
-    :show-inheritance:

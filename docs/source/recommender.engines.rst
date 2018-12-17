@@ -1,6 +1,11 @@
 recommender.engines package
 ===========================
 
+.. automodule:: recommender.engines
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 Submodules
 ----------
 
@@ -37,10 +42,3 @@ recommender.engines.generic module
     :show-inheritance:
 
 
-Module contents
----------------
-
-.. automodule:: recommender.engines
-    :members:
-    :undoc-members:
-    :show-inheritance:
