@@ -21,7 +21,7 @@
                                id="genre-{{ genre.id }}"
                                type="checkbox"
                                name="genre"
-                               {% if genre.id in user_genres %} checked {% endif %}
+                               {% if user_genres and genre.id in user_genres %} checked {% endif %}
                         > {{ genre.name }}
                     </label>
                 </div>

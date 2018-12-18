@@ -5,9 +5,11 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
 import data.db
+import data.db.common
 from recommender.engines.engine import QueryBasedEngine, OfflineEngine
 from config import MAX_RECOMMENDATIONS
-from data.db import insert, notflix
+from data.db import notflix
+from data.db.utils import insert
 
 
 class SameGenres(QueryBasedEngine):
@@ -16,7 +18,7 @@ class SameGenres(QueryBasedEngine):
 
     def compute_query(self, session, context):
         recommendations = session.query(notflix.Product)\
-                           .filter(notflix.Product.genres == context.item.genres)\
+                           .filter(notflix.Product.genres.contains([g[0] for g in context.item.genres]))\
                            .filter(notflix.Product.id != context.item.id)\
                            .limit(MAX_RECOMMENDATIONS).all()
 
@@ -70,7 +72,7 @@ class TfidfGenres(OfflineEngine):
                                 quoting=csv.QUOTE_MINIMAL)
 
             for line in reader:
-                r = data.db.Recommendation(**{"engine_name": "TfidfGenres",
+                r = data.db.common.Recommendation(**{"engine_name": "TfidfGenres",
                                               "source_product_id": line[0],
                                               "recommended_product_id": line[1],
                                               "score": line[2]})

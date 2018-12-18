@@ -9,7 +9,12 @@ class TopRated(QueryBasedEngine):
         super(TopRated, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(notflix.Product) \
+        recommendations = session.query(notflix.Product)
+
+        if context.user:  # TODO: add a filter on genre(s)
+            pass
+
+        recommendations = recommendations\
             .order_by(notflix.Product.rating.desc().nullslast()) \
             .limit(MAX_RECOMMENDATIONS).all()
 
@@ -34,7 +39,7 @@ class UserHistory(QueryBasedEngine):
 
     def compute_query(self, session, context):
         tracker = Tracker()
-        views_history = tracker.get_views_history(key="history:foo")
+        views_history = tracker.get_views_history(key="history:foo")  # TODO: add real user_id
 
         recommendations = session.query(notflix.Product)\
                                  .filter(notflix.Product.id.in_(views_history))\

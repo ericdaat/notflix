@@ -11,11 +11,14 @@ def index():
     return render_template('genres/genres.html', genres=genres)
 
 
-@bp.route('/genres/<genre>', methods=('GET',))
+@bp.route('/genres/<int:genre>', methods=('GET',))
 def genre(genre):
     products = session.query(notflix.Product)\
-                      .filter(notflix.Product.genres.ilike("%{0}%".format(genre)))\
+                      .filter(notflix.Product.genres.contains([genre]))\
                       .limit(50)\
                       .all()
+    genre = session.query(notflix.Genre.id, notflix.Genre.name) \
+                   .filter(notflix.Genre.id == genre) \
+                   .one()
 
-    return render_template('genres/genre.html', products=products)
+    return render_template('genres/genre.html', products=products, genre=genre)

@@ -1,8 +1,9 @@
 import sqlalchemy
 from flask import Blueprint, current_app, abort, jsonify, request, session
+
+import data.db.common
 from recommender.wrappers import Context
 from data import db
-import logging
 
 
 bp = Blueprint("recommend", __name__)
@@ -14,6 +15,10 @@ def product(product_id):
         active_product = db.session.query(db.notflix.Product)\
                                    .filter(db.notflix.Product.id == product_id)\
                                    .one()
+        genre_names = db.session.query(db.notflix.Genre.id, db.notflix.Genre.name)\
+                                .filter(db.notflix.Genre.id.in_(active_product.genres))\
+                                .all()
+        active_product.genres = genre_names
     except sqlalchemy.orm.exc.NoResultFound:
         abort(404)
 
@@ -35,7 +40,7 @@ def user(user_id):
     c = Context(**{"page_type": request.args.get("page_type")})
 
     try:
-        user = db.session.query(db.User).filter(db.User.username == user_id).one()
+        user = db.session.query(data.db.common.User).filter(data.db.common.User.username == user_id).one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
 

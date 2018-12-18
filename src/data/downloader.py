@@ -8,7 +8,8 @@ from datetime import datetime
 from collections import defaultdict
 from abc import abstractmethod, ABC
 
-from data.db import notflix, insert, DB_HOST
+from data.db import notflix, DB_HOST
+from data.db.utils import insert
 
 
 class Downloader(ABC):
@@ -89,7 +90,7 @@ class OMDBDownloader(Downloader):
                 d = {"id": movie["id"],
                      "image": movie["Poster"],
                      "name": movie["Title"],
-                     "genres": movie["Genre"],
+                     "genres": [genre_dict[name] for name in genres_array],
                      "description": movie["Plot"],
                      "year": datetime.strptime(movie["Released"], "%d %b %Y") if movie["Released"] != "N/A" else None,
                      "rating": movie["imdbRating"] if movie["imdbRating"] != "N/A" else None,

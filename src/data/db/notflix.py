@@ -1,15 +1,14 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, DateTime, String, Date, Float
+from sqlalchemy.dialects import postgresql
 from data.db import Base
 
 
 class Engine(Base):
     __tablename__ = "engines"
     id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, nullable=False,
-                        default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     type = Column(String(20), nullable=False)
     display_name = Column(String(50), nullable=False)
     priority = Column(Integer, nullable=False)
@@ -19,10 +18,9 @@ class Product(Base):
     __tablename__ = "products"
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     name = Column(String(256), nullable=False)
-    genres = Column(String(256), nullable=True)
+    genres = Column(postgresql.ARRAY(Integer), nullable=True)
     image = Column(String(256), nullable=True)
     description = Column(String(512), nullable=True)
     year = Column(Date, nullable=True)
@@ -42,8 +40,7 @@ class Genre(Base):
     __tablename__ = "genres"
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow,
-                        onupdate=datetime.utcnow)
+    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     name = Column(String(56), nullable=False, unique=True)
 
 

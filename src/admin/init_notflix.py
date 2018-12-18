@@ -1,5 +1,7 @@
 import os
-from data.db import DB_HOST, init, insert, notflix, Page
+from data.db import DB_HOST, notflix
+from data.db.common import Page
+from data.db.utils import init, insert
 from data.downloader import OMDBDownloader
 
 
@@ -25,7 +27,7 @@ if __name__ == "__main__":
         notflix.Engine(**{"type": "SameGenres", "display_name": "Similar to {0}", "priority": 1}),
         notflix.Engine(**{"type": "TopRated", "display_name": "Top rated movies", "priority": 1}),
         notflix.Engine(**{"type": "MostRecent", "display_name": "Recent movies", "priority": 2}),
-        notflix.Engine(**{"type": "UserHistory", "display_name": "Your movies", "priority": 2})
+        notflix.Engine(**{"type": "UserHistory", "display_name": "Your browsing history", "priority": 2})
     ],
         db_host=DB_HOST
     )

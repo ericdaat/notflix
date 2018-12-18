@@ -16,7 +16,7 @@ class Tracker(object):
         Returns:
 
         """
-        logging.debug("tracking {item} viewed for key {key}".format(key=key, item=item))
+        logging.debug("tracking item {item} viewed for key {key}".format(key=key, item=item))
         return self.cache.append(key, item)
 
     def get_views_history(self, key, n=-1):

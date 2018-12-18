@@ -1,6 +1,8 @@
 import logging
 import requests
 from flask import Blueprint, render_template, abort, request, session
+
+import data.db.common
 from data import db
 from data.db import notflix
 
@@ -31,15 +33,15 @@ def taste():
         form_data = request.form.to_dict(flat=False)
         user_genres = form_data["genre"]
 
-        db.session.query(db.User)\
-                  .filter(db.User.username == session["username"])\
+        db.session.query(data.db.common.User)\
+                  .filter(data.db.common.User.username == session["username"])\
                   .update({"favorite_genres": map(int, user_genres)})
 
         db.session.commit()
 
     genres = db.session.query(notflix.Genre).all()
-    user_genres = db.session.query(db.User.favorite_genres)\
-                            .filter(db.User.username == session["username"])\
+    user_genres = db.session.query(data.db.common.User.favorite_genres)\
+                            .filter(data.db.common.User.username == session["username"])\
                             .one()[0]
 
     return render_template("you/taste.html",

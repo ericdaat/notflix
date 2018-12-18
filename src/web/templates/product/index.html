@@ -25,8 +25,8 @@
             <tr>
               <th scope="row">Genres</th>
               <td>
-                  {% for genre in active_product.genres.split(',') %}
-                  <span class="badge badge-dark">{{ genre }}</span>
+                  {% for genre_id, genre_name in active_product.genres %}
+                  <span class="badge badge-dark">{{ genre_name }}</span>
                   {% endfor %}
               </td>
             </tr>
