@@ -7,7 +7,12 @@
 <div class="row mt-5">
     <div class="col-sm">
         <h2>Recommended for You</h2>
-        <p>These recommendations are curated especially for you !</p>
+        <p>These recommendations are curated especially for you !
+
+        {% if session["username"] %}
+        You can tell us more about your taste <a href="{{ url_for('you.taste') }}">here</a>.
+        {% endif %}
+        </p>
     </div>
 </div>
 
