@@ -87,7 +87,7 @@ class TopRated(QueryBasedEngine):
     def compute_query(self, session, context):
         recommendations = session.query(notflix.Product)
 
-        if context.user:
+        if context.user and context.user.favorite_genres:
             recommendations = recommendations.filter(notflix.Product.genres.contains(context.user.favorite_genres))
 
         recommendations = recommendations \
@@ -104,7 +104,7 @@ class MostRecent(QueryBasedEngine):
     def compute_query(self, session, context):
         recommendations = session.query(notflix.Product)
 
-        if context.user:
+        if context.user and context.user.favorite_genres:
             recommendations = recommendations.filter(notflix.Product.genres.contains(context.user.favorite_genres))
 
         recommendations = recommendations.order_by(notflix.Product.year.desc().nullslast()) \
