@@ -1,4 +1,6 @@
 #!make
+SHELL=/bin/bash
+
 include db-credentials.env
 export $(shell sed 's/=.*//' db-credentials.env)
 
