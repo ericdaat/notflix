@@ -76,3 +76,36 @@ class TfidfGenres(OfflineEngine):
                 recommendations.append(r)
 
             utils.insert(recommendations, db_host=DB_HOST)
+
+
+class TopRated(QueryBasedEngine):
+    def __init__(self):
+        super(TopRated, self).__init__()
+
+    def compute_query(self, session, context):
+        recommendations = session.query(notflix.Product)
+
+        if context.user:
+            recommendations = recommendations.filter(notflix.Product.genres.contains(context.user.favorite_genres))
+
+        recommendations = recommendations \
+            .order_by(notflix.Product.rating.desc().nullslast()) \
+            .limit(MAX_RECOMMENDATIONS).all()
+
+        return recommendations
+
+
+class MostRecent(QueryBasedEngine):
+    def __init__(self):
+        super(MostRecent, self).__init__()
+
+    def compute_query(self, session, context):
+        recommendations = session.query(notflix.Product)
+
+        if context.user:
+            recommendations = recommendations.filter(notflix.Product.genres.contains(context.user.favorite_genres))
+
+        recommendations = recommendations.order_by(notflix.Product.year.desc().nullslast()) \
+                                         .limit(MAX_RECOMMENDATIONS).all()
+
+        return recommendations
