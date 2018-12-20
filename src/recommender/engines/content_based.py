@@ -68,14 +68,16 @@ class TfidfGenres(OfflineEngine):
                                 delimiter=',',
                                 quoting=csv.QUOTE_MINIMAL)
 
-            for line in reader:
+            for i, line in enumerate(reader):
                 r = common.Recommendation(**{"engine_name": "TfidfGenres",
                                              "source_product_id": line[0],
                                              "recommended_product_id": line[1],
                                              "score": line[2]})
                 recommendations.append(r)
 
-            utils.insert(recommendations, db_host=DB_HOST)
+                if i % 10000 == 0:
+                    utils.insert(recommendations, db_host=DB_HOST)
+                    del recommendations[:]
 
 
 class TopRated(QueryBasedEngine):
