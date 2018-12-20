@@ -28,12 +28,6 @@
                 <p> {{ p.description }}</p>
                 <p> Actors: {{ p.actors }}</p>
                 <p> Rating: {{p.rating}} <i class="fa fa-star"></i></p>
-                <p>
-                    Genres:
-                    {% for genre in p.genres.split(',') %}
-                    <span class="badge badge-dark">{{ genre }}</span>
-                    {% endfor %}
-                </p>
             </td>
         </tr>
         {% endfor %}

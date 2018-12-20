@@ -25,8 +25,7 @@ if __name__ == "__main__":
 
     # insert engines
     insert([
-        notflix.Engine(**{"type": "SameGenres", "display_name": "Similar to {0}", "priority": 1}),
-        notflix.Engine(**{"type": "TfidfGenres", "display_name": "You might also like", "priority": 2}),
+        notflix.Engine(**{"type": "TfidfGenres", "display_name": "Similar to {0}", "priority": 1}),
         notflix.Engine(**{"type": "TopRated", "display_name": "Top rated movies", "priority": 1}),
         notflix.Engine(**{"type": "MostRecent", "display_name": "Recent movies", "priority": 2}),
         notflix.Engine(**{"type": "UserHistory", "display_name": "Your browsing history", "priority": 2})
@@ -37,11 +36,11 @@ if __name__ == "__main__":
     # insert pages
     insert([
         Page(**{"name": "home", "engines": ["TopRated", "MostRecent"]}),
-        Page(**{"name": "product", "engines": ["SameGenres", "TfidfGenres"]}),
+        Page(**{"name": "product", "engines": ["TfidfGenres"]}),
         Page(**{"name": "you", "engines": ["UserHistory"]}),
     ],
         db_host=DB_HOST
     )
 
-    # upload trained engines
+    # train & upload engines
     engines.TfidfGenres().upload()
