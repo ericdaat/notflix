@@ -17,8 +17,8 @@
      <form action="{{ url_for('login.signup') }}" method="post">
        <div class="form-row">
          <div class="form-group col-md-6">
-           <label for="inputEmail">Email</label>
-           <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email">
+           <label for="inputUsername">Username</label>
+           <input name="username" class="form-control" id="inputUsername" placeholder="Username">
          </div>
          <div class="form-group col-md-6">
            <label for="inputPassword4">Password</label>
@@ -27,8 +27,8 @@
        </div>
        <div class="form-row">
          <div class="form-group col-md-6">
-           <label for="inputUsername">Username</label>
-           <input name="username" class="form-control" id="inputUsername" placeholder="username">
+           <label for="inputEmail">Email</label>
+           <input type="email" name="email" class="form-control" id="inputEmail" placeholder="Email">
          </div>
        </div>
        {% if countries %}

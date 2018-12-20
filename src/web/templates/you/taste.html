@@ -12,21 +12,24 @@
 </div>
 
 <div class="row justify-content-md-center">
-    <form action="{{ url_for('you.taste') }}" method="post">
+    <form class="form-check-inline w-100" action="{{ url_for('you.taste') }}" method="post">
         {% for genre in genres %}
             {% if genre.name != "N/A"%}
-                <div class="checkbox">
-                    <label>
-                        <input value="{{ genre.id }}"
-                               id="genre-{{ genre.id }}"
-                               type="checkbox"
-                               name="genre"
-                               {% if user_genres and genre.id in user_genres %} checked {% endif %}
-                        > {{ genre.name }}
-                    </label>
-                </div>
+                {% if loop.first %}<div class="col">{% endif %}
+                    <div class="checkbox">
+                        <label>
+                            <input value="{{ genre.id }}"
+                                   id="genre-{{ genre.id }}"
+                                   type="checkbox"
+                                   name="genre"
+                                   {% if user_genres and genre.id in user_genres %} checked {% endif %}
+                            > {{ genre.name }}
+                        </label>
+                    </div>
+            {% if loop.index % 6 == 0 %}</div><div class="col">{% endif %}
             {% endif %}
         {% endfor %}
+        </div>
         <button type="submit" class="btn btn-primary">Save</button>
     </form>
 </div>
