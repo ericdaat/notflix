@@ -1,3 +1,4 @@
+import logging
 from .engine import QueryBasedEngine
 from data.db import notflix
 from config import MAX_RECOMMENDATIONS
@@ -11,8 +12,8 @@ class TopRated(QueryBasedEngine):
     def compute_query(self, session, context):
         recommendations = session.query(notflix.Product)
 
-        if context.user:  # TODO: add a filter on genre(s)
-            pass
+        if context.user:
+            recommendations = recommendations.filter(notflix.Product.genres.contains(context.user.favorite_genres))
 
         recommendations = recommendations \
             .order_by(notflix.Product.rating.desc().nullslast()) \
@@ -26,9 +27,13 @@ class MostRecent(QueryBasedEngine):
         super(MostRecent, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(notflix.Product) \
-            .order_by(notflix.Product.year.desc().nullslast()) \
-            .limit(MAX_RECOMMENDATIONS).all()
+        recommendations = session.query(notflix.Product)
+
+        if context.user:
+            recommendations = recommendations.filter(notflix.Product.genres.contains(context.user.favorite_genres))
+
+        recommendations = recommendations.order_by(notflix.Product.year.desc().nullslast()) \
+                                         .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
 
@@ -39,11 +44,14 @@ class UserHistory(QueryBasedEngine):
 
     def compute_query(self, session, context):
         tracker = Tracker()
-        views_history = tracker.get_views_history(key="history:foo")  # TODO: add real user_id
+        if context.user:
+            views_history = tracker.get_views_history(key="history:{0}".format(context.user.username))
 
-        recommendations = session.query(notflix.Product) \
-                                 .filter(notflix.Product.id.in_(views_history)) \
-                                 .limit(MAX_RECOMMENDATIONS) \
-                                 .all()
+            recommendations = session.query(notflix.Product) \
+                .filter(notflix.Product.id.in_(views_history)) \
+                .limit(MAX_RECOMMENDATIONS) \
+                .all()
+        else:
+            recommendations = []
 
         return recommendations

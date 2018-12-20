@@ -1,12 +1,14 @@
 import requests
-from flask import Blueprint, render_template, abort
+from flask import Blueprint, render_template, abort, session
 
 bp = Blueprint('home', __name__)
 
 
 @bp.route('/')
 def index():
-    res = requests.get(url="http://api:5000/recommend/generic",
+    user_id = session.get("username")
+
+    res = requests.get(url="http://api:5000/recommend/user/{user_id}".format(user_id=user_id),
                        params={"page_type": "home"})
 
     if res.status_code != 200:
