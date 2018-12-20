@@ -4,7 +4,6 @@ import logging
 import data.db.common
 from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
-from data import db
 from data.db import session, notflix
 
 
@@ -92,7 +91,8 @@ class OfflineEngine(QueryBasedEngine):
             .filter(data.db.common.Recommendation.engine_name == self.type) \
             .filter(notflix.Product.id == data.db.common.Recommendation.recommended_product_id) \
             .order_by(data.db.common.Recommendation.score) \
-            .limit(MAX_RECOMMENDATIONS).all()
+            .limit(MAX_RECOMMENDATIONS) \
+            .all()
 
         return recommendations
 
@@ -137,7 +137,3 @@ class OnlineEngine(Engine):
         logging.debug(r.to_string())
 
         return r.to_dict()
-
-
-
-

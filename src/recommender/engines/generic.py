@@ -14,7 +14,7 @@ class TopRated(QueryBasedEngine):
         if context.user:  # TODO: add a filter on genre(s)
             pass
 
-        recommendations = recommendations\
+        recommendations = recommendations \
             .order_by(notflix.Product.rating.desc().nullslast()) \
             .limit(MAX_RECOMMENDATIONS).all()
 
@@ -41,9 +41,9 @@ class UserHistory(QueryBasedEngine):
         tracker = Tracker()
         views_history = tracker.get_views_history(key="history:foo")  # TODO: add real user_id
 
-        recommendations = session.query(notflix.Product)\
-                                 .filter(notflix.Product.id.in_(views_history))\
-                                 .limit(MAX_RECOMMENDATIONS)\
+        recommendations = session.query(notflix.Product) \
+                                 .filter(notflix.Product.id.in_(views_history)) \
+                                 .limit(MAX_RECOMMENDATIONS) \
                                  .all()
 
         return recommendations

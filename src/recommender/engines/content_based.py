@@ -4,12 +4,9 @@ import logging
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import linear_kernel
 
-import data.db
-import data.db.common
 from recommender.engines.engine import QueryBasedEngine, OfflineEngine
 from config import MAX_RECOMMENDATIONS
-from data.db import notflix
-from data.db.utils import insert
+from data.db import notflix, common, utils, DB_HOST
 
 
 class SameGenres(QueryBasedEngine):
@@ -19,7 +16,7 @@ class SameGenres(QueryBasedEngine):
     def compute_query(self, session, context):
         recommendations = session.query(notflix.Product)\
                            .filter(notflix.Product.genres.contains([g[0] for g in context.item.genres]))\
-                           .filter(notflix.Product.id != context.item.id)\
+                           .filter(notflix.Product.id != context.item.id) \
                            .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
@@ -30,7 +27,7 @@ class TfidfGenres(OfflineEngine):
         super(TfidfGenres, self).__init__()
 
     def train(self):
-        movies = pd.read_csv("../data/datasets/movielens/ml-20m/movies.csv")
+        movies = pd.read_csv("data/datasets/movielens/ml-20m/movies.csv")
 
         vec = TfidfVectorizer()
         tfidf_matrix = vec.fit_transform(movies["genres"])
@@ -57,7 +54,7 @@ class TfidfGenres(OfflineEngine):
                     continue
                 recommendations.append([index, r[0], r[1]])
 
-        with open("../data/ml/csv/TfidfGenres.csv", "w") as csv_file:
+        with open("data/ml/csv/TfidfGenres.csv", "w") as csv_file:
             writer = csv.writer(csv_file,
                                 delimiter=',',
                                 quoting=csv.QUOTE_MINIMAL)
@@ -65,21 +62,17 @@ class TfidfGenres(OfflineEngine):
             writer.writerows(recommendations)
 
     def upload(self):
-        with open("../data/ml/csv/TfidfGenres.csv", "r") as csv_file:
+        with open("data/ml/csv/TfidfGenres.csv", "r") as csv_file:
             recommendations = []
             reader = csv.reader(csv_file,
                                 delimiter=',',
                                 quoting=csv.QUOTE_MINIMAL)
 
             for line in reader:
-                r = data.db.common.Recommendation(**{"engine_name": "TfidfGenres",
-                                              "source_product_id": line[0],
-                                              "recommended_product_id": line[1],
-                                              "score": line[2]})
+                r = common.Recommendation(**{"engine_name": "TfidfGenres",
+                                             "source_product_id": line[0],
+                                             "recommended_product_id": line[1],
+                                             "score": line[2]})
                 recommendations.append(r)
 
-            insert(recommendations)
-
-
-
-
+            utils.insert(recommendations, db_host=DB_HOST)
