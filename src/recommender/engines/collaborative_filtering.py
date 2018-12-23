@@ -14,8 +14,3 @@ class Word2Vec(OnlineEngine):
         ids = [r[0] for r in recommendations]
 
         return ids
-
-
-class CosineMovies(OfflineEngine):
-    def __init__(self):
-        super(CosineMovies, self).__init__()

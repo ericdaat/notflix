@@ -1,9 +1,8 @@
 import sqlalchemy
 from flask import Blueprint, current_app, abort, jsonify, request
 
-import data.db.common
 from recommender.wrappers import Context
-from data import db
+from data.db import common, notflix, session
 
 
 bp = Blueprint("recommend", __name__)
@@ -12,12 +11,12 @@ bp = Blueprint("recommend", __name__)
 @bp.route("/recommend/product/<int:product_id>", methods=("GET",))
 def product(product_id):
     try:
-        active_product = db.session.query(db.notflix.Product)\
-                                   .filter(db.notflix.Product.id == product_id)\
-                                   .one()
-        genre_names = db.session.query(db.notflix.Genre.id, db.notflix.Genre.name)\
-                                .filter(db.notflix.Genre.id.in_(active_product.genres))\
-                                .all()
+        active_product = session.query(notflix.Product)\
+                                .filter(notflix.Product.id == product_id)\
+                                .one()
+        genre_names = session.query(notflix.Genre.id, notflix.Genre.name)\
+                             .filter(notflix.Genre.id.in_(active_product.genres))\
+                             .all()
         active_product.genres = genre_names
     except sqlalchemy.orm.exc.NoResultFound:
         abort(404)
@@ -26,9 +25,9 @@ def product(product_id):
     c = Context(**{"item": active_product, "page_type": request.args.get("page_type")})
 
     try:
-        user = db.session.query(data.db.common.User) \
-                 .filter(data.db.common.User.username == request.args.get("user_id")) \
-                 .one()
+        user = session.query(common.User) \
+                      .filter(common.User.username == request.args.get("user_id")) \
+                      .one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
 
@@ -49,7 +48,7 @@ def user(user_id):
     c = Context(**{"page_type": request.args.get("page_type")})
 
     try:
-        user = db.session.query(data.db.common.User).filter(data.db.common.User.username == user_id).one()
+        user = session.query(common.User).filter(common.User.username == user_id).one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
 

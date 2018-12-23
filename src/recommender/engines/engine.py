@@ -1,10 +1,9 @@
 from abc import ABC, abstractmethod
 import logging
 
-import data.db.common
 from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
-from data.db import session, notflix
+from data.db import session, notflix, common
 
 
 class Engine(ABC):

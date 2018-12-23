@@ -2,10 +2,8 @@ import importlib
 import sqlalchemy
 import logging
 
-import data.db
-import data.db.common
 from utils.logging import setup_logging
-from data.db import session, notflix
+from data.db import session, notflix, common
 
 
 class Recommender(object):
@@ -39,8 +37,8 @@ class Recommender(object):
         active_engines = []
         if context.page_type:
             try:
-                active_engines = session.query(data.db.common.Page.engines) \
-                                        .filter(data.db.common.Page.name == context.page_type) \
+                active_engines = session.query(common.Page.engines) \
+                                        .filter(common.Page.name == context.page_type) \
                                         .one()[0]
             except sqlalchemy.orm.exc.NoResultFound:
                 pass
