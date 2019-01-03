@@ -1,12 +1,8 @@
 import bcrypt
-import logging
 from sqlalchemy.orm.exc import NoResultFound
 from flask import Blueprint, render_template, request, session, redirect, url_for
 
-import data.db.common
-import data.db.utils
-from data import db
-from data.db import notflix
+from data.db import common, utils, session as db_session, DB_HOST
 
 
 bp = Blueprint("login", __name__)
@@ -15,8 +11,8 @@ bp = Blueprint("login", __name__)
 def valid_signin(username, password):
     is_valid = False
     try:
-        hashed_password = db.session.query(data.db.common.User.password)\
-                                    .filter(data.db.common.User.username == username)\
+        hashed_password = db_session.query(common.User.password)\
+                                    .filter(common.User.username == username)\
                                     .one()[0]
     except NoResultFound:
         return is_valid
@@ -50,16 +46,14 @@ def signin():
 @bp.route("/signup", methods=("GET", "POST"))
 def signup():
     if request.method == "POST":
-        email = request.form["email"]
         username = request.form["username"]
         password = request.form["password"]
 
         if valid_signup(username, password):
             hashed_password = bcrypt.hashpw(password.encode("utf8"), bcrypt.gensalt())
-            user = data.db.common.User(email=email,
-                                       username=username,
-                                       password=hashed_password)
-            data.db.utils.insert(user, db.DB_HOST)
+            user = common.User(username=username,
+                               password=hashed_password)
+            utils.insert(user, DB_HOST)
 
             return redirect(url_for('login.signin'))
 

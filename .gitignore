@@ -124,3 +124,6 @@ src/data/mount
 
 # credentials
 db-credentials.env
+
+# notebooks
+*.ipynb
