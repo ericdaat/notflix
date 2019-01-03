@@ -127,3 +127,6 @@ db-credentials.env
 
 # notebooks
 *.ipynb
+
+# ML models
+src/data/ml/bin
