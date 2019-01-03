@@ -30,7 +30,7 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    email = Column(String(255), nullable=False, unique=True)
+    email = Column(String(255), unique=True)
     username = Column(String(255), nullable=False, unique=True)
     password = Column(Binary(60), nullable=False)
 
