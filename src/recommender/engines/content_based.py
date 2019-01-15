@@ -37,7 +37,7 @@ class TfidfMultiInput(OfflineEngine):
                                 quoting=csv.QUOTE_MINIMAL)
 
             for i, line in enumerate(reader):
-                r = common.Recommendation(**{"engine_name": "TfidfMultiInput.csv",
+                r = common.Recommendation(**{"engine_name": "TfidfMultiInput",
                                              "source_product_id": line[0],
                                              "recommended_product_id": line[1],
                                              "score": line[2]})
