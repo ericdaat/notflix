@@ -89,7 +89,7 @@ class OfflineEngine(QueryBasedEngine):
             .filter(common.Recommendation.source_product_id == context.item.id) \
             .filter(common.Recommendation.engine_name == self.type) \
             .filter(notflix.Product.id == common.Recommendation.recommended_product_id) \
-            .order_by(common.Recommendation.score) \
+            .order_by(common.Recommendation.score.desc()) \
             .limit(MAX_RECOMMENDATIONS) \
             .all()
 
