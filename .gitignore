@@ -33,7 +33,6 @@ MANIFEST
 
 # Installer logs
 pip-log.txt
-pip-delete-this-directory.txt
 
 # Unit test / coverage reports
 htmlcov/
@@ -125,8 +124,6 @@ src/data/mount
 # credentials
 db-credentials.env
 
-# notebooks
-*.ipynb
 
 # ML models
 src/data/ml/bin

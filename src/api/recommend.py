@@ -1,4 +1,5 @@
 import sqlalchemy
+import logging
 from flask import Blueprint, current_app, abort, jsonify, request
 
 from recommender.wrappers import Context
