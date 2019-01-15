@@ -22,6 +22,32 @@ class SameGenres(QueryBasedEngine):
         return recommendations
 
 
+class TfidfMultiInput(OfflineEngine):
+    def __init__(self):
+        super(TfidfMultiInput, self).__init__()
+
+    def train(self):
+        pass
+
+    def upload(self):
+        with open("data/ml/csv/TfidfMultiInput.csv", "r") as csv_file:
+            recommendations = []
+            reader = csv.reader(csv_file,
+                                delimiter=',',
+                                quoting=csv.QUOTE_MINIMAL)
+
+            for i, line in enumerate(reader):
+                r = common.Recommendation(**{"engine_name": "TfidfMultiInput.csv",
+                                             "source_product_id": line[0],
+                                             "recommended_product_id": line[1],
+                                             "score": line[2]})
+                recommendations.append(r)
+
+                if i % 10000 == 0:
+                    utils.insert(recommendations, db_host=DB_HOST)
+                    del recommendations[:]
+
+
 class TfidfGenres(OfflineEngine):
     def __init__(self):
         super(TfidfGenres, self).__init__()
