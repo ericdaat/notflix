@@ -23,9 +23,9 @@ if __name__ == "__main__":
 
     # insert engines
     utils.insert([
-        notflix.Engine(**{"type": "TfidfMultiInput", "display_name": "Similar to {0}", "priority": 1}),
+        notflix.Engine(**{"type": "OneHotMultiInput", "display_name": "Similar to {0}", "priority": 1}),
         notflix.Engine(**{"type": "TopRated", "display_name": "Top rated movies", "priority": 1}),
-        notflix.Engine(**{"type": "MostRecent", "display_name": "Recent movies", "priority": 2}),
+        notflix.Engine(**{"type": "MostRecent", "display_name": "Uploaded recently", "priority": 2}),
         notflix.Engine(**{"type": "UserHistory", "display_name": "Your browsing history", "priority": 2})
     ],
         db_host=DB_HOST
@@ -34,11 +34,11 @@ if __name__ == "__main__":
     # insert pages
     utils.insert([
         common.Page(**{"name": "home", "engines": ["TopRated", "MostRecent"]}),
-        common.Page(**{"name": "product", "engines": ["TfidfMultiInput"]}),
+        common.Page(**{"name": "product", "engines": ["OneHotMultiInput"]}),
         common.Page(**{"name": "you", "engines": ["UserHistory"]}),
     ],
         db_host=DB_HOST
     )
 
     # train & upload engines
-    engines.TfidfMultiInput().upload()
+    engines.OneHotMultiInput().upload()

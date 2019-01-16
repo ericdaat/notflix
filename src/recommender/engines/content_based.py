@@ -6,7 +6,7 @@ from sklearn.metrics.pairwise import linear_kernel
 
 from recommender.engines.engine import QueryBasedEngine, OfflineEngine
 from config import MAX_RECOMMENDATIONS
-from data.db import notflix, common, utils, DB_HOST
+from data.db import notflix
 
 
 class SameGenres(QueryBasedEngine):
@@ -22,30 +22,12 @@ class SameGenres(QueryBasedEngine):
         return recommendations
 
 
-class TfidfMultiInput(OfflineEngine):
+class OneHotMultiInput(OfflineEngine):
     def __init__(self):
-        super(TfidfMultiInput, self).__init__()
+        super(OneHotMultiInput, self).__init__()
 
     def train(self):
         pass
-
-    def upload(self):
-        with open("data/ml/csv/TfidfMultiInput.csv", "r") as csv_file:
-            recommendations = []
-            reader = csv.reader(csv_file,
-                                delimiter=',',
-                                quoting=csv.QUOTE_MINIMAL)
-
-            for i, line in enumerate(reader):
-                r = common.Recommendation(**{"engine_name": "TfidfMultiInput",
-                                             "source_product_id": line[0],
-                                             "recommended_product_id": line[1],
-                                             "score": line[2]})
-                recommendations.append(r)
-
-                if i % 10000 == 0:
-                    utils.insert(recommendations, db_host=DB_HOST)
-                    del recommendations[:]
 
 
 class TfidfGenres(OfflineEngine):
@@ -86,24 +68,6 @@ class TfidfGenres(OfflineEngine):
                                 quoting=csv.QUOTE_MINIMAL)
 
             writer.writerows(recommendations)
-
-    def upload(self):
-        with open("data/ml/csv/TfidfGenres.csv", "r") as csv_file:
-            recommendations = []
-            reader = csv.reader(csv_file,
-                                delimiter=',',
-                                quoting=csv.QUOTE_MINIMAL)
-
-            for i, line in enumerate(reader):
-                r = common.Recommendation(**{"engine_name": "TfidfGenres",
-                                             "source_product_id": line[0],
-                                             "recommended_product_id": line[1],
-                                             "score": line[2]})
-                recommendations.append(r)
-
-                if i % 10000 == 0:
-                    utils.insert(recommendations, db_host=DB_HOST)
-                    del recommendations[:]
 
 
 class TopRated(QueryBasedEngine):

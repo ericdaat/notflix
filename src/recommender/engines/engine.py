@@ -1,9 +1,10 @@
 from abc import ABC, abstractmethod
 import logging
+import csv
 
 from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
-from data.db import session, notflix, common
+from data.db import session, notflix, common, utils, DB_HOST
 
 
 class Engine(ABC):
@@ -99,9 +100,23 @@ class OfflineEngine(QueryBasedEngine):
     def train(self):
         pass
 
-    @abstractmethod
     def upload(self):
-        pass
+        with open("data/ml/csv/{0}.csv".format(self.type), "r") as csv_file:
+            recommendations = []
+            reader = csv.reader(csv_file,
+                                delimiter=',',
+                                quoting=csv.QUOTE_MINIMAL)
+
+            for i, line in enumerate(reader):
+                r = common.Recommendation(**{"engine_name": self.type,
+                                             "source_product_id": line[0],
+                                             "recommended_product_id": line[1],
+                                             "score": line[2]})
+                recommendations.append(r)
+
+                if i % 10000 == 0:  # batch insert
+                    utils.insert(recommendations, db_host=DB_HOST)
+                    del recommendations[:]
 
 
 class OnlineEngine(Engine):
