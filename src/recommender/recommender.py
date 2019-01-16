@@ -50,7 +50,7 @@ class Recommender(object):
                 continue
 
             recommendations = e.recommend(context)
-            if len(recommendations["products"]) > 0:
+            if isinstance(recommendations, dict) and len(recommendations["products"]) > 0:
                 recommendation_list.append(recommendations)
 
         return recommendation_list
