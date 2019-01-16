@@ -5,7 +5,7 @@ class Context(object):
         self.item = kwargs.get("item")
         self.user = kwargs.get("user")
         self.page_type = kwargs.get("page_type")
-        self.genre = kwargs.get("genre")
+        self.history = kwargs.get("history")
 
 
 class Recommendations(object):

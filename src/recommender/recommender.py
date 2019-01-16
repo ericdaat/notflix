@@ -15,15 +15,15 @@ class Recommender(object):
         setup_logging(log_dir="recommender",
                       config_path='recommender/logging.yml')
 
-        self.engines = []
+        self.engines = {}
 
         for engine_type in session.query(notflix.Engine.type).all():
             module = importlib.import_module("recommender.engines")
             class_ = getattr(module, engine_type[0])
             instance = class_()
-            self.engines.append(instance)
+            self.engines[instance.type] = instance
 
-    def recommend(self, context):
+    def recommend(self, context, restrict_to_engines=[]):
         """ Make recommendations
 
         Args:
@@ -34,8 +34,9 @@ class Recommender(object):
         """
         recommendation_list = []
 
-        active_engines = []
-        if context.page_type:
+        active_engines = restrict_to_engines
+
+        if not active_engines and context.page_type:
             try:
                 active_engines = session.query(common.Page.engines) \
                                         .filter(common.Page.name == context.page_type) \
@@ -45,12 +46,12 @@ class Recommender(object):
 
         logging.debug("active engines: {0}".format(active_engines))
 
-        for e in self.engines:
-            if e.type not in active_engines:
+        for type, instance in self.engines.items():
+            if type not in active_engines:
                 continue
 
-            recommendations = e.recommend(context)
-            if isinstance(recommendations, dict) and len(recommendations["products"]) > 0:
+            recommendations = instance.recommend(context)
+            if len(recommendations["products"]) > 0:
                 recommendation_list.append(recommendations)
 
         return recommendation_list

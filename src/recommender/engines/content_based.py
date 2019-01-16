@@ -1,4 +1,4 @@
-from recommender.engines.engine import QueryBasedEngine, OfflineEngine
+from recommender.engines.engine import QueryBasedEngine, OfflineEngine, Engine
 from config import MAX_RECOMMENDATIONS
 from data.db import notflix
 

@@ -55,8 +55,18 @@ def user(user_id):
 
     if user:
         c.user = user
+        c.history = current_app.tracker.get_views_history("history:{0}".format(user.username), n=3)
 
     recommendations = r.recommend(context=c)
+
+    if c.history and c.page_type == "you":
+        for item_id in c.history:
+            active_product = session.query(notflix.Product) \
+                .filter(notflix.Product.id == item_id) \
+                .one()
+
+            c.item = active_product
+            recommendations.append(r.recommend(context=c, restrict_to_engines=["OneHotMultiInput"])[0])
 
     return jsonify(active_user=user_id,
                    recommendations=recommendations)

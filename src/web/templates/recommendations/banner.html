@@ -1,11 +1,11 @@
 {% for r in recommendations %}
-    <div class="row mt-3">
+    <div class="row mt-5">
         <div class="col-sm">
             <h3 class="mb-3">{{ r.display_name }}</h3>
         </div>
     </div>
 
-    <div class="row">
+    <div class="row mt-1">
         <div id="recipeCarousel-{{ id or 0 }}-{{ loop.index }}" class="carousel slide w-100 ml-5 mr-5"
              data-interval="false">
             <div class="carousel-inner w-100" role="listbox">
