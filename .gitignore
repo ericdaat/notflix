@@ -115,10 +115,7 @@ dmypy.json
 # data
 *.csv
 *.key
-*.txt
-*.dat
-*.pkl
-data/datasets
+src/data/datasets
 src/data/mount
 
 # credentials
