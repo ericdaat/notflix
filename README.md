@@ -1,6 +1,7 @@
 # NotFlix
 
 [![Documentation Status](https://readthedocs.org/projects/notflix/badge/?version=latest)](https://notflix.readthedocs.io/en/latest/?badge=latest)
+[![CircleCI](https://circleci.com/gh/ericdaat/notflix.svg?style=svg)](https://circleci.com/gh/ericdaat/notflix)
 
 
 ## About
