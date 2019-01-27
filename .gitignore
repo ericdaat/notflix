@@ -114,9 +114,11 @@ dmypy.json
 
 # data
 *.csv
+*.tsv
 *.key
 src/data/datasets/movielens
 src/data/datasets/netflix
+src/data/datasets/imdb
 src/data/mount
 
 # credentials
