@@ -108,5 +108,5 @@ class MovielensDownloader(Downloader):
             genres = [notflix.Genre(**{"id": id, "name": name})
                       for name, id in genre_dict.items()]
 
-            utils.insert(genres, db_host=DB_HOST)
-            utils.insert(movies_to_insert, db_host=DB_HOST)
+            utils.insert(genres)
+            utils.insert(movies_to_insert)

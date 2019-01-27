@@ -5,7 +5,7 @@ import csv
 import data.db.common
 from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
-from data.db import session, notflix, common, utils, DB_HOST
+from data.db import db_scoped_session, notflix, common, utils, DB_HOST
 
 
 class Engine(ABC):
@@ -29,8 +29,8 @@ class Engine(ABC):
         r = Recommendations()
         r.type = self.type
 
-        name, priority = session.query(data.db.common.Engine.display_name,
-                                       data.db.common.Engine.priority)\
+        name, priority = db_scoped_session.query(data.db.common.Engine.display_name,
+                                                 data.db.common.Engine.priority)\
                                 .filter(data.db.common.Engine.type == self.type)\
                                 .one()
 
@@ -75,7 +75,7 @@ class QueryBasedEngine(Engine):
 
         """
         r = super(QueryBasedEngine, self).recommend(context)
-        recommendations = self.compute_query(session, context)
+        recommendations = self.compute_query(db_scoped_session, context)
         r.recommended_items = recommendations
         logging.debug(r.to_string())
 
@@ -116,7 +116,7 @@ class OfflineEngine(QueryBasedEngine):
                 recommendations.append(r)
 
                 if i % 10000 == 0:  # batch insert
-                    utils.insert(recommendations, db_host=DB_HOST)
+                    utils.insert(recommendations)
                     del recommendations[:]
 
 
@@ -142,7 +142,7 @@ class OnlineEngine(Engine):
 
         ids = self.predict(context)  # online prediction
 
-        recommendations = session.query(notflix.Movie) \
+        recommendations = db_scoped_session.query(notflix.Movie) \
             .filter(notflix.Movie.id.in_(ids)) \
             .filter(notflix.Movie.id != context.item.id) \
             .limit(MAX_RECOMMENDATIONS).all()

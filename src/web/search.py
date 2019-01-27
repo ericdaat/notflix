@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from data.db import session, notflix
+from data.db import db_scoped_session, notflix
 
 bp = Blueprint('search', __name__)
 
@@ -10,7 +10,7 @@ def search():
         return redirect((url_for('search.search', query=request.form["query"])))
 
     query = request.args.get("query")
-    items = session.query(notflix.Movie) \
+    items = db_scoped_session.query(notflix.Movie) \
                    .filter(notflix.Movie.name.ilike('%{0}%'.format(query))) \
                    .limit(50) \
                    .all()

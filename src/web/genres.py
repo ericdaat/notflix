@@ -1,23 +1,23 @@
 from flask import Blueprint, render_template
-from data.db import session, notflix
+from data.db import db_scoped_session, notflix
 
 bp = Blueprint('genres', __name__)
 
 
 @bp.route('/genres', methods=('GET',))
 def index():
-    genres = session.query(notflix.Genre).all()
+    genres = db_scoped_session.query(notflix.Genre).all()
 
     return render_template('genres/genres.html', genres=genres)
 
 
 @bp.route('/genres/<int:genre>', methods=('GET',))
 def genre(genre):
-    items = session.query(notflix.Movie)\
+    items = db_scoped_session.query(notflix.Movie)\
                    .filter(notflix.Movie.genres.contains([genre]))\
                    .limit(50)\
                    .all()
-    genre = session.query(notflix.Genre.id, notflix.Genre.name) \
+    genre = db_scoped_session.query(notflix.Genre.id, notflix.Genre.name) \
                    .filter(notflix.Genre.id == genre) \
                    .one()
 

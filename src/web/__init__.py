@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
-from data.db import session
+from data.db import db_scoped_session
 from .errors import page_not_found
 
 
@@ -40,7 +40,7 @@ def create_app(test_config=None):
 
     @app.teardown_appcontext
     def shutdown_session(exception=None):
-        session.remove()
+        db_scoped_session.remove()
 
     # HTTP errors
     app.register_error_handler(404, page_not_found)

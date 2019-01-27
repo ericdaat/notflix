@@ -31,14 +31,14 @@ def taste():
         form_data = request.form.to_dict(flat=False)
         user_genres = form_data.get("genre") or []
 
-        db.session.query(data.db.common.User)\
+        db.db_scoped_session.query(data.db.common.User)\
                   .filter(data.db.common.User.username == session.get("username"))\
                   .update({"favorite_genres": map(int, user_genres)})
 
-        db.session.commit()
+        db.db_scoped_session.commit()
 
-    genres = db.session.query(notflix.Genre).all()
-    user_genres = db.session.query(data.db.common.User.favorite_genres)\
+    genres = db.db_scoped_session.query(notflix.Genre).all()
+    user_genres = db.db_scoped_session.query(data.db.common.User.favorite_genres)\
                             .filter(data.db.common.User.username == session["username"])\
                             .one()[0]
 

@@ -2,7 +2,7 @@ import sqlalchemy
 from flask import Blueprint, current_app, abort, jsonify, request
 
 from recommender.wrappers import Context
-from data.db import common, notflix, session
+from data.db import common, notflix, db_scoped_session
 
 
 bp = Blueprint("recommend", __name__)
@@ -11,10 +11,10 @@ bp = Blueprint("recommend", __name__)
 @bp.route("/recommend/item/<int:item_id>", methods=("GET",))
 def item(item_id):
     try:
-        active_item = session.query(notflix.Movie)\
+        active_item = db_scoped_session.query(notflix.Movie)\
                              .filter(notflix.Movie.id == item_id)\
                              .one()
-        genre_names = session.query(notflix.Genre.id, notflix.Genre.name)\
+        genre_names = db_scoped_session.query(notflix.Genre.id, notflix.Genre.name)\
                              .filter(notflix.Genre.id.in_(active_item.genres))\
                              .all()
         active_item.genres = genre_names
@@ -25,7 +25,7 @@ def item(item_id):
     c = Context(**{"item": active_item, "page_type": request.args.get("page_type")})
 
     try:
-        user = session.query(common.User) \
+        user = db_scoped_session.query(common.User) \
                       .filter(common.User.username == request.args.get("user_id")) \
                       .one()
     except sqlalchemy.orm.exc.NoResultFound:
@@ -49,7 +49,7 @@ def user(user_id):
     c = Context(**{"page_type": request.args.get("page_type")})
 
     try:
-        user = session.query(common.User).filter(common.User.username == user_id).one()
+        user = db_scoped_session.query(common.User).filter(common.User.username == user_id).one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
 
@@ -61,7 +61,7 @@ def user(user_id):
 
     if c.history and c.page_type == "you":
         for item_id in c.history:
-            active_item = session.query(notflix.Movie) \
+            active_item = db_scoped_session.query(notflix.Movie) \
                                  .filter(notflix.Movie.id == item_id) \
                                  .one()
 

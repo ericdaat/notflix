@@ -4,7 +4,7 @@ import logging
 
 import data.db.common
 from utils.logging import setup_logging
-from data.db import session, common
+from data.db import db_scoped_session, common
 
 
 class Recommender(object):
@@ -18,7 +18,7 @@ class Recommender(object):
 
         self.engines = {}
 
-        for engine_type in session.query(data.db.common.Engine.type).all():
+        for engine_type in db_scoped_session.query(data.db.common.Engine.type).all():
             module = importlib.import_module("recommender.engines")
             class_ = getattr(module, engine_type[0])
             instance = class_()
@@ -39,7 +39,7 @@ class Recommender(object):
 
         if not active_engines and context.page_type:
             try:
-                active_engines = session.query(common.Page.engines) \
+                active_engines = db_scoped_session.query(common.Page.engines) \
                                         .filter(common.Page.name == context.page_type) \
                                         .one()[0]
             except sqlalchemy.orm.exc.NoResultFound:
