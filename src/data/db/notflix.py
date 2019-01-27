@@ -4,18 +4,8 @@ from sqlalchemy.dialects import postgresql
 from data.db import Base
 
 
-class Engine(Base):
-    __tablename__ = "engines"
-    id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    type = Column(String(20), nullable=False)
-    display_name = Column(String(50), nullable=False)
-    priority = Column(Integer, nullable=False)
-
-
-class Product(Base):
-    __tablename__ = "products"
+class Movie(Base):
+    __tablename__ = "movies"
     id = Column(Integer, primary_key=True)
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)

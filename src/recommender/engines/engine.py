@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 import logging
 import csv
 
+import data.db.common
 from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
 from data.db import session, notflix, common, utils, DB_HOST
@@ -28,9 +29,9 @@ class Engine(ABC):
         r = Recommendations()
         r.type = self.type
 
-        name, priority = session.query(notflix.Engine.display_name,
-                                       notflix.Engine.priority)\
-                                .filter(notflix.Engine.type == self.type)\
+        name, priority = session.query(data.db.common.Engine.display_name,
+                                       data.db.common.Engine.priority)\
+                                .filter(data.db.common.Engine.type == self.type)\
                                 .one()
 
         if context.item and True:  # TODO: add dynamic name option in DB
@@ -75,7 +76,7 @@ class QueryBasedEngine(Engine):
         """
         r = super(QueryBasedEngine, self).recommend(context)
         recommendations = self.compute_query(session, context)
-        r.products = recommendations
+        r.recommended_items = recommendations
         logging.debug(r.to_string())
 
         return r.to_dict()
@@ -86,10 +87,10 @@ class OfflineEngine(QueryBasedEngine):
         super(OfflineEngine, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(notflix.Product) \
-            .filter(common.Recommendation.source_product_id == context.item.id) \
+        recommendations = session.query(notflix.Movie) \
+            .filter(common.Recommendation.source_item_id == context.item.id) \
             .filter(common.Recommendation.engine_name == self.type) \
-            .filter(notflix.Product.id == common.Recommendation.recommended_product_id) \
+            .filter(notflix.Movie.id == common.Recommendation.recommended_item_id) \
             .order_by(common.Recommendation.score.desc()) \
             .limit(MAX_RECOMMENDATIONS) \
             .all()
@@ -109,8 +110,8 @@ class OfflineEngine(QueryBasedEngine):
 
             for i, line in enumerate(reader):
                 r = common.Recommendation(**{"engine_name": self.type,
-                                             "source_product_id": line[0],
-                                             "recommended_product_id": line[1],
+                                             "source_item_id": line[0],
+                                             "recommended_item_id": line[1],
                                              "score": line[2]})
                 recommendations.append(r)
 
@@ -141,12 +142,12 @@ class OnlineEngine(Engine):
 
         ids = self.predict(context)  # online prediction
 
-        recommendations = session.query(notflix.Product) \
-            .filter(notflix.Product.id.in_(ids)) \
-            .filter(notflix.Product.id != context.item.id) \
+        recommendations = session.query(notflix.Movie) \
+            .filter(notflix.Movie.id.in_(ids)) \
+            .filter(notflix.Movie.id != context.item.id) \
             .limit(MAX_RECOMMENDATIONS).all()
 
-        r.products = recommendations
+        r.recommended_items = recommendations
 
         logging.debug(r.to_string())
 

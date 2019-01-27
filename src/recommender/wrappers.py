@@ -13,7 +13,7 @@ class Recommendations(object):
     """
     def __init__(self):
         self.type = ""
-        self.products = None
+        self.recommended_items = None
         self.display_name = ""
         self.priority = 0
 
@@ -23,7 +23,7 @@ class Recommendations(object):
         Returns:
             dict: the recommendations as a dictionary
         """
-        self.products = [r.as_dict() for r in self.products]
+        self.recommended_items = [r.as_dict() for r in self.recommended_items]
 
         return vars(self)
 
@@ -34,4 +34,4 @@ class Recommendations(object):
             str: the recommendations as string, stating the type and number of items recommended.
         """
         return "{1} recommendations for {0}".format(self.type,
-                                                    len(self.products))
+                                                    len(self.recommended_items))

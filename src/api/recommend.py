@@ -1,5 +1,4 @@
 import sqlalchemy
-import logging
 from flask import Blueprint, current_app, abort, jsonify, request
 
 from recommender.wrappers import Context
@@ -9,21 +8,21 @@ from data.db import common, notflix, session
 bp = Blueprint("recommend", __name__)
 
 
-@bp.route("/recommend/product/<int:product_id>", methods=("GET",))
-def product(product_id):
+@bp.route("/recommend/item/<int:item_id>", methods=("GET",))
+def item(item_id):
     try:
-        active_product = session.query(notflix.Product)\
-                                .filter(notflix.Product.id == product_id)\
-                                .one()
+        active_item = session.query(notflix.Movie)\
+                             .filter(notflix.Movie.id == item_id)\
+                             .one()
         genre_names = session.query(notflix.Genre.id, notflix.Genre.name)\
-                             .filter(notflix.Genre.id.in_(active_product.genres))\
+                             .filter(notflix.Genre.id.in_(active_item.genres))\
                              .all()
-        active_product.genres = genre_names
+        active_item.genres = genre_names
     except sqlalchemy.orm.exc.NoResultFound:
         abort(404)
 
     r = current_app.reco
-    c = Context(**{"item": active_product, "page_type": request.args.get("page_type")})
+    c = Context(**{"item": active_item, "page_type": request.args.get("page_type")})
 
     try:
         user = session.query(common.User) \
@@ -37,9 +36,10 @@ def product(product_id):
 
     recommendations = r.recommend(context=c)
 
-    current_app.tracker.store_item_viewed("history:{0}".format(request.args.get("user_id")), active_product.id)
+    current_app.tracker.store_item_viewed("history:{0}".format(request.args.get("user_id")),
+                                          active_item.id)
 
-    return jsonify(active_product=active_product.as_dict(),
+    return jsonify(active_item=active_item.as_dict(),
                    recommendations=recommendations)
 
 
@@ -61,11 +61,11 @@ def user(user_id):
 
     if c.history and c.page_type == "you":
         for item_id in c.history:
-            active_product = session.query(notflix.Product) \
-                .filter(notflix.Product.id == item_id) \
-                .one()
+            active_item = session.query(notflix.Movie) \
+                                 .filter(notflix.Movie.id == item_id) \
+                                 .one()
 
-            c.item = active_product
+            c.item = active_item
             recommendations.append(r.recommend(context=c, restrict_to_engines=["OneHotMultiInput"])[0])
 
     return jsonify(active_user=user_id,

@@ -9,8 +9,8 @@ class UserHistory(QueryBasedEngine):
 
     def compute_query(self, session, context):
         if context.user and context.history:
-            recommendations = session.query(notflix.Product) \
-                .filter(notflix.Product.id.in_(context.history)) \
+            recommendations = session.query(notflix.Movie) \
+                .filter(notflix.Movie.id.in_(context.history)) \
                 .limit(MAX_RECOMMENDATIONS) \
                 .all()
         else:

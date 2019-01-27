@@ -10,9 +10,9 @@ def search():
         return redirect((url_for('search.search', query=request.form["query"])))
 
     query = request.args.get("query")
-    products = session.query(notflix.Product) \
-                      .filter(notflix.Product.name.ilike('%{0}%'.format(query))) \
-                      .limit(50) \
-                      .all()
+    items = session.query(notflix.Movie) \
+                   .filter(notflix.Movie.name.ilike('%{0}%'.format(query))) \
+                   .limit(50) \
+                   .all()
 
-    return render_template('search/index.html', products=products)
+    return render_template('search/index.html', items=items)

@@ -27,7 +27,7 @@ if __name__ == "__main__":
     # insert pages
     utils.insert([
         common.Page(**{"name": "home", "engines": ["TopRated", "MostRecent"]}),
-        common.Page(**{"name": "product", "engines": ["OneHotMultiInput"]}),
+        common.Page(**{"name": "item", "engines": ["OneHotMultiInput"]}),
         common.Page(**{"name": "you", "engines": ["UserHistory"]}),
     ],
         db_host=DB_HOST

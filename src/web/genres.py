@@ -13,12 +13,12 @@ def index():
 
 @bp.route('/genres/<int:genre>', methods=('GET',))
 def genre(genre):
-    products = session.query(notflix.Product)\
-                      .filter(notflix.Product.genres.contains([genre]))\
-                      .limit(50)\
-                      .all()
+    items = session.query(notflix.Movie)\
+                   .filter(notflix.Movie.genres.contains([genre]))\
+                   .limit(50)\
+                   .all()
     genre = session.query(notflix.Genre.id, notflix.Genre.name) \
                    .filter(notflix.Genre.id == genre) \
                    .one()
 
-    return render_template('genres/genre.html', products=products, genre=genre)
+    return render_template('genres/genre.html', items=items, genre=genre)

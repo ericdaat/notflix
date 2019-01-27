@@ -10,14 +10,14 @@
 
 <table class="table">
   <tbody>
-  {% for p in products %}
+  {% for p in items %}
   <tr>
     <td>
       <img src="{{ p.image }}" style="max-height:200px;">
     </td>
     <td>
       <p class="font-weight-bold">
-        <a href="{{ url_for('product.index', product_id=p.id) }}"> {{ p.name }} </a>
+        <a href="{{ url_for('item.index', item_id=p.id) }}"> {{ p.name }} </a>
       </p>
       <p> {{ p.description }}</p>
       <p> Actors: {{ p.actors }}</p>

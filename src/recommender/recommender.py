@@ -2,8 +2,9 @@ import importlib
 import sqlalchemy
 import logging
 
+import data.db.common
 from utils.logging import setup_logging
-from data.db import session, notflix, common
+from data.db import session, common
 
 
 class Recommender(object):
@@ -17,7 +18,7 @@ class Recommender(object):
 
         self.engines = {}
 
-        for engine_type in session.query(notflix.Engine.type).all():
+        for engine_type in session.query(data.db.common.Engine.type).all():
             module = importlib.import_module("recommender.engines")
             class_ = getattr(module, engine_type[0])
             instance = class_()
@@ -51,7 +52,7 @@ class Recommender(object):
                 continue
 
             recommendations = instance.recommend(context)
-            if len(recommendations["products"]) > 0:
+            if len(recommendations["recommended_items"]) > 0:
                 recommendation_list.append(recommendations)
 
         return recommendation_list

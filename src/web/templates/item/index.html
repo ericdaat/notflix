@@ -1,22 +1,22 @@
 {% extends 'base.html' %}
 
-{% block title %} - {{ active_product.name }} {% endblock %}
+{% block title %} - {{ active_item.name }} {% endblock %}
 
 {% block content %}
 
 <div class="row mb-3">
     <div class="col-sm">
-        <h1> {{ active_product.name }}</h1>
+        <h1> {{ active_item.name }}</h1>
     </div>
 </div>
 
 <div class="row">
     <div class="col-sm-3">
-        <img class="card-img-top" src="{{ active_product.image }}">
+        <img class="card-img-top" src="{{ active_item.image }}">
     </div>
     <div class="col-sm-4">
         <h5 class="mb-3">Movie Description</h5>
-        <p>{{ active_product.description }}</p>
+        <p>{{ active_item.description }}</p>
     </div>
     <div class="col-sm-5">
         <h5 class="mb-3">Movie Details</h5>
@@ -25,38 +25,38 @@
             <tr>
               <th scope="row">Genres</th>
               <td>
-                  {% for genre_id, genre_name in active_product.genres %}
+                  {% for genre_id, genre_name in active_item.genres %}
                   <span class="badge badge-dark">{{ genre_name }}</span>
                   {% endfor %}
               </td>
             </tr>
             <tr>
                 <th scope="row">Rating</th>
-                <td>{{active_product.rating}} <i class="fa fa-star"></i></td>
+                <td>{{active_item.rating}} <i class="fa fa-star"></i></td>
             </tr>
             <tr>
                 <th scope="row">Director</th>
-                <td>{{active_product.director}}</td>
+                <td>{{active_item.director}}</td>
             </tr>
             <tr>
                 <th scope="row">Actors</th>
-                <td>{{active_product.actors}}</td>
+                <td>{{active_item.actors}}</td>
             </tr>
             <tr>
                 <th scope="row">Duration</th>
-                <td>{{active_product.duration}} minutes</td>
+                <td>{{active_item.duration}} minutes</td>
             </tr>
             <tr>
                 <th scope="row">Awards</th>
-                <td>{{active_product.awards}}</td>
+                <td>{{active_item.awards}}</td>
             </tr>
             <tr>
                 <th scope="row">Released</th>
-                <td>{{active_product.year}}</td>
+                <td>{{active_item.year}}</td>
             </tr>
             <tr>
                 <th scope="row">Country</th>
-                <td>{{active_product.country}}</td>
+                <td>{{active_item.country}}</td>
             </tr>
           </tbody>
         </table>

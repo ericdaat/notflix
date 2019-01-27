@@ -46,9 +46,9 @@ def create_app(test_config=None):
     app.register_error_handler(404, page_not_found)
 
     # blueprints
-    from web import home, product, genres, search, you, login
+    from web import home, item, genres, search, you, login
     app.register_blueprint(home.bp)
-    app.register_blueprint(product.bp)
+    app.register_blueprint(item.bp)
     app.register_blueprint(genres.bp)
     app.register_blueprint(search.bp)
     app.register_blueprint(you.bp)

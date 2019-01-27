@@ -9,10 +9,10 @@
         <div id="recipeCarousel-{{ id or 0 }}-{{ loop.index }}" class="carousel slide w-100 ml-5 mr-5"
              data-interval="false">
             <div class="carousel-inner w-100" role="listbox">
-                {% for i in range(0, r.products | length, 6) %}
+                {% for i in range(0, r.recommended_items | length, 6) %}
                     <div class="carousel-item row no-gutters {% if i == 0 %} active {% endif %}">
-                        {% for item in r.products[i:i+6] %}
-                            <a href="{{ url_for('product.index', product_id=item.id) }}"
+                        {% for item in r.recommended_items[i:i+6] %}
+                            <a href="{{ url_for('item.index', item_id=item.id) }}"
                                style="text-decoration:none; color: inherit;">
                                 <div class="col-2 float-left">
                                     <img class="img-fluid"
