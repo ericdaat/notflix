@@ -9,6 +9,14 @@ utils package
 Submodules
 ----------
 
+utils.data module
+-----------------
+
+.. automodule:: utils.data
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 utils.logging module
 --------------------
 

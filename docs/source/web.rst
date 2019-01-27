@@ -33,18 +33,18 @@ web.home module
     :undoc-members:
     :show-inheritance:
 
-web.login module
-----------------
+web.item module
+---------------
 
-.. automodule:: web.login
+.. automodule:: web.item
     :members:
     :undoc-members:
     :show-inheritance:
 
-web.product module
-------------------
+web.login module
+----------------
 
-.. automodule:: web.product
+.. automodule:: web.login
     :members:
     :undoc-members:
     :show-inheritance:

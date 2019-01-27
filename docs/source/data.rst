@@ -26,12 +26,4 @@ data.cache module
     :undoc-members:
     :show-inheritance:
 
-data.downloader module
-----------------------
-
-.. automodule:: data.downloader
-    :members:
-    :undoc-members:
-    :show-inheritance:
-
 
