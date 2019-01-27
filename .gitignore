@@ -116,6 +116,7 @@ dmypy.json
 *.csv
 *.tsv
 *.key
+.DS_Store
 src/data/datasets/movielens
 src/data/datasets/netflix
 src/data/datasets/imdb

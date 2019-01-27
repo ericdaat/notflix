@@ -12,13 +12,11 @@ services:
     working_dir: /src
     environment:
       PYTHONPATH: /src
-      FLASK_APP: web
-      FLASK_DEBUG: "true"
     env_file:
       - db-credentials.env
     links:
       - api
-    command: ["flask", "run", "--host=0.0.0.0"]
+    command: ["python", "web/wsgi.py"]
 
   api:
     image: notflix_python:latest
@@ -29,14 +27,12 @@ services:
     working_dir: /src
     environment:
       PYTHONPATH: /src
-      FLASK_APP: api
-      FLASK_DEBUG: "true"
     env_file:
       - db-credentials.env
     links:
       - postgres
       - redis
-    command: ["flask", "run", "--host=0.0.0.0"]
+    command: ["python", "api/wsgi.py"]
 
   redis:
     image: redis:alpine
