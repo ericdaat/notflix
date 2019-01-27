@@ -13,15 +13,13 @@ install:
  	cp -n db-credentials.env.dist db-credentials.env; \
 	echo "done"; \
 
-
 init-db:
 	docker-compose stop api web; \
 	docker-compose up -d postgres; \
 	source venv/bin/activate; \
 	cd src; \
-	PYTHONPATH="." HOST="127.0.0.1" python admin/init_notflix.py; \
+	PYTHONPATH="." HOST="127.0.0.1" python scripts/init_notflix.py; \
 	echo "done"; \
-
 
 start:
 	docker-compose up -d web;
