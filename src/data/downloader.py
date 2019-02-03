@@ -18,7 +18,7 @@ from data.db import movielens, utils
 class Downloader(ABC):
     def __init__(self):
         # API related conf
-        self.api_key = self.read_api_key("data/datasets/omdb.key")
+        self.api_key = self.read_api_key("../omdb.key")
         self.url = "http://private.omdbapi.com/"
 
     @abstractmethod
@@ -45,8 +45,8 @@ class Downloader(ABC):
 class MovielensDownloader(Downloader):
     def __init__(self):
         super(MovielensDownloader, self).__init__()
-        self.input_filepath = "data/datasets/movielens/ml-20m/links.csv"
-        self.output_filepath = "data/datasets/movielens/omdb.csv"
+        self.input_filepath = "../datasets/movielens/ml-20m/links.csv"
+        self.output_filepath = "../datasets/movielens/omdb.csv"
 
     def download_to_file(self):
         with open(self.output_filepath, "a") as output:
@@ -123,7 +123,7 @@ class IMDBDownloader(Downloader):
     def insert_in_db(self):
         CHUNKSIZE = 100
 
-        for df in pd.read_csv("data/datasets/imdb/title.basics.tsv", sep="\t", chunksize=CHUNKSIZE):
+        for df in pd.read_csv("../datasets/imdb/title.basics.tsv", sep="\t", chunksize=CHUNKSIZE):
             df.rename({"tconst": "id"}, axis=1, inplace=True)
             df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
             df["genres"] = df["genres"].fillna("").str.split(",")
@@ -132,7 +132,7 @@ class IMDBDownloader(Downloader):
             utils.insert([data.db.imdb.TitleBasics(**item) for item in df.to_dict(orient="records")])
             break
 
-        for df in pd.read_csv("data/datasets/imdb/title.akas.tsv", sep="\t", chunksize=CHUNKSIZE):
+        for df in pd.read_csv("../datasets/imdb/title.akas.tsv", sep="\t", chunksize=CHUNKSIZE):
             df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
             df["types"] = df["types"].fillna("").str.split(",")
             df["attributes"] = df["attributes"].fillna("").str.split(",")
@@ -141,7 +141,7 @@ class IMDBDownloader(Downloader):
             utils.insert([data.db.imdb.TitleAkas(**item) for item in df.to_dict(orient="records")])
             break
 
-        for df in pd.read_csv("data/datasets/imdb/title.crew.tsv", sep="\t", chunksize=CHUNKSIZE):
+        for df in pd.read_csv("../datasets/imdb/title.crew.tsv", sep="\t", chunksize=CHUNKSIZE):
             df.rename({"tconst": "id"}, axis=1, inplace=True)
             df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
             df["directors"] = df["directors"].fillna("").str.split(",")
@@ -151,28 +151,28 @@ class IMDBDownloader(Downloader):
             utils.insert([data.db.imdb.TitleCrew(**item) for item in df.to_dict(orient="records")])
             break
 
-        # for df in pd.read_csv("data/datasets/imdb/title.episode.tsv", sep="\t", chunksize=CHUNKSIZE):
+        # for df in pd.read_csv("../datasets/imdb/title.episode.tsv", sep="\t", chunksize=CHUNKSIZE):
         #     df.rename({"tconst": "id"}, axis=1, inplace=True)
         #     df.replace(to_replace=r"\\N", value=null(), inplace=True, regex=True)
 
         #     utils.insert([notflix.TitleEpisode(**item) for item in df.to_dict(orient="records")])
         #     break
 
-        for df in pd.read_csv("data/datasets/imdb/title.principals.tsv", sep="\t", chunksize=CHUNKSIZE):
+        for df in pd.read_csv("../datasets/imdb/title.principals.tsv", sep="\t", chunksize=CHUNKSIZE):
             df.rename({"tconst": "title_id", "nconst": "name_id"}, axis=1, inplace=True)
             df.replace(to_replace=r"\\N", value=null(), inplace=True, regex=True)
 
             utils.insert([data.db.imdb.TitlePrincipals(**item) for item in df.to_dict(orient="records")])
             break
 
-        for df in pd.read_csv("data/datasets/imdb/title.ratings.tsv", sep="\t", chunksize=CHUNKSIZE):
+        for df in pd.read_csv("../datasets/imdb/title.ratings.tsv", sep="\t", chunksize=CHUNKSIZE):
             df.rename({"tconst": "id"}, axis=1, inplace=True)
             df.replace(to_replace=r"\\N", value=null(), inplace=True, regex=True)
 
             utils.insert([data.db.imdb.TitleRatings(**item) for item in df.to_dict(orient="records")])
             break
 
-        for df in pd.read_csv("data/datasets/imdb/name.basics.tsv", sep="\t", chunksize=CHUNKSIZE):
+        for df in pd.read_csv("../datasets/imdb/name.basics.tsv", sep="\t", chunksize=CHUNKSIZE):
             df.rename({"nconst": "id"}, axis=1, inplace=True)
             df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
             df["primaryProfession"] = df["primaryProfession"].fillna("").str.split(",")

@@ -5,7 +5,7 @@ import csv
 import data.db.common
 from recommender.wrappers import Recommendations
 from config import MAX_RECOMMENDATIONS
-from data.db import db_scoped_session, movielens, common, utils, DB_HOST
+from data.db import db_scoped_session, movielens, common, utils
 
 
 class Engine(ABC):
@@ -102,7 +102,7 @@ class OfflineEngine(QueryBasedEngine):
         pass
 
     def upload(self):
-        with open("data/ml/csv/{0}.csv".format(self.type), "r") as csv_file:
+        with open("../ml/csv/{0}.csv".format(self.type), "r") as csv_file:
             recommendations = []
             reader = csv.reader(csv_file,
                                 delimiter=',',

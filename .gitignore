@@ -117,14 +117,12 @@ dmypy.json
 *.tsv
 *.key
 .DS_Store
-src/data/datasets/movielens
-src/data/datasets/netflix
-src/data/datasets/imdb
-src/data/mount
+datasets/imdb
+datasets/movielens
+datasets/netflix
+ml/bin
+ml/csv
+mount
 
 # credentials
 db-credentials.env
-
-
-# ML models
-src/data/ml/bin

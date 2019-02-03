@@ -41,14 +41,14 @@ services:
   redis:
     image: redis:alpine
     volumes:
-      - ./src/data/mount/redis:/data
+      - ./mount/redis:/data
 
   postgres:
     image: postgres:latest
     env_file:
       - db-credentials.env
     volumes:
-      - ./src/data/mount/postgresql/data:/var/lib/postgresql/data
+      - ./mount/postgresql/data:/var/lib/postgresql/data
     ports:
       - 5432:5432
     links:
