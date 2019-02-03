@@ -2,7 +2,7 @@ import sqlalchemy
 from flask import Blueprint, current_app, abort, jsonify, request
 
 from recommender.wrappers import Context
-from data.db import common, notflix, db_scoped_session
+from data.db import common, movielens, db_scoped_session
 
 
 bp = Blueprint("recommend", __name__)
@@ -11,11 +11,11 @@ bp = Blueprint("recommend", __name__)
 @bp.route("/recommend/item/<int:item_id>", methods=("GET",))
 def item(item_id):
     try:
-        active_item = db_scoped_session.query(notflix.Movie)\
-                             .filter(notflix.Movie.id == item_id)\
+        active_item = db_scoped_session.query(movielens.Movie)\
+                             .filter(movielens.Movie.id == item_id)\
                              .one()
-        genre_names = db_scoped_session.query(notflix.Genre.id, notflix.Genre.name)\
-                             .filter(notflix.Genre.id.in_(active_item.genres))\
+        genre_names = db_scoped_session.query(movielens.Genre.id, movielens.Genre.name)\
+                             .filter(movielens.Genre.id.in_(active_item.genres))\
                              .all()
         active_item.genres = genre_names
     except sqlalchemy.orm.exc.NoResultFound:
@@ -61,8 +61,8 @@ def user(user_id):
 
     if c.history and c.page_type == "you":
         for item_id in c.history:
-            active_item = db_scoped_session.query(notflix.Movie) \
-                                 .filter(notflix.Movie.id == item_id) \
+            active_item = db_scoped_session.query(movielens.Movie) \
+                                 .filter(movielens.Movie.id == item_id) \
                                  .one()
 
             c.item = active_item

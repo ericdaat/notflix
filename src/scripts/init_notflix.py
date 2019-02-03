@@ -11,7 +11,6 @@ if __name__ == "__main__":
     utils.init()
 
     d = downloader.MovielensDownloader()
-    # d.download_to_file()
     d.insert_in_db()
 
     # insert engines

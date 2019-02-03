@@ -1,6 +1,6 @@
 from recommender.engines.engine import QueryBasedEngine, OfflineEngine, Engine
 from config import MAX_RECOMMENDATIONS
-from data.db import notflix
+from data.db import movielens
 
 
 class SameGenres(QueryBasedEngine):
@@ -8,9 +8,9 @@ class SameGenres(QueryBasedEngine):
         super(SameGenres, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(notflix.Movie)\
-                           .filter(notflix.Movie.genres.contains([g[0] for g in context.item.genres]))\
-                           .filter(notflix.Movie.id != context.item.id) \
+        recommendations = session.query(movielens.Movie)\
+                           .filter(movielens.Movie.genres.contains([g[0] for g in context.item.genres]))\
+                           .filter(movielens.Movie.id != context.item.id) \
                            .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
@@ -37,13 +37,13 @@ class TopRated(QueryBasedEngine):
         super(TopRated, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(notflix.Movie)
+        recommendations = session.query(movielens.Movie)
 
         if context.user and context.user.favorite_genres:
-            recommendations = recommendations.filter(notflix.Movie.genres.contains(context.user.favorite_genres))
+            recommendations = recommendations.filter(movielens.Movie.genres.contains(context.user.favorite_genres))
 
         recommendations = recommendations \
-            .order_by(notflix.Movie.rating.desc().nullslast()) \
+            .order_by(movielens.Movie.rating.desc().nullslast()) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations
@@ -54,12 +54,12 @@ class MostRecent(QueryBasedEngine):
         super(MostRecent, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(notflix.Movie)
+        recommendations = session.query(movielens.Movie)
 
         if context.user and context.user.favorite_genres:
-            recommendations = recommendations.filter(notflix.Movie.genres.contains(context.user.favorite_genres))
+            recommendations = recommendations.filter(movielens.Movie.genres.contains(context.user.favorite_genres))
 
-        recommendations = recommendations.order_by(notflix.Movie.year.desc().nullslast()) \
+        recommendations = recommendations.order_by(movielens.Movie.year.desc().nullslast()) \
                                          .limit(MAX_RECOMMENDATIONS).all()
 
         return recommendations

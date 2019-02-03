@@ -3,7 +3,7 @@ from flask import Blueprint, render_template, abort, request, session
 
 import data.db.common
 from data import db
-from data.db import notflix
+from data.db import movielens
 
 
 bp = Blueprint('you', __name__)
@@ -37,7 +37,7 @@ def taste():
 
         db.db_scoped_session.commit()
 
-    genres = db.db_scoped_session.query(notflix.Genre).all()
+    genres = db.db_scoped_session.query(movielens.Genre).all()
     user_genres = db.db_scoped_session.query(data.db.common.User.favorite_genres)\
                             .filter(data.db.common.User.username == session["username"])\
                             .one()[0]

@@ -32,5 +32,3 @@ class Genre(Base):
     created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
     updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     name = Column(String(56), nullable=False, unique=True)
-
-
