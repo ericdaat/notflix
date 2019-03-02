@@ -1,5 +1,9 @@
 import os
 
+# paths
+DATASETS_PATH = os.path.abspath("../datasets")
+ML_PATH = os.path.abspath("../ml")
+
 # data.cache
 CACHE_HOST = "redis"
 CACHE_TIMEOUT = 30
