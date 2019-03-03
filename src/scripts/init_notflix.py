@@ -1,6 +1,6 @@
 import logging
 from data.db import common, utils
-from data.datasets import downloader
+from data import downloader
 from recommender import engines
 
 
@@ -9,8 +9,10 @@ if __name__ == "__main__":
 
     # Drop and create all tables
     utils.init()
+    logging.info("database initialized")
 
     d = downloader.MovielensDownloader()
+    # d.download_to_file()
     d.insert_in_db()
 
     # insert engines

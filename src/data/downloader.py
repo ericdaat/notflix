@@ -58,7 +58,11 @@ class MovielensDownloader(Downloader):
                 next(reader, None)  # skip header
 
                 for i, (id, imdb_id, _) in enumerate(reader):
-                    movie_json = self.item_from_api("tt{0}".format(imdb_id))
+                    try:
+                        movie_json = self.item_from_api("tt{0}".format(imdb_id))
+                    except json.decoder.JSONDecodeError():
+                        logging.error("can't get item from API")
+                        continue
 
                     if eval(movie_json["Response"]):
                         movie_json["id"] = id
@@ -113,6 +117,9 @@ class MovielensDownloader(Downloader):
 
             utils.insert(genres)
             utils.insert(movies_to_insert)
+
+            logging.info("inserted {0} movies".format(len(movies_to_insert)))
+            logging.info("inserted {0} genres".format(len(genres)))
 
 
 class IMDBDownloader(Downloader):

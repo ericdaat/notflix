@@ -117,6 +117,7 @@ class OfflineEngine(QueryBasedEngine):
 
                 if i % 10000 == 0:  # batch insert
                     utils.insert(recommendations)
+                    logging.info("inserted {0} recommendations".format(len(recommendations)))
                     del recommendations[:]
 
 

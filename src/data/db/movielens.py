@@ -15,7 +15,7 @@ class Movie(Base):
     description = Column(String(512), nullable=True)
     year = Column(Date, nullable=True)
     rating = Column(Float, nullable=True)
-    director = Column(String(256), nullable=True)
+    director = Column(String(1024), nullable=True)
     actors = Column(String(256), nullable=True)
     awards = Column(String(256), nullable=True)
     language = Column(String(256), nullable=True)
