@@ -11,9 +11,7 @@ Subpackages
 
 .. toctree::
 
-    data.datasets
     data.db
-    data.ml
 
 Submodules
 ----------
@@ -22,6 +20,14 @@ data.cache module
 -----------------
 
 .. automodule:: data.cache
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data.downloader module
+----------------------
+
+.. automodule:: data.downloader
     :members:
     :undoc-members:
     :show-inheritance:

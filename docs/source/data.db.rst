@@ -17,10 +17,18 @@ data.db.common module
     :undoc-members:
     :show-inheritance:
 
-data.db.notflix module
-----------------------
+data.db.imdb module
+-------------------
 
-.. automodule:: data.db.notflix
+.. automodule:: data.db.imdb
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
+data.db.movielens module
+------------------------
+
+.. automodule:: data.db.movielens
     :members:
     :undoc-members:
     :show-inheritance:

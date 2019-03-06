@@ -57,6 +57,14 @@ web.search module
     :undoc-members:
     :show-inheritance:
 
+web.wsgi module
+---------------
+
+.. automodule:: web.wsgi
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 web.you module
 --------------
 

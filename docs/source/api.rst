@@ -25,4 +25,12 @@ api.recommend module
     :undoc-members:
     :show-inheritance:
 
+api.wsgi module
+---------------
+
+.. automodule:: api.wsgi
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 
