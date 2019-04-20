@@ -2,9 +2,7 @@ import importlib
 import sqlalchemy
 import logging
 
-import data.db.common
-from utils.logging import setup_logging
-from data.db import db_scoped_session, common
+from src.data.db import db_scoped_session, common
 
 
 class Recommender(object):
@@ -13,13 +11,11 @@ class Recommender(object):
     def __init__(self):
         """ Recommender constructor.
         """
-        setup_logging(log_dir="recommender",
-                      config_path='recommender/logging.yml')
 
         self.engines = {}
 
-        for engine_type in db_scoped_session.query(data.db.common.Engine.type).all():
-            module = importlib.import_module("recommender.engines")
+        for engine_type in db_scoped_session.query(common.Engine.type).all():
+            module = importlib.import_module("src.recommender.engines")
             class_ = getattr(module, engine_type[0])
             instance = class_()
             self.engines[instance.type] = instance

@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from data.db import db_scoped_session, movielens
+from src.data.db import db_scoped_session, movielens
 
 bp = Blueprint('search', __name__)
 

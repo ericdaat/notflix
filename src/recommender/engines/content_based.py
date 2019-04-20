@@ -1,6 +1,15 @@
-from recommender.engines.engine import QueryBasedEngine, OfflineEngine, Engine
-from config import MAX_RECOMMENDATIONS
-from data.db import movielens
+import os
+import pandas as pd
+import numpy as np
+import csv
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.neighbors import NearestNeighbors
+from scipy import sparse
+from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_PATH
+from src.recommender.engines.engine import (
+    QueryBasedEngine, OfflineEngine
+)
+from src.data.db import movielens
 
 
 class SameGenres(QueryBasedEngine):
@@ -21,7 +30,61 @@ class OneHotMultiInput(OfflineEngine):
         super(OneHotMultiInput, self).__init__()
 
     def train(self):
-        pass
+        df = pd.read_json(
+            os.path.join(DATASETS_PATH, "movielens", "omdb.csv"),
+            lines=True
+        )
+
+        movies = df[[
+            "id", "Title", "Plot", "Country", "Actors", "Director",
+            "Production", "Genre", "Language", "Released", "imdbVotes",
+            "imdbRating"
+        ]]
+
+        movies.replace("N/A", np.nan, inplace=True)
+        movies["Released_year"] = movies["Released"].fillna("").str.split(" ").str[-1].replace("", 0).astype(int)
+        movies["Released_decade"] = pd.cut(movies["Released_year"], range(1920, 2020, 10))
+        movies["imdbVotes"] = movies["imdbVotes"].str.replace(",", "").fillna(0).astype(int)
+        movies["popularity"] = pd.cut(movies["imdbVotes"], 10)
+
+        country_vect = CountVectorizer()
+        director_vect = CountVectorizer()
+        genre_vect = CountVectorizer()
+        language_vect = CountVectorizer()
+        # plot_vect = TfidfVectorizer(min_df=2, max_df=0.5)
+        # title_vect = TfidfVectorizer(min_df=2, max_df=0.5)
+
+        X = sparse.hstack([
+            country_vect.fit_transform(movies["Country"].fillna("")),
+            genre_vect.fit_transform(movies["Genre"].fillna("")),
+            language_vect.fit_transform(movies["Language"].fillna("")),
+            director_vect.fit_transform(movies["Director"].fillna("")),
+            # pd.get_dummies(movies["Released_decade"]).values,
+            # plot_vect.fit_transform(movies["Plot"].fillna("")),
+            # title_vect.fit_transform(movies["Title"].fillna("")),
+        ])
+
+        nbrs = NearestNeighbors(n_neighbors=30, metric="cosine").fit(X)
+        distances, neighbors = nbrs.kneighbors(X)
+
+        to_insert = []
+
+        for index, movie_id in enumerate(movies.id):
+            scores = 1. - distances[index]
+            recommendations = list(map(lambda r: movies.id[r], neighbors[index]))
+
+            for score, recommended_movie_id in zip(scores, recommendations):
+                if movie_id == recommended_movie_id:
+                    continue
+
+                to_insert.append([movie_id, recommended_movie_id, score])
+
+        with open(os.path.join(ML_PATH, "csv", self.type + ".csv"), "w") as csv_file:
+            writer = csv.writer(csv_file,
+                                delimiter=',',
+                                quoting=csv.QUOTE_MINIMAL)
+
+            writer.writerows(to_insert)
 
 
 class TfidfGenres(OfflineEngine):

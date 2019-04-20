@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template
-from data.db import db_scoped_session, movielens
+from src.data.db import db_scoped_session, movielens
 
 bp = Blueprint('genres', __name__)
 

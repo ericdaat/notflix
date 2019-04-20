@@ -1,11 +1,11 @@
 from abc import ABC, abstractmethod
 import logging
+import os
 import csv
 
-import data.db.common
-from recommender.wrappers import Recommendations
-from config import MAX_RECOMMENDATIONS
-from data.db import db_scoped_session, movielens, common, utils
+from config import MAX_RECOMMENDATIONS, BATCH_UPLOAD_SIZE, ML_PATH
+from src.recommender.wrappers import Recommendations
+from src.data.db import db_scoped_session, movielens, common, utils
 
 
 class Engine(ABC):
@@ -29,9 +29,9 @@ class Engine(ABC):
         r = Recommendations()
         r.type = self.type
 
-        name, priority = db_scoped_session.query(data.db.common.Engine.display_name,
-                                                 data.db.common.Engine.priority)\
-                                .filter(data.db.common.Engine.type == self.type)\
+        name, priority = db_scoped_session.query(common.Engine.display_name,
+                                                 common.Engine.priority)\
+                                .filter(common.Engine.type == self.type)\
                                 .one()
 
         if context.item and True:  # TODO: add dynamic name option in DB
@@ -102,7 +102,7 @@ class OfflineEngine(QueryBasedEngine):
         pass
 
     def upload(self):
-        with open("../ml/csv/{0}.csv".format(self.type), "r") as csv_file:
+        with open(os.path.join(ML_PATH, "csv", self.type + ".csv"), "r") as csv_file:
             recommendations = []
             reader = csv.reader(csv_file,
                                 delimiter=',',
@@ -115,7 +115,7 @@ class OfflineEngine(QueryBasedEngine):
                                              "score": line[2]})
                 recommendations.append(r)
 
-                if i % 10000 == 0:  # batch insert
+                if i % BATCH_UPLOAD_SIZE == 0:  # batch insert
                     utils.insert(recommendations)
                     logging.info("inserted {0} recommendations".format(len(recommendations)))
                     del recommendations[:]

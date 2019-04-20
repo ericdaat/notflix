@@ -2,7 +2,7 @@ import bcrypt
 from sqlalchemy.orm.exc import NoResultFound
 from flask import Blueprint, render_template, request, session, redirect, url_for
 
-from data.db import common, utils, db_scoped_session
+from src.data.db import common, utils, db_scoped_session
 
 
 bp = Blueprint("login", __name__)

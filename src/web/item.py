@@ -6,7 +6,7 @@ bp = Blueprint("item", __name__)
 
 @bp.route("/item/<int:item_id>", methods=("GET", "POST"))
 def index(item_id):
-    res = requests.get(url="http://api:5000/recommend/item/{0}".format(item_id),
+    res = requests.get(url="http://api:8000/recommend/item/{0}".format(item_id),
                        params={"page_type": "item",
                                "user_id": session.get("username")})
 

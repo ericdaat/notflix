@@ -20,7 +20,8 @@ NotFlix based on data from the following sources:
 
 *Note: This is a work in progress.*
 
-You need to have [Docker](https://www.docker.com/get-started) and [docker-compose](https://docs.docker.com/compose/) installed.
+You need to have [Docker](https://www.docker.com/get-started)
+and [docker-compose](https://docs.docker.com/compose/) installed.
 
 Then, run:
 

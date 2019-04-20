@@ -1,5 +1,5 @@
 from .engine import QueryBasedEngine
-from data.db import movielens
+from src.data.db import movielens
 from config import MAX_RECOMMENDATIONS
 
 

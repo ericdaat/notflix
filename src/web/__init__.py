@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
-from data.db import db_scoped_session
+from src.data.db import db_scoped_session
 from .errors import page_not_found
 
 
@@ -46,7 +46,7 @@ def create_app(test_config=None):
     app.register_error_handler(404, page_not_found)
 
     # blueprints
-    from web import home, item, genres, search, you, login
+    from src.web import home, item, genres, search, you, login
     app.register_blueprint(home.bp)
     app.register_blueprint(item.bp)
     app.register_blueprint(genres.bp)

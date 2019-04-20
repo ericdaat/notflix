@@ -6,12 +6,12 @@ services:
   web:
     image: notflix_python:latest
     ports:
-     - 5000:5000
+     - 5000:8000
     volumes:
-     - ./src:/src
-    working_dir: /src
+     - ./:/app/
+    working_dir: /app
     environment:
-      PYTHONPATH: /src
+      PYTHONPATH: /app
     env_file:
       - db-credentials.env
     depends_on:
@@ -19,24 +19,24 @@ services:
       - postgres
       - redis
     restart: on-failure
-    command: ["python", "web/wsgi.py"]
+    command: ["python", "src/web/wsgi.py"]
 
   api:
     image: notflix_python:latest
     ports:
-      - 5001:5000
+      - 5001:8000
     volumes:
-      - ./src:/src
-    working_dir: /src
+      - ./:/app/
+    working_dir: /app
     environment:
-      PYTHONPATH: /src
+      PYTHONPATH: /app
     env_file:
       - db-credentials.env
     depends_on:
       - postgres
       - redis
     restart: on-failure
-    command: ["python", "api/wsgi.py"]
+    command: ["python", "src/api/wsgi.py"]
 
   redis:
     image: redis:alpine

@@ -2,23 +2,20 @@ import csv
 import json
 import os
 import requests
-import logging
 import re
-import pandas as pd
-import numpy as np
 from abc import ABC, abstractmethod
 from datetime import datetime
 from collections import defaultdict
-from sqlalchemy.sql import null
 
-from data.db import movielens, utils, imdb
+from src.data.db import movielens, utils
+from config import logger
 from config import DATASETS_PATH
 
 
 class Downloader(ABC):
     def __init__(self):
         # API related conf
-        self.api_key = self.read_api_key("../omdb.key")
+        self.api_key = self.read_api_key("omdb.key")
         self.url = "http://private.omdbapi.com/"
 
     @abstractmethod
@@ -60,16 +57,16 @@ class MovielensDownloader(Downloader):
                 for i, (id, imdb_id, _) in enumerate(reader):
                     try:
                         movie_json = self.item_from_api("tt{0}".format(imdb_id))
-                    except json.decoder.JSONDecodeError():
-                        logging.error("can't get item from API")
+                    except json.decoder.JSONDecodeError:
+                        logger.error("can't get item from API")
                         continue
 
                     if eval(movie_json["Response"]):
                         movie_json["id"] = id
                         output.write(json.dumps(movie_json) + "\n")
-                        logging.info("got movie {0}".format(imdb_id))
+                        logger.info("got movie {0}".format(imdb_id))
                     else:
-                        logging.error("failed for movie {0}".format(imdb_id))
+                        logger.error("failed for movie {0}".format(imdb_id))
 
     def insert_in_db(self):
         with open(self.output_filepath, "r") as f:
@@ -118,69 +115,5 @@ class MovielensDownloader(Downloader):
             utils.insert(genres)
             utils.insert(movies_to_insert)
 
-            logging.info("inserted {0} movies".format(len(movies_to_insert)))
-            logging.info("inserted {0} genres".format(len(genres)))
-
-
-class IMDBDownloader(Downloader):
-    def __init__(self):
-        super(IMDBDownloader, self).__init__()
-
-    def download_to_file(self):
-        pass
-
-    def insert_in_db(self):
-        CHUNKSIZE = 100
-
-        for df in pd.read_csv(os.path.join(DATASETS_PATH, "imdb/title.basics.tsv"),
-                              sep="\t", chunksize=CHUNKSIZE):
-            df.rename({"tconst": "id"}, axis=1, inplace=True)
-            df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
-            df["genres"] = df["genres"].fillna("").str.split(",")
-
-            df.fillna(null(), inplace=True)
-            utils.insert([imdb.TitleBasics(**item) for item in df.to_dict(orient="records")])
-            break
-
-        for df in pd.read_csv("imdb/title.akas.tsv", sep="\t", chunksize=CHUNKSIZE):
-            df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
-            df["types"] = df["types"].fillna("").str.split(",")
-            df["attributes"] = df["attributes"].fillna("").str.split(",")
-
-            df.fillna(null(), inplace=True)
-            utils.insert([imdb.TitleAkas(**item) for item in df.to_dict(orient="records")])
-            break
-
-        for df in pd.read_csv("../datasets/imdb/title.crew.tsv", sep="\t", chunksize=CHUNKSIZE):
-            df.rename({"tconst": "id"}, axis=1, inplace=True)
-            df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
-            df["directors"] = df["directors"].fillna("").str.split(",")
-            df["writers"] = df["writers"].fillna("").str.split(",")
-
-            df.fillna(null(), inplace=True)
-            utils.insert([imdb.TitleCrew(**item) for item in df.to_dict(orient="records")])
-            break
-
-        for df in pd.read_csv("../datasets/imdb/title.principals.tsv", sep="\t", chunksize=CHUNKSIZE):
-            df.rename({"tconst": "title_id", "nconst": "name_id"}, axis=1, inplace=True)
-            df.replace(to_replace=r"\\N", value=null(), inplace=True, regex=True)
-
-            utils.insert([imdb.TitlePrincipals(**item) for item in df.to_dict(orient="records")])
-            break
-
-        for df in pd.read_csv("../datasets/imdb/title.ratings.tsv", sep="\t", chunksize=CHUNKSIZE):
-            df.rename({"tconst": "id"}, axis=1, inplace=True)
-            df.replace(to_replace=r"\\N", value=null(), inplace=True, regex=True)
-
-            utils.insert([imdb.TitleRatings(**item) for item in df.to_dict(orient="records")])
-            break
-
-        for df in pd.read_csv("../datasets/imdb/name.basics.tsv", sep="\t", chunksize=CHUNKSIZE):
-            df.rename({"nconst": "id"}, axis=1, inplace=True)
-            df.replace(to_replace=r"\\N", value=np.nan, inplace=True, regex=True)
-            df["primaryProfession"] = df["primaryProfession"].fillna("").str.split(",")
-            df["knownForTitles"] = df["knownForTitles"].fillna("").str.split(",")
-
-            df.fillna(null(), inplace=True)
-            utils.insert([imdb.NameBasics(**item) for item in df.to_dict(orient="records")])
-            break
+            logger.info("inserted {0} movies".format(len(movies_to_insert)))
+            logger.info("inserted {0} genres".format(len(genres)))

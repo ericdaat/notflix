@@ -17,8 +17,7 @@ init-db:
 	docker-compose stop api web; \
 	docker-compose up -d postgres; \
 	source venv/bin/activate; \
-	cd src; \
-	PYTHONPATH="." HOST="127.0.0.1" python scripts/init_notflix.py; \
+	PYTHONPATH="." HOST="127.0.0.1" python src/scripts/init_notflix.py; \
 	echo "done"; \
 
 start:

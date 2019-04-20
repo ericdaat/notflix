@@ -1,7 +1,7 @@
 from datetime import datetime
 from sqlalchemy import Column, Integer, DateTime, String, Float, Binary
 from sqlalchemy.dialects import postgresql
-from data.db import Base
+from src.data.db import Base
 
 
 class Recommendation(Base):

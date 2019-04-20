@@ -1,6 +1,5 @@
 import os
 import logging.config
-
 import yaml
 
 

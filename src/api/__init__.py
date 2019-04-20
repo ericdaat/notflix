@@ -2,10 +2,10 @@ import os
 
 from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
-from recommender.recommender import Recommender
-from tracker.tracker import Tracker
+from src.recommender.recommender import Recommender
+from src.tracker.tracker import Tracker
 from .errors import page_not_found
-from data.db import db_scoped_session
+from src.data.db import db_scoped_session
 
 
 def create_app(test_config=None):
@@ -44,7 +44,7 @@ def create_app(test_config=None):
     app.register_error_handler(404, page_not_found)
 
     # blueprints
-    from api import recommend
+    from src.api import recommend
     app.register_blueprint(recommend.bp)
 
     # register Recommender
