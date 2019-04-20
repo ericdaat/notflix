@@ -105,7 +105,7 @@ class OneHotMultiInput(OfflineEngine):
         with open(output_filepath, "w") as csv_file:
             writer = csv.writer(
                 csv_file,
-                delimiter=',',
+                delimiter=",",
                 quoting=csv.QUOTE_MINIMAL
             )
 

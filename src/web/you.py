@@ -4,10 +4,10 @@ from flask import Blueprint, render_template, abort, request, session
 from src.data.db import movielens, common, db_scoped_session
 
 
-bp = Blueprint('you', __name__)
+bp = Blueprint("you", __name__)
 
 
-@bp.route('/you')
+@bp.route("/you")
 def index():
     res = requests.get(
         url="http://api:8000/recommend/user/{0}"
@@ -23,7 +23,7 @@ def index():
     recommendations = res_json["recommendations"]
 
     return render_template(
-        'you/index.html',
+        "you/index.html",
         recommendations=recommendations
     )
 

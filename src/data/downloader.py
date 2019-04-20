@@ -63,7 +63,7 @@ class MovielensDownloader(Downloader):
                     try:
                         movie_json = self.item_from_api("tt{0}".format(imdb_id))
                     except json.decoder.JSONDecodeError:
-                        logging.error("can't get item from API")
+                        logging.error("can"t get item from API")
                         continue
 
                     if eval(movie_json["Response"]):

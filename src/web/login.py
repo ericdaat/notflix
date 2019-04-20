@@ -38,7 +38,7 @@ def signin():
 
         if valid_signin(username, password):
             session["username"] = username
-            return redirect(url_for('home.index'))
+            return redirect(url_for("home.index"))
         else:
             error = "Bad login"
             return render_template("login/signin.html", error=error)
@@ -63,7 +63,7 @@ def signup():
             )
             utils.insert(user)
 
-            return redirect(url_for('login.signin'))
+            return redirect(url_for("login.signin"))
 
     return render_template("login/signup.html")
 
@@ -72,4 +72,4 @@ def signup():
 def signout():
     session.pop("username")
 
-    return redirect(url_for('home.index'))
+    return redirect(url_for("home.index"))
