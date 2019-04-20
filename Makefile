@@ -17,7 +17,8 @@ init-db:
 	docker-compose stop api web; \
 	docker-compose up -d postgres; \
 	source venv/bin/activate; \
-	PYTHONPATH="." HOST="127.0.0.1" python src/scripts/init_notflix.py; \
+	PYTHONPATH="." POSTGRES_HOST="127.0.0.1" REDIS_HOST="127.0.0.1"\
+	python src/scripts/init_notflix.py; \
 	echo "done"; \
 
 start:
@@ -33,3 +34,8 @@ docs:
 	sphinx-apidoc ../ -o source -M; \
 	make html;  \
 	echo "done"; \
+
+tests:
+	source venv/bin/activate;
+	PYTHONPATH="." POSTGRES_HOST="127.0.0.1" REDIS_HOST="127.0.0.1" \
+	python -m unittest discover -s tests;
