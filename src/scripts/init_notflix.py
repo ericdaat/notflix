@@ -18,20 +18,40 @@ def download_data(insert_in_db=True):
 
 
 def insert_engines():
-    utils.insert([
-        common.Engine(**{"type": "OneHotMultiInput", "display_name": "Similar to {0}", "priority": 1}),
-        common.Engine(**{"type": "TopRated", "display_name": "Top rated movies", "priority": 1}),
-        common.Engine(**{"type": "MostRecent", "display_name": "Uploaded recently", "priority": 2}),
-        common.Engine(**{"type": "UserHistory", "display_name": "Your browsing history", "priority": 2})
-    ])
+    engines = [
+        {
+            "type": "OneHotMultiInput",
+            "display_name": "Similar to {0}",
+            "priority": 1
+        },
+        {
+            "type": "TopRated",
+            "display_name": "Top rated movies",
+            "priority": 1
+        },
+        {
+            "type": "MostRecent",
+            "display_name": "Uploaded recently",
+            "priority": 2
+        },
+        {
+            "type": "UserHistory",
+            "display_name": "Your browsing history",
+            "priority": 2
+        },
+    ]
+
+    utils.insert([common.Engine(**e) for e in engines])
 
 
 def insert_pages():
-    utils.insert([
-        common.Page(**{"name": "home", "engines": ["TopRated", "MostRecent"]}),
-        common.Page(**{"name": "item", "engines": ["OneHotMultiInput"]}),
-        common.Page(**{"name": "you", "engines": ["UserHistory"]}),
-    ])
+    pages = [
+        {"name": "home", "engines": ["TopRated", "MostRecent"]},
+        {"name": "item", "engines": ["OneHotMultiInput"]},
+        {"name": "you", "engines": ["UserHistory"]}
+    ]
+
+    utils.insert([common.Page(**p) for p in pages])
 
 
 if __name__ == "__main__":

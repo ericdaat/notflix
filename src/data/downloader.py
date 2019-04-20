@@ -42,14 +42,19 @@ class Downloader(ABC):
 class MovielensDownloader(Downloader):
     def __init__(self):
         super(MovielensDownloader, self).__init__()
-        self.input_filepath = os.path.join(DATASETS_PATH,
-                                           "movielens/ml-20m/links.csv")
-        self.output_filepath = os.path.join(DATASETS_PATH,
-                                            "movielens/omdb.csv")
+        self.input_filepath = os.path.join(
+            DATASETS_PATH,
+            "movielens/ml-20m/links.csv"
+        )
+
+        self.output_filepath = os.path.join(
+            DATASETS_PATH,
+            "movielens/omdb.csv"
+        )
 
     def download_to_file(self):
         with open(self.output_filepath, "a") as output:
-            with open(os.path.join(self.input_filepath), "r", encoding="latin1") as input:
+            with open(self.input_filepath, "r", encoding="latin1") as input:
 
                 reader = csv.reader(input, delimiter=",", quotechar="\"")
                 next(reader, None)  # skip header
@@ -93,19 +98,28 @@ class MovielensDownloader(Downloader):
                     if genre not in genre_dict:
                         genre_dict[genre] = len(genre_dict) + 1
 
-                d = {"id": movie["id"],
-                     "image": movie["Poster"],
-                     "name": movie["Title"],
-                     "genres": [genre_dict[name] for name in genres_array],
-                     "description": movie["Plot"],
-                     "year": datetime.strptime(movie["Released"], "%d %b %Y") if movie["Released"] != "N/A" else None,
-                     "rating": movie["imdbRating"] if movie["imdbRating"] != "N/A" else None,
-                     "director": movie["Director"],
-                     "actors": movie["Actors"],
-                     "awards": movie["Awards"],
-                     "language": movie["Language"],
-                     "country": movie["Country"],
-                     "duration": duration}
+                # fix fields
+                year = datetime.strptime(movie["Released"], "%d %b %Y") \
+                    if movie["Released"] != "N/A" else None
+
+                rating = movie["imdbRating"] \
+                    if movie["imdbRating"] != "N/A" else None
+
+                d = {
+                    "id": movie["id"],
+                    "image": movie["Poster"],
+                    "name": movie["Title"],
+                    "genres": [genre_dict[name] for name in genres_array],
+                    "description": movie["Plot"],
+                    "year": year,
+                    "rating": rating,
+                    "director": movie["Director"],
+                    "actors": movie["Actors"],
+                    "awards": movie["Awards"],
+                    "language": movie["Language"],
+                    "country": movie["Country"],
+                    "duration": duration
+                }
 
                 movies_to_insert.append(movielens.Movie(**d))
 

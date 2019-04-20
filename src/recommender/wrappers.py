@@ -31,7 +31,11 @@ class Recommendations(object):
         """ Convert recommendation object to string for debug purpose
 
         Returns:
-            str: the recommendations as string, stating the type and number of items recommended.
+            str: the recommendations as string, stating the type \
+                and number of items recommended.
         """
-        return "{1} recommendations for {0}".format(self.type,
-                                                    len(self.recommended_items))
+
+        string = "{1} recommendations for {0}"\
+                 .format(self.type, len(self.recommended_items))
+
+        return string

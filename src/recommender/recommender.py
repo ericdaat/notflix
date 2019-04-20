@@ -35,9 +35,10 @@ class Recommender(object):
 
         if not active_engines and context.page_type:
             try:
-                active_engines = db_scoped_session.query(common.Page.engines) \
-                                        .filter(common.Page.name == context.page_type) \
-                                        .one()[0]
+                active_engines = db_scoped_session\
+                    .query(common.Page.engines)\
+                    .filter(common.Page.name == context.page_type)\
+                    .one()[0]
             except sqlalchemy.orm.exc.NoResultFound:
                 pass
 
@@ -48,6 +49,7 @@ class Recommender(object):
                 continue
 
             recommendations = instance.recommend(context)
+
             if len(recommendations["recommended_items"]) > 0:
                 recommendation_list.append(recommendations)
 

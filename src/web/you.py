@@ -9,8 +9,11 @@ bp = Blueprint('you', __name__)
 
 @bp.route('/you')
 def index():
-    res = requests.get(url="http://api:8000/recommend/user/{0}".format(session.get("username")),
-                       params={"page_type": "you"})
+    res = requests.get(
+        url="http://api:8000/recommend/user/{0}"
+            .format(session.get("username")),
+        params={"page_type": "you"}
+    )
 
     if res.status_code != 200:
         abort(res.status_code)
@@ -19,8 +22,10 @@ def index():
 
     recommendations = res_json["recommendations"]
 
-    return render_template('you/index.html',
-                           recommendations=recommendations)
+    return render_template(
+        'you/index.html',
+        recommendations=recommendations
+    )
 
 
 @bp.route("/you/taste", methods=("GET", "POST"))
@@ -36,10 +41,13 @@ def taste():
         db_scoped_session.commit()
 
     genres = db_scoped_session.query(movielens.Genre).all()
-    user_genres = db_scoped_session.query(common.User.favorite_genres)\
-                            .filter(common.User.username == session["username"])\
-                            .one()[0]
+    user_genres = db_scoped_session\
+        .query(common.User.favorite_genres)\
+        .filter(common.User.username == session["username"])\
+        .one()[0]
 
-    return render_template("you/taste.html",
-                           genres=genres,
-                           user_genres=user_genres)
+    return render_template(
+        "you/taste.html",
+        genres=genres,
+        user_genres=user_genres
+    )

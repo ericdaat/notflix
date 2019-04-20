@@ -11,23 +11,31 @@ bp = Blueprint("recommend", __name__)
 @bp.route("/recommend/item/<int:item_id>", methods=("GET",))
 def item(item_id):
     try:
-        active_item = db_scoped_session.query(movielens.Movie)\
-                             .filter(movielens.Movie.id == item_id)\
-                             .one()
-        genre_names = db_scoped_session.query(movielens.Genre.id, movielens.Genre.name)\
-                             .filter(movielens.Genre.id.in_(active_item.genres))\
-                             .all()
+        active_item = db_scoped_session\
+            .query(movielens.Movie)\
+            .filter(movielens.Movie.id == item_id)\
+            .one()
+
+        genre_names = db_scoped_session\
+            .query(movielens.Genre.id, movielens.Genre.name)\
+            .filter(movielens.Genre.id.in_(active_item.genres))\
+            .all()
+
         active_item.genres = genre_names
     except sqlalchemy.orm.exc.NoResultFound:
         abort(404)
 
     r = current_app.reco
-    c = Context(**{"item": active_item, "page_type": request.args.get("page_type")})
+    c = Context(
+        item=active_item,
+        page_type=request.args.get("page_type")
+    )
 
     try:
-        user = db_scoped_session.query(common.User) \
-                      .filter(common.User.username == request.args.get("user_id")) \
-                      .one()
+        user = db_scoped_session\
+            .query(common.User) \
+            .filter(common.User.username == request.args.get("user_id")) \
+            .one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
 
@@ -36,26 +44,40 @@ def item(item_id):
 
     recommendations = r.recommend(context=c)
 
-    current_app.tracker.store_item_viewed("history:{0}".format(request.args.get("user_id")),
-                                          active_item.id)
+    current_app.tracker.store_item_viewed(
+        "history:{0}".format(request.args.get("user_id")),
+        active_item.id
+    )
 
-    return jsonify(active_item=active_item.as_dict(),
-                   recommendations=recommendations)
+    res = jsonify(
+        active_item=active_item.as_dict(),
+        recommendations=recommendations
+    )
+
+    return res
 
 
 @bp.route("/recommend/user/<user_id>", methods=("GET",))
 def user(user_id):
     r = current_app.reco
-    c = Context(**{"page_type": request.args.get("page_type")})
+    c = Context(
+        page_type=request.args.get("page_type")
+    )
 
     try:
-        user = db_scoped_session.query(common.User).filter(common.User.username == user_id).one()
+        user = db_scoped_session\
+            .query(common.User)\
+            .filter(common.User.username == user_id)\
+            .one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
 
     if user:
         c.user = user
-        c.history = current_app.tracker.get_views_history("history:{0}".format(user.username), n=3)
+        c.history = current_app.tracker.get_views_history(
+            "history:{0}".format(user.username),
+            n=3
+        )
 
     recommendations = r.recommend(context=c)
 
@@ -66,7 +88,15 @@ def user(user_id):
                                  .one()
 
             c.item = active_item
-            recommendations.append(r.recommend(context=c, restrict_to_engines=["OneHotMultiInput"])[0])
+            recommendations.append(
+                r.recommend(
+                    context=c,
+                    restrict_to_engines=["OneHotMultiInput"])[0]
+            )
 
-    return jsonify(active_user=user_id,
-                   recommendations=recommendations)
+    res = jsonify(
+        active_user=user_id,
+        recommendations=recommendations
+    )
+
+    return res

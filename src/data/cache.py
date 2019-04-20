@@ -12,7 +12,8 @@ class Cache(object):
 
         Args:
             key (str): cache key
-            start (int): when querying a redis list, starting range of the list.
+            start (int): when querying a redis list,\
+                starting range of the list.
             end (int): when querying a redis list, ending range of the list.
 
         Returns:

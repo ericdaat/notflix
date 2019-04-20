@@ -29,10 +29,10 @@ class Engine(ABC):
         r = Recommendations()
         r.type = self.type
 
-        name, priority = db_scoped_session.query(common.Engine.display_name,
-                                                 common.Engine.priority)\
-                                .filter(common.Engine.type == self.type)\
-                                .one()
+        name, priority = db_scoped_session\
+            .query(common.Engine.display_name, common.Engine.priority)\
+            .filter(common.Engine.type == self.type)\
+            .one()
 
         if context.item and True:  # TODO: add dynamic name option in DB
             r.display_name = name.format(context.item.name)
@@ -87,7 +87,8 @@ class OfflineEngine(QueryBasedEngine):
         super(OfflineEngine, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(movielens.Movie) \
+        recommendations = session\
+            .query(movielens.Movie) \
             .filter(common.Recommendation.source_item_id == context.item.id) \
             .filter(common.Recommendation.engine_name == self.type) \
             .filter(movielens.Movie.id == common.Recommendation.recommended_item_id) \
@@ -102,22 +103,30 @@ class OfflineEngine(QueryBasedEngine):
         pass
 
     def upload(self):
-        with open(os.path.join(ML_PATH, "csv", self.type + ".csv"), "r") as csv_file:
+        input_filepath = os.path.join(ML_PATH, "csv", self.type + ".csv")
+
+        with open(input_filepath, "r") as csv_file:
             recommendations = []
-            reader = csv.reader(csv_file,
-                                delimiter=',',
-                                quoting=csv.QUOTE_MINIMAL)
+            reader = csv.reader(
+                csv_file,
+                delimiter=',',
+                quoting=csv.QUOTE_MINIMAL
+            )
 
             for i, line in enumerate(reader):
-                r = common.Recommendation(**{"engine_name": self.type,
-                                             "source_item_id": line[0],
-                                             "recommended_item_id": line[1],
-                                             "score": line[2]})
+                r = common.Recommendation(
+                    engine_name=self.type,
+                    source_item_id=line[0],
+                    recommended_item_id=line[1],
+                    score=line[2]
+                )
                 recommendations.append(r)
 
-                if i % BATCH_UPLOAD_SIZE == 0:  # batch insert
+                # don't burst RAM, use batch size
+                if i % BATCH_UPLOAD_SIZE == 0:
                     utils.insert(recommendations)
-                    logging.info("inserted {0} recommendations".format(len(recommendations)))
+                    logging.info("inserted {0} recommendations"
+                                 .format(len(recommendations)))
                     del recommendations[:]
 
 

@@ -17,10 +17,13 @@ class SameGenres(QueryBasedEngine):
         super(SameGenres, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(movielens.Movie)\
-                           .filter(movielens.Movie.genres.contains([g[0] for g in context.item.genres]))\
-                           .filter(movielens.Movie.id != context.item.id) \
-                           .limit(MAX_RECOMMENDATIONS).all()
+        recommendations = session\
+            .query(movielens.Movie)\
+            .filter(movielens.Movie.genres.contains(
+                [g[0] for g in context.item.genres]))\
+            .filter(movielens.Movie.id != context.item.id) \
+            .limit(MAX_RECOMMENDATIONS)\
+            .all()
 
         return recommendations
 
@@ -30,23 +33,34 @@ class OneHotMultiInput(OfflineEngine):
         super(OneHotMultiInput, self).__init__()
 
     def train(self):
+        # read dataset
         df = pd.read_json(
             os.path.join(DATASETS_PATH, "movielens", "omdb.csv"),
             lines=True
         )
 
+        # select features
         movies = df[[
             "id", "Title", "Plot", "Country", "Actors", "Director",
             "Production", "Genre", "Language", "Released", "imdbVotes",
             "imdbRating"
         ]]
 
+        # edit features
         movies.replace("N/A", np.nan, inplace=True)
-        movies["Released_year"] = movies["Released"].fillna("").str.split(" ").str[-1].replace("", 0).astype(int)
-        movies["Released_decade"] = pd.cut(movies["Released_year"], range(1920, 2020, 10))
-        movies["imdbVotes"] = movies["imdbVotes"].str.replace(",", "").fillna(0).astype(int)
+        movies["Released_year"] = movies["Released"]\
+            .fillna("")\
+            .str.split(" ").str[-1]\
+            .replace("", 0).astype(int)
+        movies["Released_decade"] = pd.cut(
+            movies["Released_year"],
+            range(1920, 2020, 10)
+        )
+        movies["imdbVotes"] = movies["imdbVotes"]\
+            .str.replace(",", "").fillna(0).astype(int)
         movies["popularity"] = pd.cut(movies["imdbVotes"], 10)
 
+        # init vectorizers
         country_vect = CountVectorizer()
         director_vect = CountVectorizer()
         genre_vect = CountVectorizer()
@@ -54,6 +68,7 @@ class OneHotMultiInput(OfflineEngine):
         # plot_vect = TfidfVectorizer(min_df=2, max_df=0.5)
         # title_vect = TfidfVectorizer(min_df=2, max_df=0.5)
 
+        # fit vectorizers and concatenate
         X = sparse.hstack([
             country_vect.fit_transform(movies["Country"].fillna("")),
             genre_vect.fit_transform(movies["Genre"].fillna("")),
@@ -64,14 +79,20 @@ class OneHotMultiInput(OfflineEngine):
             # title_vect.fit_transform(movies["Title"].fillna("")),
         ])
 
-        nbrs = NearestNeighbors(n_neighbors=30, metric="cosine").fit(X)
+        # fit model
+        nbrs = NearestNeighbors(
+            n_neighbors=MAX_RECOMMENDATIONS,
+            metric="cosine"
+        ).fit(X)
+
         distances, neighbors = nbrs.kneighbors(X)
 
+        # compute recommendations
         to_insert = []
 
         for index, movie_id in enumerate(movies.id):
             scores = 1. - distances[index]
-            recommendations = list(map(lambda r: movies.id[r], neighbors[index]))
+            recommendations = map(lambda r: movies.id[r], neighbors[index])
 
             for score, recommended_movie_id in zip(scores, recommendations):
                 if movie_id == recommended_movie_id:
@@ -79,10 +100,14 @@ class OneHotMultiInput(OfflineEngine):
 
                 to_insert.append([movie_id, recommended_movie_id, score])
 
-        with open(os.path.join(ML_PATH, "csv", self.type + ".csv"), "w") as csv_file:
-            writer = csv.writer(csv_file,
-                                delimiter=',',
-                                quoting=csv.QUOTE_MINIMAL)
+        # export recomemndations as CSV
+        output_filepath = os.path.join(ML_PATH, "csv", self.type + ".csv")
+        with open(output_filepath, "w") as csv_file:
+            writer = csv.writer(
+                csv_file,
+                delimiter=',',
+                quoting=csv.QUOTE_MINIMAL
+            )
 
             writer.writerows(to_insert)
 
@@ -103,11 +128,14 @@ class TopRated(QueryBasedEngine):
         recommendations = session.query(movielens.Movie)
 
         if context.user and context.user.favorite_genres:
-            recommendations = recommendations.filter(movielens.Movie.genres.contains(context.user.favorite_genres))
+            query_filter = movielens.Movie.genres\
+                .contains(context.user.favorite_genres)
+            recommendations = recommendations.filter(query_filter)
 
         recommendations = recommendations \
             .order_by(movielens.Movie.rating.desc().nullslast()) \
-            .limit(MAX_RECOMMENDATIONS).all()
+            .limit(MAX_RECOMMENDATIONS)\
+            .all()
 
         return recommendations
 
@@ -120,9 +148,13 @@ class MostRecent(QueryBasedEngine):
         recommendations = session.query(movielens.Movie)
 
         if context.user and context.user.favorite_genres:
-            recommendations = recommendations.filter(movielens.Movie.genres.contains(context.user.favorite_genres))
+            query_filter = movielens.Movie.genres\
+                .contains(context.user.favorite_genres)
+            recommendations = recommendations.filter(query_filter)
 
-        recommendations = recommendations.order_by(movielens.Movie.year.desc().nullslast()) \
-                                         .limit(MAX_RECOMMENDATIONS).all()
+        recommendations = recommendations\
+            .order_by(movielens.Movie.year.desc().nullslast())\
+            .limit(MAX_RECOMMENDATIONS)\
+            .all()
 
         return recommendations
