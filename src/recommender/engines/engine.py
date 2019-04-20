@@ -122,7 +122,7 @@ class OfflineEngine(QueryBasedEngine):
                 )
                 recommendations.append(r)
 
-                # don"t burst RAM, use batch size
+                # don't burst RAM, use batch size
                 if i % BATCH_UPLOAD_SIZE == 0:
                     utils.insert(recommendations)
                     logging.info("inserted {0} recommendations"
