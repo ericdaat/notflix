@@ -30,6 +30,6 @@ docs:
 	cd docs; \
 	make clean; \
 	find source/*.rst ! -name 'index.rst' -type f -exec rm -f {} +; \
-	sphinx-apidoc ../src -o source -M; \
-	sphinx-build source build; \
+	sphinx-apidoc ../ -o source -M; \
+	make html;  \
 	echo "done"; \

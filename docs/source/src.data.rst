@@ -1,7 +1,7 @@
-data package
-============
+src.data package
+================
 
-.. automodule:: data
+.. automodule:: src.data
     :members:
     :undoc-members:
     :show-inheritance:
@@ -11,23 +11,23 @@ Subpackages
 
 .. toctree::
 
-    data.db
+    src.data.db
 
 Submodules
 ----------
 
-data.cache module
------------------
+src.data.cache module
+---------------------
 
-.. automodule:: data.cache
+.. automodule:: src.data.cache
     :members:
     :undoc-members:
     :show-inheritance:
 
-data.downloader module
-----------------------
+src.data.downloader module
+--------------------------
 
-.. automodule:: data.downloader
+.. automodule:: src.data.downloader
     :members:
     :undoc-members:
     :show-inheritance:
