@@ -1,3 +1,5 @@
+from datetime import datetime
+from sqlalchemy import Column, DateTime, Integer
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
@@ -10,3 +12,13 @@ db_scoped_session = scoped_session(db_session)
 
 Base = declarative_base()
 Base.query = db_scoped_session.query_property()
+
+
+class BaseTable(object):
+    id = Column(Integer, primary_key=True)
+    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
+    updated_at = Column(
+        DateTime,
+        default=datetime.utcnow,
+        onupdate=datetime.utcnow
+    )

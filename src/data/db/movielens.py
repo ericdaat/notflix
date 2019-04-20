@@ -1,14 +1,11 @@
-from datetime import datetime
-from sqlalchemy import Column, Integer, DateTime, String, Date, Float
+
+from sqlalchemy import Column, Integer, String, Date, Float
 from sqlalchemy.dialects import postgresql
-from src.data.db import Base
+from src.data.db import Base, BaseTable
 
 
-class Movie(Base):
+class Movie(Base, BaseTable):
     __tablename__ = "movies"
-    id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     name = Column(String(256), nullable=False)
     genres = Column(postgresql.ARRAY(Integer), nullable=True)
     image = Column(String(256), nullable=True)
@@ -26,9 +23,6 @@ class Movie(Base):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
-class Genre(Base):
+class Genre(Base, BaseTable):
     __tablename__ = "genres"
-    id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     name = Column(String(56), nullable=False, unique=True)
