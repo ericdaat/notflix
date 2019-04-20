@@ -1,5 +1,5 @@
 import os
-import logging
+from src.utils.logging import setup_logging
 
 # paths
 DATASETS_PATH = os.path.abspath("datasets")
@@ -21,14 +21,7 @@ DB_HOST = "postgresql://{user}:{password}@{host}/{db}".format(
 MAX_RECOMMENDATIONS = 25
 BATCH_UPLOAD_SIZE = 50000
 
-# logging
-logger = logging.getLogger()
-stream_handler = logging.StreamHandler()
-file_handler = logging.FileHandler(filename="notflix.log")
-formatter = logging.Formatter(
-    "%(asctime)s %(name)-12s %(levelname)-8s %(message)s"
+setup_logging(
+    log_dir="/var/log/notflix.log",
+    config_path="logging.yml"
 )
-stream_handler.setFormatter(formatter)
-file_handler.setFormatter(formatter)
-logger.addHandler(stream_handler)
-logger.setLevel(logging.INFO)

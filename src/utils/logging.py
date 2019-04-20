@@ -3,9 +3,7 @@ import logging.config
 import yaml
 
 
-def setup_logging(log_dir,
-                  config_path="logging.yml",
-                  level=logging.DEBUG):
+def setup_logging(log_dir, config_path, level=logging.DEBUG):
     """Setup logging configuration
     """
     if os.path.isfile(config_path):
@@ -16,4 +14,3 @@ def setup_logging(log_dir,
     else:
         logging.basicConfig(level=level)
         logging.info("Loaded default config.")
-

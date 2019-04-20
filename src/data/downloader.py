@@ -3,12 +3,12 @@ import json
 import os
 import requests
 import re
+import logging
 from abc import ABC, abstractmethod
 from datetime import datetime
 from collections import defaultdict
 
 from src.data.db import movielens, utils
-from config import logger
 from config import DATASETS_PATH
 
 
@@ -58,15 +58,15 @@ class MovielensDownloader(Downloader):
                     try:
                         movie_json = self.item_from_api("tt{0}".format(imdb_id))
                     except json.decoder.JSONDecodeError:
-                        logger.error("can't get item from API")
+                        logging.error("can't get item from API")
                         continue
 
                     if eval(movie_json["Response"]):
                         movie_json["id"] = id
                         output.write(json.dumps(movie_json) + "\n")
-                        logger.info("got movie {0}".format(imdb_id))
+                        logging.info("got movie {0}".format(imdb_id))
                     else:
-                        logger.error("failed for movie {0}".format(imdb_id))
+                        logging.error("failed for movie {0}".format(imdb_id))
 
     def insert_in_db(self):
         with open(self.output_filepath, "r") as f:
@@ -115,5 +115,5 @@ class MovielensDownloader(Downloader):
             utils.insert(genres)
             utils.insert(movies_to_insert)
 
-            logger.info("inserted {0} movies".format(len(movies_to_insert)))
-            logger.info("inserted {0} genres".format(len(genres)))
+            logging.info("inserted {0} movies".format(len(movies_to_insert)))
+            logging.info("inserted {0} genres".format(len(genres)))
