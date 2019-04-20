@@ -4,7 +4,7 @@ from flask import (
     Blueprint, render_template, request, session, redirect, url_for
 )
 
-from src.data.db import common, utils, db_scoped_session
+from src.data.model import common, utils, db_scoped_session
 
 
 bp = Blueprint("login", __name__)

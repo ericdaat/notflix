@@ -5,7 +5,7 @@ import csv
 
 from config import MAX_RECOMMENDATIONS, BATCH_UPLOAD_SIZE, ML_PATH
 from src.recommender.wrappers import Recommendations
-from src.data.db import db_scoped_session, movielens, common, utils
+from src.data.model import db_scoped_session, movielens, common, utils
 
 
 class Engine(ABC):

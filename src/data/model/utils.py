@@ -1,5 +1,5 @@
 from sqlalchemy_utils import database_exists, create_database
-from src.data.db import Base, engine, db_session
+from src.data.model import Base, engine, db_session
 
 
 def init():

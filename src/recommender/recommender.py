@@ -2,7 +2,7 @@ import importlib
 import sqlalchemy
 import logging
 
-from src.data.db import db_scoped_session, common
+from src.data.model import db_scoped_session, common
 
 
 class Recommender(object):

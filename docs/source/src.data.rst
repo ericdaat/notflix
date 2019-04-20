@@ -11,7 +11,7 @@ Subpackages
 
 .. toctree::
 
-    src.data.db
+    src.data.model
 
 Submodules
 ----------

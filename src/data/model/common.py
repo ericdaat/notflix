@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, Float, Binary
 from sqlalchemy.dialects import postgresql
-from src.data.db import Base, BaseTable
+from src.data.model import Base, BaseTable
 
 
 class Recommendation(Base, BaseTable):

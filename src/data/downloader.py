@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from collections import defaultdict
 
-from src.data.db import movielens, utils
+from src.data.model import movielens, utils
 from config import DATASETS_PATH
 
 

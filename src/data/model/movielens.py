@@ -1,7 +1,7 @@
 
 from sqlalchemy import Column, Integer, String, Date, Float
 from sqlalchemy.dialects import postgresql
-from src.data.db import Base, BaseTable
+from src.data.model import Base, BaseTable
 
 
 class Movie(Base, BaseTable):

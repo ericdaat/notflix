@@ -21,7 +21,5 @@ DB_HOST = "postgresql://{user}:{password}@{host}/{db}".format(
 MAX_RECOMMENDATIONS = 25
 BATCH_UPLOAD_SIZE = 50000
 
-setup_logging(
-    log_dir="/var/log/notflix.log",
-    config_path="logging.yml"
-)
+# logging
+setup_logging(config_path="logging.yml")

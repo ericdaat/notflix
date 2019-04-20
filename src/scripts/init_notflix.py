@@ -1,5 +1,5 @@
 import logging
-from src.data.db import common, utils
+from src.data.model import common, utils
 from src.data import downloader
 from src.recommender import engines
 
@@ -55,6 +55,7 @@ def insert_pages():
 
 
 if __name__ == "__main__":
+    init_db()
     download_data(insert_in_db=True)
     insert_engines()
     insert_pages()

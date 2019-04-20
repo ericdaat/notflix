@@ -5,7 +5,7 @@ from werkzeug.contrib.fixers import ProxyFix
 from src.recommender.recommender import Recommender
 from src.tracker.tracker import Tracker
 from .errors import page_not_found
-from src.data.db import db_scoped_session
+from src.data.model import db_scoped_session
 
 
 def create_app(test_config=None):

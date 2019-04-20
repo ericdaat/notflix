@@ -9,7 +9,7 @@ from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_PATH
 from src.recommender.engines.engine import (
     QueryBasedEngine, OfflineEngine
 )
-from src.data.db import movielens
+from src.data.model import movielens
 
 
 class SameGenres(QueryBasedEngine):

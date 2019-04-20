@@ -2,7 +2,7 @@ import sqlalchemy
 from flask import Blueprint, current_app, abort, jsonify, request
 
 from src.recommender.wrappers import Context
-from src.data.db import common, movielens, db_scoped_session
+from src.data.model import common, movielens, db_scoped_session
 
 
 bp = Blueprint("recommend", __name__)

@@ -1,7 +1,7 @@
 import requests
 from flask import Blueprint, render_template, abort, request, session
 
-from src.data.db import movielens, common, db_scoped_session
+from src.data.model import movielens, common, db_scoped_session
 
 
 bp = Blueprint("you", __name__)
