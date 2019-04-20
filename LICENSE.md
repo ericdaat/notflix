@@ -1,6 +1,6 @@
 MIT License
 
-Copyright (c) 2018 Eric Daoud Attoyan
+Copyright (c) 2019 Eric Daoud Attoyan
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
