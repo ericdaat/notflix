@@ -1,12 +1,12 @@
+import os
+import logging
+from datetime import datetime
 from sqlalchemy import (
     Column, Integer, String, Float, Binary, Date, DateTime
 )
-from sqlalchemy.dialects import postgresql
-
-from sqlalchemy_utils import database_exists, create_database
-
-from datetime import datetime
 from sqlalchemy import create_engine
+from sqlalchemy.dialects import postgresql
+from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker, scoped_session
 from config import DB_HOST
@@ -34,6 +34,7 @@ class BaseTable(object):
 def init():
     if not database_exists(engine.url):
         create_database(engine.url)
+        logging.info("Created database {0}".format(os.environ["POSTGRES_DB"]))
 
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
