@@ -9,6 +9,7 @@ services:
      - 5000:8000
     volumes:
      - ./:/app/
+     - ./logs/web/:/app/logs/
     working_dir: /app
     environment:
       PYTHONPATH: /app
@@ -27,6 +28,7 @@ services:
       - 5001:8000
     volumes:
       - ./:/app/
+      - ./logs/api/:/app/logs/
     working_dir: /app
     environment:
       PYTHONPATH: /app
