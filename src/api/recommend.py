@@ -2,7 +2,7 @@ import sqlalchemy
 from flask import Blueprint, current_app, abort, jsonify, request
 
 from src.recommender.wrappers import Context
-from src.data.model import common, movielens, db_scoped_session
+from src.data_interface import model, db_scoped_session
 
 
 bp = Blueprint("recommend", __name__)
@@ -12,13 +12,13 @@ bp = Blueprint("recommend", __name__)
 def item(item_id):
     try:
         active_item = db_scoped_session\
-            .query(movielens.Movie)\
-            .filter(movielens.Movie.id == item_id)\
+            .query(model.Movie)\
+            .filter(model.Movie.id == item_id)\
             .one()
 
         genre_names = db_scoped_session\
-            .query(movielens.Genre.id, movielens.Genre.name)\
-            .filter(movielens.Genre.id.in_(active_item.genres))\
+            .query(model.Genre.id, model.Genre.name)\
+            .filter(model.Genre.id.in_(active_item.genres))\
             .all()
 
         active_item.genres = genre_names
@@ -33,8 +33,8 @@ def item(item_id):
 
     try:
         user = db_scoped_session\
-            .query(common.User) \
-            .filter(common.User.username == request.args.get("user_id")) \
+            .query(model.User) \
+            .filter(model.User.username == request.args.get("user_id")) \
             .one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
@@ -66,8 +66,8 @@ def user(user_id):
 
     try:
         user = db_scoped_session\
-            .query(common.User)\
-            .filter(common.User.username == user_id)\
+            .query(model.User)\
+            .filter(model.User.username == user_id)\
             .one()
     except sqlalchemy.orm.exc.NoResultFound:
         user = None
@@ -83,8 +83,8 @@ def user(user_id):
 
     if c.history and c.page_type == "you":
         for item_id in c.history:
-            active_item = db_scoped_session.query(movielens.Movie) \
-                                 .filter(movielens.Movie.id == item_id) \
+            active_item = db_scoped_session.query(model.Movie) \
+                                 .filter(model.Movie.id == item_id) \
                                  .one()
 
             c.item = active_item

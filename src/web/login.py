@@ -4,7 +4,7 @@ from flask import (
     Blueprint, render_template, request, session, redirect, url_for
 )
 
-from src.data.model import common, utils, db_scoped_session
+from src.data_interface import model, db_scoped_session
 
 
 bp = Blueprint("login", __name__)
@@ -14,8 +14,8 @@ def valid_signin(username, password):
     is_valid = False
     try:
         hashed_password = db_scoped_session\
-            .query(common.User.password)\
-            .filter(common.User.username == username)\
+            .query(model.User.password)\
+            .filter(model.User.username == username)\
             .one()[0]
     except NoResultFound:
         return is_valid
@@ -57,11 +57,11 @@ def signup():
                 password.encode("utf8"),
                 bcrypt.gensalt()
             )
-            user = common.User(
+            user = model.User(
                 username=username,
                 password=hashed_password
             )
-            utils.insert(user)
+            model.insert(user)
 
             return redirect(url_for("login.signin"))
 

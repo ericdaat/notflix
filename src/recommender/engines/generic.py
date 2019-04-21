@@ -1,5 +1,5 @@
 from .engine import QueryBasedEngine
-from src.data.model import movielens
+from src.data_interface import model
 from config import MAX_RECOMMENDATIONS
 
 
@@ -9,8 +9,8 @@ class UserHistory(QueryBasedEngine):
 
     def compute_query(self, session, context):
         if context.user and context.history:
-            recommendations = session.query(movielens.Movie) \
-                .filter(movielens.Movie.id.in_(context.history)) \
+            recommendations = session.query(model.Movie) \
+                .filter(model.Movie.id.in_(context.history)) \
                 .limit(MAX_RECOMMENDATIONS) \
                 .all()
         else:

@@ -8,7 +8,7 @@ from abc import ABC, abstractmethod
 from datetime import datetime
 from collections import defaultdict
 
-from src.data.model import movielens, utils
+from src.data_interface import model
 from config import DATASETS_PATH
 
 
@@ -121,13 +121,13 @@ class MovielensDownloader(Downloader):
                     "duration": duration
                 }
 
-                movies_to_insert.append(movielens.Movie(**d))
+                movies_to_insert.append(model.Movie(**d))
 
-            genres = [movielens.Genre(**{"id": id, "name": name})
+            genres = [model.Genre(**{"id": id, "name": name})
                       for name, id in genre_dict.items()]
 
-            utils.insert(genres)
-            utils.insert(movies_to_insert)
+            model.insert(genres)
+            model.insert(movies_to_insert)
 
             logging.info("inserted {0} movies".format(len(movies_to_insert)))
             logging.info("inserted {0} genres".format(len(genres)))

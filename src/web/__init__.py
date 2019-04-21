@@ -2,7 +2,7 @@ import os
 
 from flask import Flask, render_template
 from werkzeug.contrib.fixers import ProxyFix
-from src.data.model import db_scoped_session
+from src.data_interface import db_scoped_session
 from .errors import page_not_found
 
 

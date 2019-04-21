@@ -9,7 +9,7 @@ from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_PATH
 from src.recommender.engines.engine import (
     QueryBasedEngine, OfflineEngine
 )
-from src.data.model import movielens
+from src.data_interface import model
 
 
 class SameGenres(QueryBasedEngine):
@@ -18,10 +18,10 @@ class SameGenres(QueryBasedEngine):
 
     def compute_query(self, session, context):
         recommendations = session\
-            .query(movielens.Movie)\
-            .filter(movielens.Movie.genres.contains(
+            .query(model.Movie)\
+            .filter(model.Movie.genres.contains(
                 [g[0] for g in context.item.genres]))\
-            .filter(movielens.Movie.id != context.item.id) \
+            .filter(model.Movie.id != context.item.id) \
             .limit(MAX_RECOMMENDATIONS)\
             .all()
 
@@ -125,15 +125,15 @@ class TopRated(QueryBasedEngine):
         super(TopRated, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(movielens.Movie)
+        recommendations = session.query(model.Movie)
 
         if context.user and context.user.favorite_genres:
-            query_filter = movielens.Movie.genres\
+            query_filter = model.Movie.genres\
                 .contains(context.user.favorite_genres)
             recommendations = recommendations.filter(query_filter)
 
         recommendations = recommendations \
-            .order_by(movielens.Movie.rating.desc().nullslast()) \
+            .order_by(model.Movie.rating.desc().nullslast()) \
             .limit(MAX_RECOMMENDATIONS)\
             .all()
 
@@ -145,15 +145,15 @@ class MostRecent(QueryBasedEngine):
         super(MostRecent, self).__init__()
 
     def compute_query(self, session, context):
-        recommendations = session.query(movielens.Movie)
+        recommendations = session.query(model.Movie)
 
         if context.user and context.user.favorite_genres:
-            query_filter = movielens.Movie.genres\
+            query_filter = model.Movie.genres\
                 .contains(context.user.favorite_genres)
             recommendations = recommendations.filter(query_filter)
 
         recommendations = recommendations\
-            .order_by(movielens.Movie.year.desc().nullslast())\
+            .order_by(model.Movie.year.desc().nullslast())\
             .limit(MAX_RECOMMENDATIONS)\
             .all()
 

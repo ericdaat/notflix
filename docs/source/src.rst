@@ -12,7 +12,7 @@ Subpackages
 .. toctree::
 
     src.api
-    src.data
+    src.data_interface
     src.recommender
     src.tracker
     src.utils

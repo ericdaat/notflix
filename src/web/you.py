@@ -1,7 +1,7 @@
 import requests
 from flask import Blueprint, render_template, abort, request, session
 
-from src.data.model import movielens, common, db_scoped_session
+from src.data_interface import model, db_scoped_session
 
 
 bp = Blueprint("you", __name__)
@@ -34,16 +34,16 @@ def taste():
         form_data = request.form.to_dict(flat=False)
         user_genres = form_data.get("genre") or []
 
-        db_scoped_session.query(common.User)\
-                  .filter(common.User.username == session.get("username"))\
+        db_scoped_session.query(model.User)\
+                  .filter(model.User.username == session.get("username"))\
                   .update({"favorite_genres": map(int, user_genres)})
 
         db_scoped_session.commit()
 
-    genres = db_scoped_session.query(movielens.Genre).all()
+    genres = db_scoped_session.query(model.Genre).all()
     user_genres = db_scoped_session\
-        .query(common.User.favorite_genres)\
-        .filter(common.User.username == session["username"])\
+        .query(model.User.favorite_genres)\
+        .filter(model.User.username == session["username"])\
         .one()[0]
 
     return render_template(

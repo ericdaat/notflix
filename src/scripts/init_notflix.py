@@ -1,11 +1,11 @@
 import logging
-from src.data.model import common, utils
-from src.data import downloader
+from src.data_interface import model
+from src.data_interface import downloader
 from src.recommender import engines
 
 
 def init_db():
-    utils.init()
+    model.init()
     logging.info("database initialized")
 
 
@@ -41,7 +41,7 @@ def insert_engines():
         },
     ]
 
-    utils.insert([common.Engine(**e) for e in engines])
+    model.insert([model.Engine(**e) for e in engines])
 
 
 def insert_pages():
@@ -51,7 +51,7 @@ def insert_pages():
         {"name": "you", "engines": ["UserHistory"]}
     ]
 
-    utils.insert([common.Page(**p) for p in pages])
+    model.insert([model.Page(**p) for p in pages])
 
 
 if __name__ == "__main__":

@@ -1,8 +1,9 @@
 import unittest
-from src.data import Cache
-from src.data.model import engine
+from src.data_interface import Cache, model, engine
 
 cache = Cache()
+model.init()
+
 
 class TestRedis(unittest.TestCase):
     def test_up(self):

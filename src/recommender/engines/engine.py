@@ -5,7 +5,7 @@ import csv
 
 from config import MAX_RECOMMENDATIONS, BATCH_UPLOAD_SIZE, ML_PATH
 from src.recommender.wrappers import Recommendations
-from src.data.model import db_scoped_session, movielens, common, utils
+from src.data_interface import model, db_scoped_session
 
 
 class Engine(ABC):
@@ -30,8 +30,8 @@ class Engine(ABC):
         r.type = self.type
 
         name, priority = db_scoped_session\
-            .query(common.Engine.display_name, common.Engine.priority)\
-            .filter(common.Engine.type == self.type)\
+            .query(model.Engine.display_name, model.Engine.priority)\
+            .filter(model.Engine.type == self.type)\
             .one()
 
         if context.item and True:  # TODO: add dynamic name option in DB
@@ -88,11 +88,11 @@ class OfflineEngine(QueryBasedEngine):
 
     def compute_query(self, session, context):
         recommendations = session\
-            .query(movielens.Movie) \
-            .filter(common.Recommendation.source_item_id == context.item.id) \
-            .filter(common.Recommendation.engine_name == self.type) \
-            .filter(movielens.Movie.id == common.Recommendation.recommended_item_id) \
-            .order_by(common.Recommendation.score.desc()) \
+            .query(model.Movie) \
+            .filter(model.Recommendation.source_item_id == context.item.id) \
+            .filter(model.Recommendation.engine_name == self.type) \
+            .filter(model.Movie.id == model.Recommendation.recommended_item_id) \
+            .order_by(model.Recommendation.score.desc()) \
             .limit(MAX_RECOMMENDATIONS) \
             .all()
 
@@ -114,7 +114,7 @@ class OfflineEngine(QueryBasedEngine):
             )
 
             for i, line in enumerate(reader):
-                r = common.Recommendation(
+                r = model.Recommendation(
                     engine_name=self.type,
                     source_item_id=line[0],
                     recommended_item_id=line[1],
@@ -124,7 +124,7 @@ class OfflineEngine(QueryBasedEngine):
 
                 # don't burst RAM, use batch size
                 if i % BATCH_UPLOAD_SIZE == 0:
-                    utils.insert(recommendations)
+                    model.insert(recommendations)
                     logging.info("inserted {0} recommendations"
                                  .format(len(recommendations)))
                     del recommendations[:]
@@ -152,9 +152,9 @@ class OnlineEngine(Engine):
 
         ids = self.predict(context)  # online prediction
 
-        recommendations = db_scoped_session.query(movielens.Movie) \
-            .filter(movielens.Movie.id.in_(ids)) \
-            .filter(movielens.Movie.id != context.item.id) \
+        recommendations = db_scoped_session.query(model.Movie) \
+            .filter(model.Movie.id.in_(ids)) \
+            .filter(model.Movie.id != context.item.id) \
             .limit(MAX_RECOMMENDATIONS).all()
 
         r.recommended_items = recommendations
