@@ -3,7 +3,7 @@ import logging
 import os
 import csv
 
-from config import MAX_RECOMMENDATIONS, BATCH_UPLOAD_SIZE, ML_PATH
+from config import MAX_RECOMMENDATIONS, BATCH_UPLOAD_SIZE, ML_MODELS_PATH
 from src.recommender.wrappers import Recommendations
 from src.data_interface import model, db_scoped_session
 
@@ -103,7 +103,7 @@ class OfflineEngine(QueryBasedEngine):
         pass
 
     def upload(self):
-        input_filepath = os.path.join(ML_PATH, "csv", self.type + ".csv")
+        input_filepath = os.path.join(ML_MODELS_PATH, "csv", self.type + ".csv")
 
         with open(input_filepath, "r") as csv_file:
             recommendations = []

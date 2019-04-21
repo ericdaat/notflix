@@ -3,7 +3,7 @@ from src.utils.logging import setup_logging
 
 # paths
 DATASETS_PATH = os.path.abspath("./datasets")
-ML_PATH = os.path.abspath("./models")
+ML_MODELS_PATH = os.path.abspath("./models")
 
 # data.cache
 CACHE_HOST = os.environ.get("REDIS_HOST")

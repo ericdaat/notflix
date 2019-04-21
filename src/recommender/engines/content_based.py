@@ -5,7 +5,7 @@ import csv
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.neighbors import NearestNeighbors
 from scipy import sparse
-from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_PATH
+from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_MODELS_PATH
 from src.recommender.engines.engine import (
     QueryBasedEngine, OfflineEngine
 )
@@ -101,7 +101,7 @@ class OneHotMultiInput(OfflineEngine):
                 to_insert.append([movie_id, recommended_movie_id, score])
 
         # export recomemndations as CSV
-        output_filepath = os.path.join(ML_PATH, "csv", self.type + ".csv")
+        output_filepath = os.path.join(ML_MODELS_PATH, "csv", self.type + ".csv")
         with open(output_filepath, "w") as csv_file:
             writer = csv.writer(
                 csv_file,
