@@ -39,6 +39,8 @@ def init():
     Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
 
+    logging.info("Database initialized")
+
 
 def insert(to_insert):
     session = db_session()
@@ -56,6 +58,7 @@ class Recommendation(Base, BaseTable):
     engine_name = Column(String(56), nullable=False)
     source_item_id = Column(Integer, nullable=False)
     recommended_item_id = Column(Integer, nullable=False)
+    source_item_id_kind = Column(String(56), nullable=False)
     score = Column(Float, nullable=False)
 
 

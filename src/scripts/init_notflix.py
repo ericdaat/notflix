@@ -1,20 +1,7 @@
-import logging
+import os
 from src.data_interface import model
 from src.data_interface import downloader
 from src.recommender import engines
-
-
-def init_db():
-    model.init()
-    logging.info("database initialized")
-
-
-def download_data(insert_in_db=True):
-    d = downloader.MovielensDownloader()
-    d.download_to_file()
-
-    if insert_in_db:
-        d.insert_in_db()
 
 
 def insert_engines():
@@ -55,8 +42,10 @@ def insert_pages():
 
 
 if __name__ == "__main__":
-    init_db()
-    download_data(insert_in_db=True)
+    d = downloader.MovielensDownloader()
+    # d.download_to_file()
+    d.insert_in_db()
+
     insert_engines()
     insert_pages()
 

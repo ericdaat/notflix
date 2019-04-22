@@ -18,7 +18,13 @@ init-db:
 	docker-compose up -d postgres; \
 	source venv/bin/activate; \
 	PYTHONPATH="." POSTGRES_HOST="127.0.0.1" REDIS_HOST="127.0.0.1" \
-		python src/scripts/init_notflix.py; \
+		python -c "from src.data_interface import model; model.init()";  \
+	echo "done"; \
+
+insert-data:
+	source venv/bin/activate; \
+	PYTHONPATH="." POSTGRES_HOST="127.0.0.1" REDIS_HOST="127.0.0.1" \
+		python src/scripts/init_notflix.py;  \
 	echo "done"; \
 
 start:

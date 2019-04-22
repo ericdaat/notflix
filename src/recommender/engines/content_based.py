@@ -2,7 +2,7 @@ import os
 import pandas as pd
 import numpy as np
 import csv
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
 from scipy import sparse
 from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_MODELS_PATH
@@ -31,6 +31,19 @@ class SameGenres(QueryBasedEngine):
 class OneHotMultiInput(OfflineEngine):
     def __init__(self):
         super(OneHotMultiInput, self).__init__()
+
+    def compute_query(self, session, context):
+        recommendations = session\
+            .query(model.Movie) \
+            .filter(model.Recommendation.source_item_id_kind == "item") \
+            .filter(model.Recommendation.source_item_id == context.item.id) \
+            .filter(model.Recommendation.engine_name == self.type) \
+            .filter(model.Movie.id == model.Recommendation.recommended_item_id) \
+            .order_by(model.Recommendation.score.desc()) \
+            .limit(MAX_RECOMMENDATIONS) \
+            .all()
+
+        return recommendations
 
     def train(self):
         # read dataset
@@ -65,8 +78,8 @@ class OneHotMultiInput(OfflineEngine):
         director_vect = CountVectorizer()
         genre_vect = CountVectorizer()
         language_vect = CountVectorizer()
-        # plot_vect = TfidfVectorizer(min_df=2, max_df=0.5)
-        # title_vect = TfidfVectorizer(min_df=2, max_df=0.5)
+        plot_vect = TfidfVectorizer(min_df=2, max_df=0.5)
+        title_vect = TfidfVectorizer(min_df=2, max_df=0.5)
 
         # fit vectorizers and concatenate
         X = sparse.hstack([
@@ -74,16 +87,17 @@ class OneHotMultiInput(OfflineEngine):
             genre_vect.fit_transform(movies["Genre"].fillna("")),
             language_vect.fit_transform(movies["Language"].fillna("")),
             director_vect.fit_transform(movies["Director"].fillna("")),
-            # pd.get_dummies(movies["Released_decade"]).values,
-            # plot_vect.fit_transform(movies["Plot"].fillna("")),
-            # title_vect.fit_transform(movies["Title"].fillna("")),
+            pd.get_dummies(movies["Released_decade"]).values,
+            plot_vect.fit_transform(movies["Plot"].fillna("")),
+            title_vect.fit_transform(movies["Title"].fillna("")),
         ])
 
         # fit model
         nbrs = NearestNeighbors(
             n_neighbors=MAX_RECOMMENDATIONS,
             metric="cosine"
-        ).fit(X)
+        )
+        nbrs.fit(X)
 
         distances, neighbors = nbrs.kneighbors(X)
 
@@ -98,7 +112,11 @@ class OneHotMultiInput(OfflineEngine):
                 if movie_id == recommended_movie_id:
                     continue
 
-                to_insert.append([movie_id, recommended_movie_id, score])
+                to_insert.append([
+                    movie_id,
+                    recommended_movie_id,
+                    "item",
+                    score])
 
         # export recomemndations as CSV
         output_filepath = os.path.join(ML_MODELS_PATH, "csv", self.type + ".csv")

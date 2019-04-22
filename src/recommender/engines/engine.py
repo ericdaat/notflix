@@ -86,24 +86,20 @@ class OfflineEngine(QueryBasedEngine):
     def __init__(self):
         super(OfflineEngine, self).__init__()
 
+    @abstractmethod
     def compute_query(self, session, context):
-        recommendations = session\
-            .query(model.Movie) \
-            .filter(model.Recommendation.source_item_id == context.item.id) \
-            .filter(model.Recommendation.engine_name == self.type) \
-            .filter(model.Movie.id == model.Recommendation.recommended_item_id) \
-            .order_by(model.Recommendation.score.desc()) \
-            .limit(MAX_RECOMMENDATIONS) \
-            .all()
-
-        return recommendations
+        pass
 
     @abstractmethod
     def train(self):
         pass
 
     def upload(self):
-        input_filepath = os.path.join(ML_MODELS_PATH, "csv", self.type + ".csv")
+        input_filepath = os.path.join(
+            ML_MODELS_PATH,
+            "csv",
+            self.type + ".csv"
+        )
 
         with open(input_filepath, "r") as csv_file:
             recommendations = []
@@ -118,7 +114,8 @@ class OfflineEngine(QueryBasedEngine):
                     engine_name=self.type,
                     source_item_id=line[0],
                     recommended_item_id=line[1],
-                    score=line[2]
+                    source_item_id_kind=line[2],
+                    score=line[3]
                 )
                 recommendations.append(r)
 
