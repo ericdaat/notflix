@@ -32,3 +32,15 @@ def sparse_matrix_from_df(df, groupby, indicator):
                                shape=(len(rows_u), len(columns_u)))
 
     return sparse_matrix, rows_u, columns_u
+
+
+def matrix_from_df_with_vect(df, groupby_column, data_column, vectorizer):
+    grouped_df = df.groupby(groupby_column)
+    group_keys = list(grouped_df.groups.keys())
+
+    data = grouped_df[data_column]\
+        .apply(list)\
+        .apply(lambda r: " ".join(list(map(str, r))))\
+        .tolist()
+
+    return vectorizer.transform(data), group_keys

@@ -12,6 +12,11 @@ def insert_engines():
             "priority": 1
         },
         {
+            "type": "ItemBasedCF",
+            "display_name": "People also liked",
+            "priority": 2
+        },
+        {
             "type": "TopRated",
             "display_name": "Top rated movies",
             "priority": 1
@@ -34,7 +39,7 @@ def insert_engines():
 def insert_pages():
     pages = [
         {"name": "home", "engines": ["TopRated", "MostRecent"]},
-        {"name": "item", "engines": ["OneHotMultiInput"]},
+        {"name": "item", "engines": ["OneHotMultiInput", "ItemBasedCF"]},
         {"name": "you", "engines": ["UserHistory"]}
     ]
 
@@ -49,6 +54,11 @@ if __name__ == "__main__":
     insert_engines()
     insert_pages()
 
-    e = engines.OneHotMultiInput()
-    e.train()
-    e.upload()
+    engines = [
+        engines.OneHotMultiInput(),
+        engines.ItemBasedCF()
+    ]
+
+    for e in engines:
+        e.train()
+        e.upload()
