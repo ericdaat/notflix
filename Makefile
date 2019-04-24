@@ -34,6 +34,7 @@ stop:
 	docker-compose down;
 
 docs:
+	source venv/bin/activate;\
 	cd docs; \
 	make clean; \
 	find source/*.rst ! -name 'index.rst' -type f -exec rm -f {} +; \

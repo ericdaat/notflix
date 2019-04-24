@@ -16,6 +16,14 @@ Subpackages
 Submodules
 ----------
 
+src.recommender.metrics module
+------------------------------
+
+.. automodule:: src.recommender.metrics
+    :members:
+    :undoc-members:
+    :show-inheritance:
+
 src.recommender.recommender module
 ----------------------------------
 
