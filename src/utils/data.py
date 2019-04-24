@@ -44,3 +44,32 @@ def matrix_from_df_with_vect(df, groupby_column, data_column, vectorizer):
         .tolist()
 
     return vectorizer.transform(data), group_keys
+
+
+def recommendations_from_similarity_matrix(movie_ids,
+                                           sim_matrix,
+                                           n_recommendations,
+                                           input_kind):
+    recommendations = []
+
+    for movie_index, movie_id in enumerate(movie_ids):
+        sim_scores = list(enumerate(sim_matrix[movie_index]))
+        sim_scores_sorted = sorted(
+            sim_scores,
+            key=lambda x: x[1], reverse=True
+        )[:n_recommendations]
+
+        for recommended_movie_index, score in sim_scores_sorted:
+            recommended_movie_id = movie_ids[recommended_movie_index]
+
+            if movie_id == recommended_movie_id:
+                continue
+
+            recommendations.append([
+                movie_id,
+                recommended_movie_id,
+                input_kind,
+                score
+            ])
+
+    return recommendations

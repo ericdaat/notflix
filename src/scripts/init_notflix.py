@@ -62,14 +62,14 @@ def insert_pages():
 if __name__ == "__main__":
     d = downloader.MovielensDownloader()
     # d.download_to_file()
-    # d.insert_in_db()
+    d.insert_in_db()
 
-    # insert_engines()
-    # insert_pages()
+    insert_engines()
+    insert_pages()
 
     engines = [
-        # engines.OneHotMultiInput(),
-        # engines.ItemBasedCF(),
+        engines.OneHotMultiInput(),
+        engines.ItemBasedCF(),
         engines.TfidfGenres(),
     ]
 

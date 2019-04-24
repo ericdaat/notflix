@@ -13,6 +13,7 @@ class Engine(ABC):
     """
     def __init__(self):
         self.type = type(self).__name__
+        self.input_id_kind = None
         logging.debug("Creating instance of {0}".format(self.type))
 
     @abstractmethod
@@ -85,14 +86,36 @@ class QueryBasedEngine(Engine):
 class OfflineEngine(QueryBasedEngine):
     def __init__(self):
         super(OfflineEngine, self).__init__()
+        self.output_filepath = os.path.join(
+            ML_MODELS_PATH, "csv", self.type + ".csv"
+        )
 
-    @abstractmethod
     def compute_query(self, session, context):
-        pass
+        recommendations = session\
+            .query(model.Movie) \
+            .filter(model.Movie.id == model.Recommendation.recommended_item_id) \
+            .filter(model.Recommendation.source_item_id_kind == self.input_id_kind) \
+            .filter(model.Recommendation.source_item_id == context.item.id) \
+            .filter(model.Recommendation.engine_name == self.type) \
+            .order_by(model.Recommendation.score.desc()) \
+            .limit(MAX_RECOMMENDATIONS) \
+            .all()
+
+        return recommendations
 
     @abstractmethod
     def train(self):
         pass
+
+    def save_recommendations_to_csv(self, recommendations):
+        with open(self.output_filepath, "w") as csv_file:
+            writer = csv.writer(
+                csv_file,
+                delimiter=",",
+                quoting=csv.QUOTE_MINIMAL
+            )
+
+            writer.writerows(recommendations)
 
     def upload(self):
         input_filepath = os.path.join(
