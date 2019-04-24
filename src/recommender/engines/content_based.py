@@ -4,7 +4,9 @@ import numpy as np
 import csv
 from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.neighbors import NearestNeighbors
+from sklearn.metrics.pairwise import pairwise_distances
 from scipy import sparse
+
 from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_MODELS_PATH
 from src.recommender.engines.engine import (
     QueryBasedEngine, OfflineEngine
@@ -119,7 +121,10 @@ class OneHotMultiInput(OfflineEngine):
                     score])
 
         # export recomemndations as CSV
-        output_filepath = os.path.join(ML_MODELS_PATH, "csv", self.type + ".csv")
+        output_filepath = os.path.join(
+            ML_MODELS_PATH, "csv", self.type + ".csv"
+        )
+
         with open(output_filepath, "w") as csv_file:
             writer = csv.writer(
                 csv_file,
@@ -134,45 +139,67 @@ class TfidfGenres(OfflineEngine):
     def __init__(self):
         super(TfidfGenres, self).__init__()
 
+    def compute_query(self, session, context):
+        recommendations = session\
+            .query(model.Movie) \
+            .filter(model.Recommendation.source_item_id_kind == "item") \
+            .filter(model.Recommendation.source_item_id == context.item.id) \
+            .filter(model.Recommendation.engine_name == self.type) \
+            .filter(model.Movie.id == model.Recommendation.recommended_item_id) \
+            .order_by(model.Recommendation.score.desc()) \
+            .limit(MAX_RECOMMENDATIONS) \
+            .all()
+
+        return recommendations
+
     def train(self):
-        pass
+        df = pd.read_json(
+            os.path.join(DATASETS_PATH, "movielens", "omdb.csv"),
+            lines=True
+        )
 
+        genre_vect = TfidfVectorizer()
 
-class TopRated(QueryBasedEngine):
-    def __init__(self):
-        super(TopRated, self).__init__()
+        X = sparse.hstack([
+            genre_vect.fit_transform(df["Genre"].fillna("")),
+        ])
 
-    def compute_query(self, session, context):
-        recommendations = session.query(model.Movie)
+        cosine_sim = 1 - pairwise_distances(X, metric="cosine")
 
-        if context.user and context.user.favorite_genres:
-            query_filter = model.Movie.genres\
-                .contains(context.user.favorite_genres)
-            recommendations = recommendations.filter(query_filter)
+        movie_ids = df["id"].tolist()
+        recommendations = []
 
-        recommendations = recommendations \
-            .order_by(model.Movie.rating.desc().nullslast()) \
-            .limit(MAX_RECOMMENDATIONS)\
-            .all()
+        for movie_index, movie_id in enumerate(movie_ids):
+            sim_scores = list(enumerate(cosine_sim[movie_index]))
+            sim_scores_sorted = sorted(
+                sim_scores,
+                key=lambda x: x[1], reverse=True
+            )[:MAX_RECOMMENDATIONS]
 
-        return recommendations
+            for recommended_movie_index, score in sim_scores_sorted:
+                recommended_movie_id = movie_ids[recommended_movie_index]
 
+                if movie_id == recommended_movie_id:
+                    continue
 
-class MostRecent(QueryBasedEngine):
-    def __init__(self):
-        super(MostRecent, self).__init__()
+                recommendations.append([
+                    movie_id,
+                    recommended_movie_id,
+                    "item",
+                    score
+                ])
 
-    def compute_query(self, session, context):
-        recommendations = session.query(model.Movie)
+        # TODO: this should be an attribute for every offline engine
+        output_filepath = os.path.join(
+            ML_MODELS_PATH, "csv", self.type + ".csv"
+        )
 
-        if context.user and context.user.favorite_genres:
-            query_filter = model.Movie.genres\
-                .contains(context.user.favorite_genres)
-            recommendations = recommendations.filter(query_filter)
+        # TODO: put this in another method, common to all offline engines
+        with open(output_filepath, "w") as csv_file:
+            writer = csv.writer(
+                csv_file,
+                delimiter=",",
+                quoting=csv.QUOTE_MINIMAL
+            )
 
-        recommendations = recommendations\
-            .order_by(model.Movie.year.desc().nullslast())\
-            .limit(MAX_RECOMMENDATIONS)\
-            .all()
-
-        return recommendations
+            writer.writerows(recommendations)

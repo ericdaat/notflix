@@ -17,3 +17,43 @@ class UserHistory(QueryBasedEngine):
             recommendations = []
 
         return recommendations
+
+
+class TopRated(QueryBasedEngine):
+    def __init__(self):
+        super(TopRated, self).__init__()
+
+    def compute_query(self, session, context):
+        recommendations = session.query(model.Movie)
+
+        if context.user and context.user.favorite_genres:
+            query_filter = model.Movie.genres\
+                .contains(context.user.favorite_genres)
+            recommendations = recommendations.filter(query_filter)
+
+        recommendations = recommendations \
+            .order_by(model.Movie.rating.desc().nullslast()) \
+            .limit(MAX_RECOMMENDATIONS)\
+            .all()
+
+        return recommendations
+
+
+class MostRecent(QueryBasedEngine):
+    def __init__(self):
+        super(MostRecent, self).__init__()
+
+    def compute_query(self, session, context):
+        recommendations = session.query(model.Movie)
+
+        if context.user and context.user.favorite_genres:
+            query_filter = model.Movie.genres\
+                .contains(context.user.favorite_genres)
+            recommendations = recommendations.filter(query_filter)
+
+        recommendations = recommendations\
+            .order_by(model.Movie.year.desc().nullslast())\
+            .limit(MAX_RECOMMENDATIONS)\
+            .all()
+
+        return recommendations

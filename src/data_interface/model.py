@@ -70,7 +70,7 @@ class Page(Base, BaseTable):
 
 class Engine(Base, BaseTable):
     __tablename__ = "engines"
-    type = Column(String(20), nullable=False)
+    type = Column(String(20), nullable=False, unique=True)
     display_name = Column(String(50), nullable=False)
     priority = Column(Integer, nullable=False)
 
