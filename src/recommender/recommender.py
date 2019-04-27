@@ -53,4 +53,9 @@ class Recommender(object):
             if len(recommendations["recommended_items"]) > 0:
                 recommendation_list.append(recommendations)
 
+        recommendation_list = sorted(
+            recommendation_list,
+            key=lambda r: r["priority"]
+        )
+
         return recommendation_list
