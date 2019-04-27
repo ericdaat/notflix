@@ -148,6 +148,12 @@ class OfflineEngine(QueryBasedEngine):
                     logging.info("inserted {0} recommendations"
                                  .format(len(recommendations)))
                     del recommendations[:]
+            else:
+                model.insert(recommendations)
+                logging.info("inserted {0} recommendations"
+                             .format(len(recommendations)))
+                del recommendations[:]
+
 
 
 class OnlineEngine(Engine):
