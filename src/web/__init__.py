@@ -58,13 +58,13 @@ def create_app(test_config=None):
     app.register_error_handler(404, page_not_found)
 
     # blueprints
-    from src.web import home, item, genres, search, you, login
+    from src.web import home, item, genres, search
     app.register_blueprint(home.bp)
     app.register_blueprint(item.bp)
     app.register_blueprint(genres.bp)
     app.register_blueprint(search.bp)
-    app.register_blueprint(you.bp)
-    app.register_blueprint(login.bp)
+    # app.register_blueprint(you.bp)
+    # app.register_blueprint(login.bp)
 
     app.add_url_rule("/", endpoint="index")
 
