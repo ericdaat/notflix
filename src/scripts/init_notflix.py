@@ -35,6 +35,11 @@ def insert_engines():
             "display_name": "Your browsing history",
             "priority": 2
         },
+        {
+            "type": "Random",
+            "display_name": "Random Selection",
+            "priority": 10
+        },
     ]
 
     model.insert([model.Engine(**e) for e in engines])
@@ -44,15 +49,11 @@ def insert_pages():
     pages = [
         {
             "name": "home",
-            "engines": ["TopRated", "MostRecent", "UserHistory"]
+            "engines": ["TopRated", "MostRecent", "UserHistory", "Random"]
         },
         {
             "name": "item",
             "engines": ["OneHotMultiInput", "ItemBasedCF", "TfidfGenres"]
-        },
-        {
-            "name": "you",
-            "engines": ["UserHistory"]
         }
     ]
 
@@ -62,17 +63,17 @@ def insert_pages():
 if __name__ == "__main__":
     d = downloader.MovielensDownloader()
     # d.download_to_file()
-    d.insert_in_db()
+    # d.insert_in_db()
 
     insert_engines()
     insert_pages()
 
-    engines = [
-        engines.OneHotMultiInput(),
-        engines.ItemBasedCF(),
-        engines.TfidfGenres(),
-    ]
+    # engines = [
+    #     engines.OneHotMultiInput(),
+    #     engines.ItemBasedCF(),
+    #     engines.TfidfGenres(),
+    # ]
 
-    for e in engines:
-        e.train()
-        e.upload()
+    # for e in engines:
+    #     e.train()
+    #     e.upload()

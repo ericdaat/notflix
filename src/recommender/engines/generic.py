@@ -1,4 +1,5 @@
 from .engine import QueryBasedEngine
+from sqlalchemy.sql.expression import func
 from src.data_interface import model
 from config import MAX_RECOMMENDATIONS
 
@@ -53,6 +54,21 @@ class MostRecent(QueryBasedEngine):
 
         recommendations = recommendations\
             .order_by(model.Movie.year.desc().nullslast())\
+            .limit(MAX_RECOMMENDATIONS)\
+            .all()
+
+        return recommendations
+
+
+class Random(QueryBasedEngine):
+    def __init__(self):
+        super(Random, self).__init__()
+
+    def compute_query(self, session, context):
+        recommendations = session.query(model.Movie)
+
+        recommendations = recommendations\
+            .order_by(func.random())\
             .limit(MAX_RECOMMENDATIONS)\
             .all()
 
