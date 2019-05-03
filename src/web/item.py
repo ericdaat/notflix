@@ -1,5 +1,5 @@
 import requests
-from flask import Blueprint, render_template, abort, session
+from flask import Blueprint, render_template, abort, session, current_app
 
 bp = Blueprint("item", __name__)
 
@@ -18,6 +18,11 @@ def index(item_id):
 
     active_item = res_json["active_item"]
     recommendations = res_json["recommendations"]
+
+    current_app.tracker.store_item_viewed(
+        "history:{0}".format(session.get("uid")),
+        active_item["id"]
+    )
 
     return render_template(
         "item/index.html",

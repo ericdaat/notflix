@@ -9,9 +9,10 @@ bp = Blueprint("you", __name__)
 
 @bp.route("/you")
 def index():
+    session_id = session["uid"]
+
     res = requests.get(
-        url="http://api:8000/recommend/user/{0}"
-            .format(session.get("username")),
+        url="http://api:8000/recommend/session/{id}".format(id=session_id),
         params={"page_type": "you"}
     )
 
@@ -35,8 +36,8 @@ def taste():
         user_genres = form_data.get("genre") or []
 
         db_scoped_session.query(model.User)\
-                  .filter(model.User.username == session.get("username"))\
-                  .update({"favorite_genres": map(int, user_genres)})
+            .filter(model.User.username == session.get("username"))\
+            .update({"favorite_genres": map(int, user_genres)})
 
         db_scoped_session.commit()
 

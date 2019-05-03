@@ -1,11 +1,10 @@
 import os
-
 from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
 from src.recommender.recommender import Recommender
 from src.tracker.tracker import Tracker
 from .errors import page_not_found
-from src.data_interface import db_scoped_session, model
+from src.data_interface import db_scoped_session
 
 
 def create_app(test_config=None):
@@ -14,7 +13,9 @@ def create_app(test_config=None):
                 instance_relative_config=True,
                 instance_path=os.path.abspath("src/api/instance"))
 
-    app.config.from_mapping(SECRET_KEY="dev")
+    app.config.from_mapping(
+        SECRET_KEY="dev"
+    )
 
     if test_config is None:
         # load the instance config, if it exists, when not testing

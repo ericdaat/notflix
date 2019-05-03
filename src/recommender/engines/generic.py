@@ -8,7 +8,7 @@ class UserHistory(QueryBasedEngine):
         super(UserHistory, self).__init__()
 
     def compute_query(self, session, context):
-        if context.user and context.history:
+        if context.history:
             recommendations = session.query(model.Movie) \
                 .filter(model.Movie.id.in_(context.history)) \
                 .limit(MAX_RECOMMENDATIONS) \

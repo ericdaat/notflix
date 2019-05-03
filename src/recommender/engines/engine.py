@@ -155,7 +155,6 @@ class OfflineEngine(QueryBasedEngine):
                 del recommendations[:]
 
 
-
 class OnlineEngine(Engine):
     def __init__(self):
         super(OnlineEngine, self).__init__()

@@ -1,9 +1,11 @@
 import os
-
-from flask import Flask, render_template
+import uuid
+import logging
+from flask import Flask, render_template, session
 from werkzeug.contrib.fixers import ProxyFix
 from src.data_interface import db_scoped_session
 from .errors import page_not_found
+from src.tracker.tracker import Tracker
 
 
 def create_app(test_config=None):
@@ -44,6 +46,14 @@ def create_app(test_config=None):
     def shutdown_session(exception=None):
         db_scoped_session.remove()
 
+    @app.before_request
+    def assign_session_id():
+        if "uid" not in session:
+            session["uid"] = uuid.uuid4().hex
+            session.modified = True
+            logging.debug("Assigned session_id {session_id}"
+                          .format(session_id=session["uid"]))
+
     # HTTP errors
     app.register_error_handler(404, page_not_found)
 
@@ -57,5 +67,7 @@ def create_app(test_config=None):
     app.register_blueprint(login.bp)
 
     app.add_url_rule("/", endpoint="index")
+
+    app.tracker = Tracker()
 
     return app

@@ -25,4 +25,7 @@ class Tracker(object):
         history = map(int, history)
         history_set = set(history)
 
+        logging.debug("Got {set} for key {key}"
+                      .format(set=history_set, key=key))
+
         return history_set
