@@ -2,7 +2,7 @@ import importlib
 import sqlalchemy
 import logging
 
-from src.data_interface import model, db_scoped_session
+from src.data_interface import model
 
 
 class Recommender(object):
@@ -13,8 +13,10 @@ class Recommender(object):
         """
 
         self.engines = {}
+        engine_types = \
+            model.Engine.query.with_entities(model.Engine.type).all()
 
-        for engine_type in db_scoped_session.query(model.Engine.type).all():
+        for engine_type in engine_types:
             module = importlib.import_module("src.recommender.engines")
             class_ = getattr(module, engine_type[0])
             instance = class_()
@@ -35,8 +37,8 @@ class Recommender(object):
 
         if not active_engines and context.page_type:
             try:
-                active_engines = db_scoped_session\
-                    .query(model.Page.engines)\
+                active_engines = model.Page.query\
+                    .with_entities(model.Page.engines)\
                     .filter(model.Page.name == context.page_type)\
                     .one()[0]
             except sqlalchemy.orm.exc.NoResultFound:

@@ -1,14 +1,16 @@
 import os
 import uuid
 import logging
-from flask import Flask, render_template, session
 from werkzeug.contrib.fixers import ProxyFix
-from src.data_interface import db_scoped_session
-from .errors import page_not_found
+from flask import Flask, render_template, session
+from src.data_interface.model import db
+from src.utils import click_commands
+from src.web.errors import page_not_found
 from src.tracker.tracker import Tracker
+from config import SQLALCHEMY_DATABASE_URI
 
 
-def create_app(test_config=None):
+def create_app():
     # create and configure the app
     app = Flask(
         __name__,
@@ -16,14 +18,10 @@ def create_app(test_config=None):
         instance_path=os.path.abspath("src/web/instance")
     )
 
-    app.config.from_mapping(SECRET_KEY="dev")
-
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
+    app.config.from_mapping(
+        SECRET_KEY="dev",
+        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI
+    )
 
     try:
         os.makedirs(app.instance_path)
@@ -42,9 +40,17 @@ def create_app(test_config=None):
     def about():
         return render_template("about/index.html")
 
-    @app.teardown_appcontext
-    def shutdown_session(exception=None):
-        db_scoped_session.remove()
+    # register database
+    db.init_app(app)
+
+    # register click commands
+    app.cli.add_command(click_commands.init_db)
+    app.cli.add_command(click_commands.insert_engines)
+    app.cli.add_command(click_commands.insert_pages)
+    app.cli.add_command(click_commands.download_movies)
+    app.cli.add_command(click_commands.insert_movies)
+    app.cli.add_command(click_commands.train_engines)
+    app.cli.add_command(click_commands.upload_engines)
 
     @app.before_request
     def assign_session_id():
@@ -68,6 +74,7 @@ def create_app(test_config=None):
 
     app.add_url_rule("/", endpoint="index")
 
-    app.tracker = Tracker()
+    with app.app_context():
+        app.tracker = Tracker()
 
     return app

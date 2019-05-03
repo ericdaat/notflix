@@ -25,7 +25,7 @@
             <tr>
               <th scope="row">Genres</th>
               <td>
-                  {% for genre_id, genre_name in active_item.genres %}
+                  {% for genre_id, genre_name in active_item["genres"] %}
                   <span class="badge badge-dark">{{ genre_name }}</span>
                   {% endfor %}
               </td>

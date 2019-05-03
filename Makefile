@@ -13,20 +13,6 @@ install:
  	cp -n db-credentials.env.dist db-credentials.env; \
 	echo "done"; \
 
-init-db:
-	docker-compose stop api web; \
-	docker-compose up -d postgres; \
-	source venv/bin/activate; \
-	PYTHONPATH="." POSTGRES_HOST="127.0.0.1" REDIS_HOST="127.0.0.1" \
-		python -c "from src.data_interface import model; model.init()";  \
-	echo "done"; \
-
-insert-data:
-	source venv/bin/activate; \
-	PYTHONPATH="." POSTGRES_HOST="127.0.0.1" REDIS_HOST="127.0.0.1" \
-		python src/scripts/init_notflix.py;  \
-	echo "done"; \
-
 start:
 	docker-compose up -d web;
 

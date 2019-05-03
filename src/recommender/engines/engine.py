@@ -5,7 +5,7 @@ import csv
 
 from config import MAX_RECOMMENDATIONS, BATCH_UPLOAD_SIZE, ML_MODELS_PATH
 from src.recommender.wrappers import Recommendations
-from src.data_interface import model, db_scoped_session
+from src.data_interface import model
 
 
 class Engine(ABC):
@@ -30,8 +30,8 @@ class Engine(ABC):
         r = Recommendations()
         r.type = self.type
 
-        name, priority = db_scoped_session\
-            .query(model.Engine.display_name, model.Engine.priority)\
+        name, priority = model.Engine.query\
+            .with_entities(model.Engine.display_name, model.Engine.priority)\
             .filter(model.Engine.type == self.type)\
             .one()
 
@@ -52,7 +52,7 @@ class QueryBasedEngine(Engine):
         super(QueryBasedEngine, self).__init__()
 
     @abstractmethod
-    def compute_query(self, session, context):
+    def compute_query(self, context):
         """ Abstract method that computes the SQL query using SQLAlchemy
 
         Args:
@@ -76,7 +76,7 @@ class QueryBasedEngine(Engine):
 
         """
         r = super(QueryBasedEngine, self).recommend(context)
-        recommendations = self.compute_query(db_scoped_session, context)
+        recommendations = self.compute_query(context)
         r.recommended_items = recommendations
         logging.debug(r.to_string())
 
@@ -90,9 +90,8 @@ class OfflineEngine(QueryBasedEngine):
             ML_MODELS_PATH, "csv", self.type + ".csv"
         )
 
-    def compute_query(self, session, context):
-        recommendations = session\
-            .query(model.Movie) \
+    def compute_query(self, context):
+        recommendations = model.Movie.query\
             .filter(model.Movie.id == model.Recommendation.recommended_item_id) \
             .filter(model.Recommendation.source_item_id_kind == self.input_id_kind) \
             .filter(model.Recommendation.source_item_id == context.item.id) \
@@ -177,7 +176,7 @@ class OnlineEngine(Engine):
 
         ids = self.predict(context)  # online prediction
 
-        recommendations = db_scoped_session.query(model.Movie) \
+        recommendations = model.Movie.query\
             .filter(model.Movie.id.in_(ids)) \
             .filter(model.Movie.id != context.item.id) \
             .limit(MAX_RECOMMENDATIONS).all()

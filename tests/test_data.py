@@ -1,8 +1,12 @@
 import unittest
-from src.data_interface import Cache, model, engine
+from src.web import create_app
+from src.data_interface import Cache, model
 
 cache = Cache()
-model.init()
+app = create_app()
+
+with app.app_context():
+    model.init()
 
 
 class TestRedis(unittest.TestCase):
@@ -22,4 +26,5 @@ class TestRedis(unittest.TestCase):
 
 class TestPostgres(unittest.TestCase):
     def test_up(self):
-        engine.connect()
+        with app.app_context():
+            model.db.session.execute('SELECT 1')

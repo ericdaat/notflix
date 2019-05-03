@@ -20,9 +20,8 @@ class SameGenres(QueryBasedEngine):
     def __init__(self):
         super(SameGenres, self).__init__()
 
-    def compute_query(self, session, context):
-        recommendations = session\
-            .query(model.Movie)\
+    def compute_query(self, context):
+        recommendations = model.Movie.query\
             .filter(model.Movie.genres.contains(
                 [g[0] for g in context.item.genres]))\
             .filter(model.Movie.id != context.item.id) \

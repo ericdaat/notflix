@@ -4,7 +4,7 @@ from flask import (
     Blueprint, render_template, request, session, redirect, url_for
 )
 
-from src.data_interface import model, db_scoped_session
+from src.data_interface import model
 
 
 bp = Blueprint("login", __name__)
@@ -13,8 +13,8 @@ bp = Blueprint("login", __name__)
 def valid_signin(username, password):
     is_valid = False
     try:
-        hashed_password = db_scoped_session\
-            .query(model.User.password)\
+        hashed_password = model.User.query\
+            .with_entities(model.User.password)\
             .filter(model.User.username == username)\
             .one()[0]
     except NoResultFound:

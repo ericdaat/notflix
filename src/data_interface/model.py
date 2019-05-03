@@ -1,107 +1,99 @@
 import os
 import logging
-from datetime import datetime
-from sqlalchemy import (
-    Column, Integer, String, Float, Binary, Date, DateTime
-)
-from sqlalchemy import create_engine
-from sqlalchemy.dialects import postgresql
 from sqlalchemy_utils import database_exists, create_database
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker, scoped_session
-from config import DB_HOST
+from datetime import datetime
+from sqlalchemy.dialects import postgresql
+from flask_sqlalchemy import SQLAlchemy
+from config import SQLALCHEMY_DATABASE_URI
 
 
-engine = create_engine(DB_HOST, convert_unicode=True)
-
-db_session = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-db_scoped_session = scoped_session(db_session)
-
-Base = declarative_base()
-Base.query = db_scoped_session.query_property()
+db = SQLAlchemy()
 
 
-class BaseTable(object):
-    id = Column(Integer, primary_key=True)
-    created_at = Column(DateTime, nullable=False, default=datetime.utcnow)
-    updated_at = Column(
-        DateTime,
+def init():
+    if not database_exists(SQLALCHEMY_DATABASE_URI):
+        create_database(SQLALCHEMY_DATABASE_URI)
+        logging.info("Created database {0}".format(os.environ["POSTGRES_DB"]))
+
+    db.drop_all()
+    db.create_all()
+    db.session.commit()
+
+
+def insert(to_insert):
+    if isinstance(to_insert, list):
+        for item in to_insert:
+            db.session.add(item)
+    else:
+        db.session.add(to_insert)
+
+    return db.session.commit()
+
+
+class BaseTable(db.Model):
+    __abstract__ = True
+    id = db.Column(db.Integer, primary_key=True)
+    created_at = db.Column(
+        db.DateTime,
+        nullable=False,
+        default=datetime.utcnow
+    )
+    updated_at = db.Column(
+        db.DateTime,
         default=datetime.utcnow,
         onupdate=datetime.utcnow
     )
 
 
-def init():
-    if not database_exists(engine.url):
-        create_database(engine.url)
-        logging.info("Created database {0}".format(os.environ["POSTGRES_DB"]))
-
-    Base.metadata.drop_all(engine)
-    Base.metadata.create_all(engine)
-
-    logging.info("Database initialized")
-
-
-def insert(to_insert):
-    session = db_session()
-
-    if isinstance(to_insert, list):
-        session.bulk_save_objects(to_insert)
-    else:
-        session.add(to_insert)
-
-    return session.commit()
-
-
-class Recommendation(Base, BaseTable):
+class Recommendation(BaseTable):
     __tablename__ = "recommendations"
-    engine_name = Column(String(56), nullable=False)
-    source_item_id = Column(Integer, nullable=False)
-    recommended_item_id = Column(Integer, nullable=False)
-    source_item_id_kind = Column(String(56), nullable=False)
-    score = Column(Float, nullable=False)
+    engine_name = db.Column(db.String(56), nullable=False)
+    source_item_id = db.Column(db.Integer, nullable=False)
+    recommended_item_id = db.Column(db.Integer, nullable=False)
+    source_item_id_kind = db.Column(db.String(56), nullable=False)
+    score = db.Column(db.Float, nullable=False)
 
 
-class Page(Base, BaseTable):
+class Page(BaseTable):
     __tablename__ = "pages"
-    name = Column(String(56), nullable=False, unique=True)
-    engines = Column(postgresql.ARRAY(String(56)))
+    name = db.Column(db.String(56), nullable=False, unique=True)
+    engines = db.Column(postgresql.ARRAY(db.String(56)))
 
 
-class Engine(Base, BaseTable):
+class Engine(BaseTable):
     __tablename__ = "engines"
-    type = Column(String(20), nullable=False, unique=True)
-    display_name = Column(String(50), nullable=False)
-    priority = Column(Integer, nullable=False)
+    type = db.Column(db.String(20), nullable=False, unique=True)
+    display_name = db.Column(db.String(50), nullable=False)
+    priority = db.Column(db.Integer, nullable=False)
 
 
-class User(Base, BaseTable):
+class User(BaseTable):
     __tablename__ = "users"
-    email = Column(String(255), unique=True)
-    username = Column(String(255), nullable=False, unique=True)
-    password = Column(Binary(60), nullable=False)
-    favorite_genres = Column(postgresql.ARRAY(Integer))
+    email = db.Column(db.String(255), unique=True)
+    username = db.Column(db.String(255), nullable=False, unique=True)
+    password = db.Column(db.Binary(60), nullable=False)
+    favorite_genres = db.Column(postgresql.ARRAY(db.Integer))
 
 
-class Movie(Base, BaseTable):
+class Movie(BaseTable):
     __tablename__ = "movies"
-    name = Column(String(256), nullable=False)
-    genres = Column(postgresql.ARRAY(Integer), nullable=True)
-    image = Column(String(256), nullable=True)
-    description = Column(String(512), nullable=True)
-    year = Column(Date, nullable=True)
-    rating = Column(Float, nullable=True)
-    director = Column(String(1024), nullable=True)
-    actors = Column(String(256), nullable=True)
-    awards = Column(String(256), nullable=True)
-    language = Column(String(256), nullable=True)
-    country = Column(String(256), nullable=True)
-    duration = Column(Integer, nullable=True)
+    name = db.Column(db.String(256), nullable=False)
+    genres = db.Column(postgresql.ARRAY(db.Integer), nullable=True)
+    image = db.Column(db.String(256), nullable=True)
+    description = db.Column(db.String(512), nullable=True)
+    year = db.Column(db.Date, nullable=True)
+    rating = db.Column(db.Float, nullable=True)
+    director = db.Column(db.String(1024), nullable=True)
+    actors = db.Column(db.String(256), nullable=True)
+    awards = db.Column(db.String(256), nullable=True)
+    language = db.Column(db.String(256), nullable=True)
+    country = db.Column(db.String(256), nullable=True)
+    duration = db.Column(db.Integer, nullable=True)
 
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
 
-class Genre(Base, BaseTable):
+class Genre(BaseTable):
     __tablename__ = "genres"
-    name = Column(String(56), nullable=False, unique=True)
+    name = db.Column(db.String(56), nullable=False, unique=True)

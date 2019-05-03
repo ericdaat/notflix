@@ -8,9 +8,9 @@ class UserHistory(QueryBasedEngine):
     def __init__(self):
         super(UserHistory, self).__init__()
 
-    def compute_query(self, session, context):
+    def compute_query(self, context):
         if context.history:
-            recommendations = session.query(model.Movie) \
+            recommendations = model.Movie.query\
                 .filter(model.Movie.id.in_(context.history)) \
                 .limit(MAX_RECOMMENDATIONS) \
                 .all()
@@ -24,8 +24,8 @@ class TopRated(QueryBasedEngine):
     def __init__(self):
         super(TopRated, self).__init__()
 
-    def compute_query(self, session, context):
-        recommendations = session.query(model.Movie)
+    def compute_query(self, context):
+        recommendations = model.Movie.query
 
         if context.user and context.user.favorite_genres:
             query_filter = model.Movie.genres\
@@ -44,8 +44,8 @@ class MostRecent(QueryBasedEngine):
     def __init__(self):
         super(MostRecent, self).__init__()
 
-    def compute_query(self, session, context):
-        recommendations = session.query(model.Movie)
+    def compute_query(self, context):
+        recommendations = model.Movie.query
 
         if context.user and context.user.favorite_genres:
             query_filter = model.Movie.genres\
@@ -64,8 +64,8 @@ class Random(QueryBasedEngine):
     def __init__(self):
         super(Random, self).__init__()
 
-    def compute_query(self, session, context):
-        recommendations = session.query(model.Movie)
+    def compute_query(self, context):
+        recommendations = model.Movie.query
 
         recommendations = recommendations\
             .order_by(func.random())\

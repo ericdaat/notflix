@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, redirect, url_for
-from src.data_interface import model, db_scoped_session
+from src.data_interface import model
 
 bp = Blueprint("search", __name__)
 
@@ -12,10 +12,9 @@ def search():
         )
 
     query = request.args.get("query")
-    items = db_scoped_session\
-        .query(model.Movie) \
+    items = model.Movie.query\
         .filter(model.Movie.name.ilike("%{0}%".format(query))) \
-        .limit(50) \
-        .all()
+        .paginate(0, 50, error_out=False)\
+        .items
 
     return render_template("search/index.html", items=items)

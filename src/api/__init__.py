@@ -3,8 +3,9 @@ from flask import Flask
 from werkzeug.contrib.fixers import ProxyFix
 from src.recommender.recommender import Recommender
 from src.tracker.tracker import Tracker
-from .errors import page_not_found
-from src.data_interface import db_scoped_session
+from src.web.errors import page_not_found
+from src.data_interface.model import db
+from config import SQLALCHEMY_DATABASE_URI
 
 
 def create_app(test_config=None):
@@ -14,15 +15,9 @@ def create_app(test_config=None):
                 instance_path=os.path.abspath("src/api/instance"))
 
     app.config.from_mapping(
-        SECRET_KEY="dev"
+        SECRET_KEY="dev",
+        SQLALCHEMY_DATABASE_URI=SQLALCHEMY_DATABASE_URI
     )
-
-    if test_config is None:
-        # load the instance config, if it exists, when not testing
-        app.config.from_pyfile("config.py", silent=True)
-    else:
-        # load the test config if passed in
-        app.config.from_mapping(test_config)
 
     try:
         os.makedirs(app.instance_path)
@@ -37,9 +32,8 @@ def create_app(test_config=None):
     def status():
         return "So far so good"
 
-    @app.teardown_appcontext
-    def shutdown_session(exception=None):
-        db_scoped_session.remove()
+    # register database
+    db.init_app(app)
 
     # HTTP errors
     app.register_error_handler(404, page_not_found)
@@ -48,10 +42,10 @@ def create_app(test_config=None):
     from src.api import recommend
     app.register_blueprint(recommend.bp)
 
-    # register Recommender
-    app.reco = Recommender()
-
-    # register Tracker
-    app.tracker = Tracker()
+    with app.app_context():
+        # register Recommender
+        app.reco = Recommender()
+        # register Tracker
+        app.tracker = Tracker()
 
     return app

@@ -1,10 +1,5 @@
-from src.data_interface import model
-from src.data_interface import downloader
-from src.recommender import engines
-
-
-def insert_engines():
-    engines = [
+{
+    "engines": [
         {
             "type": "OneHotMultiInput",
             "display_name": "Similar to {0}",
@@ -39,14 +34,9 @@ def insert_engines():
             "type": "Random",
             "display_name": "Random Selection",
             "priority": 10
-        },
-    ]
-
-    model.insert([model.Engine(**e) for e in engines])
-
-
-def insert_pages():
-    pages = [
+        }
+    ],
+    "pages": [
         {
             "name": "home",
             "engines": ["TopRated", "MostRecent", "UserHistory", "Random"]
@@ -56,24 +46,4 @@ def insert_pages():
             "engines": ["OneHotMultiInput", "ItemBasedCF", "TfidfGenres"]
         }
     ]
-
-    model.insert([model.Page(**p) for p in pages])
-
-
-if __name__ == "__main__":
-    d = downloader.MovielensDownloader()
-    # d.download_to_file()
-    # d.insert_in_db()
-
-    insert_engines()
-    insert_pages()
-
-    # engines = [
-    #     engines.OneHotMultiInput(),
-    #     engines.ItemBasedCF(),
-    #     engines.TfidfGenres(),
-    # ]
-
-    # for e in engines:
-    #     e.train()
-    #     e.upload()
+}
