@@ -60,8 +60,8 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarDropdown">
             <a class="dropdown-item" href="{{ url_for('genres.index') }}">Genres</a>
-            <div class="dropdown-divider"></div>
-            <a class="dropdown-item" href="{{ url_for('you.index') }}">Recommended for You</a>
+            <!-- <div class="dropdown-divider"></div> -->
+            <!-- <a class="dropdown-item" href="{{ url_for('you.index') }}">Recommended for You</a> -->
           </div>
         </li>
      </ul>
@@ -74,13 +74,13 @@
                aria-label="Search"
                value="{{ request.form.query }}">
      </form>
-     {% if not session["username"] %}
+     <!-- {% if not session["username"] %}
      <a class="nav-link" href="{{ url_for('login.signin') }}"> Log In <span class="sr-only">(current)</span></a>
       {% else %}
      <form class="form-inline my-2 my-lg-0" method="post" action="{{ url_for('login.signout') }}">
        <button class="btn btn-outline-danger my-2 my-sm-0" type="submit"> Logout </button>
      </form>
-     {% endif %}
+     {% endif %} -->
      </div>
 </nav>
 

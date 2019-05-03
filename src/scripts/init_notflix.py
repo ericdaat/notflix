@@ -17,7 +17,7 @@ def insert_engines():
         },
         {
             "type": "TfidfGenres",
-            "display_name": "Same genres",
+            "display_name": "Based on the same genres",
             "priority": 3
         },
         {
@@ -44,7 +44,7 @@ def insert_pages():
     pages = [
         {
             "name": "home",
-            "engines": ["TopRated", "MostRecent"]
+            "engines": ["TopRated", "MostRecent", "UserHistory"]
         },
         {
             "name": "item",

@@ -6,11 +6,11 @@ bp = Blueprint("home", __name__)
 
 @bp.route("/")
 def index():
-    user_id = session.get("username")
+    session_id = session.get("uid")
 
     res = requests.get(
-        url="http://api:8000/recommend/user/{user_id}"
-            .format(user_id=user_id),
+        url="http://api:8000/recommend/session/{id}"
+            .format(id=session_id),
         params={"page_type": "home"})
 
     if res.status_code != 200:

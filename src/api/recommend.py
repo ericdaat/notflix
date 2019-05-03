@@ -73,6 +73,19 @@ def session_recommendations(session_id):
 
     recommendations = r.recommend(context=c)
 
+    if c.history and c.page_type in {"you", "home"}:
+        for item_id in c.history:
+            active_item = db_scoped_session.query(model.Movie) \
+                                 .filter(model.Movie.id == item_id) \
+                                 .one()
+
+            c.item = active_item
+            recommendations.append(
+                r.recommend(
+                    context=c,
+                    restrict_to_engines=["OneHotMultiInput"])[0]
+            )
+
     res = jsonify(
         session_id=session_id,
         recommendations=recommendations
