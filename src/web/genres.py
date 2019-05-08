@@ -1,5 +1,6 @@
-from flask import Blueprint, render_template
+from flask import Blueprint, render_template, request
 from src.data_interface import model
+from config import MAX_MOVIES_PER_LISTING
 
 bp = Blueprint("genres", __name__)
 
@@ -13,9 +14,14 @@ def index():
 
 @bp.route("/genres/<int:genre>", methods=("GET",))
 def genre(genre):
-    items = model.Movie.query\
-        .filter(model.Movie.genres.contains([genre]))\
-        .paginate(0, 50, error_out=False)\
+    page = request.args.get("page") or 1
+
+    items = model.Movie.query.filter(model.Movie.genres.contains([genre]))
+
+    items_count = items.count()
+
+    items_on_page = items\
+        .paginate(int(page), MAX_MOVIES_PER_LISTING, error_out=False)\
         .items
 
     genre = model.Genre.query\
@@ -23,4 +29,9 @@ def genre(genre):
         .filter(model.Genre.id == genre)\
         .one()
 
-    return render_template("genres/genre.html", items=items, genre=genre)
+    return render_template(
+        "genres/genre.html",
+        items=items_on_page,
+        number_of_pages=(items_count // MAX_MOVIES_PER_LISTING) + 1,
+        genre=genre
+    )

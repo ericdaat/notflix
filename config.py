@@ -23,3 +23,6 @@ BATCH_UPLOAD_SIZE = 50000
 
 # logging
 setup_logging(config_path="logging.yml")
+
+# web
+MAX_MOVIES_PER_LISTING = 20

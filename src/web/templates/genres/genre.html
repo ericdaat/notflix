@@ -5,27 +5,56 @@
 {% block content %}
 
 <div class="row mb-4">
-  <h1>{{ genre[1] }}</h1>
+    <h1>{{ genre[1] }}</h1>
 </div>
 
-<table class="table">
-  <tbody>
-  {% for p in items %}
-  <tr>
-    <td>
-      <img src="{{ p.image }}" style="max-height:200px;">
-    </td>
-    <td>
-      <p class="font-weight-bold">
-        <a href="{{ url_for('item.index', item_id=p.id) }}"> {{ p.name }} </a>
-      </p>
-      <p> {{ p.description }}</p>
-      <p> Actors: {{ p.actors }}</p>
-      <p> Rating: {{p.rating}} <i class="fa fa-star"></i></p>
-    </td>
-  </tr>
-  {% endfor %}
-  </tbody>
-</table>
+<div class="row">
+    <table class="table">
+        <tbody>
+            {% for p in items %}
+            <tr>
+                <td>
+                    <img src="{{ p.image }}" style="max-height:200px;">
+                </td>
+                <td>
+                    <p class="font-weight-bold">
+                        <a href="{{ url_for('item.index', item_id=p.id) }}"> {{ p.name }} </a>
+                    </p>
+                    <p> {{ p.description }}</p>
+                    <p> Actors: {{ p.actors }}</p>
+                    <p> Rating: {{p.rating}} <i class="fa fa-star"></i></p>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
+    <nav aria-label="Page navigation">
+        {% set active_page = request.args.get('page') or 1 %}
+
+        <ul class="pagination justify-content-center">
+            <li class="page-item {{ 'disabled' if active_page|int == 1 else 'enabled'}}">
+                <a class="page-link"
+                    href="{{ url_for('genres.genre', genre=genre[0]) }}?page={{active_page|int - 1}}"
+                    tabindex="-1">Previous
+                </a>
+            </li>
+            {% for i in range(1, number_of_pages)[active_page|int:active_page|int + 5] %}
+                <li class="page-item">
+                    <a class="page-link"
+                        href="{{ url_for('genres.genre', genre=genre[0]) }}?page={{i}}">{{i}}
+                    </a>
+                </li>
+            {% endfor %}
+            <li class="page-item {{'disabled' if active_page|int == number_of_pages else 'enabled'}}">
+                <a class="page-link"
+                    href="{{ url_for('genres.genre', genre=genre[0]) }}?page={{ active_page|int + 1 }}"> Next
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
 
 {% endblock %}

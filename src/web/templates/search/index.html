@@ -8,10 +8,11 @@
   <h1>Search</h1>
 </div>
 
-<div class="row mb-4">
-    <h4>Matching results for "{{request.args.get("query") }}"</h4>
-</div>
+{% set query=request.args.get("query") %}
 
+<div class="row mb-4">
+    <h4>Matching results for "{{query}}"</h4>
+</div>
 
 {% if items %}
     <table class="table">
@@ -33,6 +34,33 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <div class="row">
+        <nav aria-label="Page navigation">
+            {% set active_page = request.args.get('page') or 1 %}
+
+            <ul class="pagination justify-content-center">
+                <li class="page-item {{'disabled' if active_page|int == 1 else 'enabled'}}">
+                    <a class="page-link"
+                        href="{{ url_for('search.search') }}?query={{query}}&page={{active_page|int - 1}}"
+                        tabindex="-1">Previous
+                    </a>
+                </li>
+                {% for i in range(1, number_of_pages)[active_page|int:active_page|int + 5] %}
+                    <li class="page-item">
+                        <a class="page-link"
+                            href="{{ url_for('search.search') }}?query={{query}}&page={{i}}">{{i}}
+                        </a>
+                    </li>
+                {% endfor %}
+                <li class="page-item {{'disabled' if active_page|int == number_of_pages else 'enabled'}}">
+                    <a class="page-link"
+                        href="{{ url_for('search.search') }}?query={{query}}&page={{active_page|int + 1 }}"> Next
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 {% else %}
     <h6>Sorry we could not find anything ...</h6>
 {% endif %}
