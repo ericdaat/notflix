@@ -5,12 +5,14 @@
 
 ## About
 
-You have just met NotFlix, a free movie database and recommendation website.
+This is Notflix, a free movie database and recommendation website.
 
-This website is simply a side project, that aims at displaying a fixed dataset of movies,
-and provide recommendations about other movies to watch.
+This website is simply a side project, that aims at displaying a fixed dataset
+of movies and provide recommendations about other movies to watch.
+I am building it mostly for fun and also to have a nice playground to
+implement various recommendation algorithms using Machine Learning.
 
-NotFlix based on data from the following sources:
+NotFlix is based on data from the following sources:
 
 * [OMDB](http://www.omdbapi.com/): The Open Movie DataBase
 * [Grouplens' MovieLens](https://grouplens.org/datasets/movielens/):
@@ -18,25 +20,82 @@ NotFlix based on data from the following sources:
 
 ## Installation
 
-*Note: This is a work in progress.*
+Pre-requisite:
 
-You need to have [Docker](https://www.docker.com/get-started)
-and [docker-compose](https://docs.docker.com/compose/) installed.
+1. Install the following software:
 
-Then, run:
+    * [Docker](https://www.docker.com/get-started)
+    * [docker-compose](https://docs.docker.com/compose/)
+    * [Python 3](https://www.python.org/downloads/)
+    * [virtualenv](https://virtualenv.pypa.io/en/latest/)
 
-``` text
-make install;
-make init-db;
-```
+2. Download the movielens data:
 
-## Running
+    * Download the `ml-1m dataset` by clicking [here](http://files.grouplens.org/datasets/movielens/ml-1m.zip)
+    * Unzip it and place it under `datasets/movielens/ml-1m`
 
-``` text
-make start;
-```
+3. To add the movie metadata to the downloaded dataset
+    (such as the actors, ...) I chose to use the
+    [OMDb API](http://www.omdbapi.com/) (the Open Movie Database).
+    Support him on [Patreon](https://www.patreon.com/omdb) and get
+    a key that you will place in a text file called `omdb.key` at the
+    root of this repository
 
-The following calls should work:
+Once you have all the pre-requisite set up, follow these steps:
 
-* Web: `localhost:5000/status`
-* API: `localhost:5001/status`
+1. Copy the [db-credentials.env](db-credentials.env.dist) template and add the credentials you want:
+
+    ``` text
+    cp -n db-credentials.env.dist db-credentials.env;
+    ```
+
+2. Create a virtual environment and install the required packages:
+
+    ``` text
+    virtualenv venv;
+    source venv/bin/activate;
+    pip install -r requirements.txt;
+    ```
+
+3. Build the Docker images:
+
+    ``` text
+    docker-compose build;
+    ```
+
+4. Launch the PostgreSQL database:
+
+    ``` text
+    docker-compose up -d postgres
+    ```
+
+5. Use the following flask-cli commands to insert the data into the DB:
+
+    ``` text
+    export FLASK_APP="src/web";
+    export POSTGRES_HOST="127.0.0.1";
+
+    flask init-db;
+    flask insert-engines;
+    flask insert-pages;
+    flask download-movies;
+    flask insert-movies;
+    flask train-engines;
+    flask upload-engines;
+    ```
+
+6. Launch the application with `make start`
+
+## Usage
+
+So far, Notflix exposes the following pages:
+
+* A **home page**, displaying the popular movies, the user browsing history
+    and some personalized recommendations.
+* A **movie page**, displaying basic informations about the selected movie
+    and recommendations on similar movies to watch.
+* A **genres** page, that lets you browse movies by genres.
+* A **search** page, that lets you search the movies.
+
+The configuration for engines and pages is handled with the [display.json](./display.json) file. You can use it to change
+the engines displayed, their names and order on the page.
