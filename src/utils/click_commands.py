@@ -16,6 +16,8 @@ def init_db():
 @click.command("insert-engines")
 @with_appcontext
 def insert_engines():
+    model.truncate_table(model.Engine)
+
     with open("display.json", "r") as f:
         engines = json.load(f)["engines"]
 
@@ -25,6 +27,8 @@ def insert_engines():
 @click.command("insert-pages")
 @with_appcontext
 def insert_pages():
+    model.truncate_table(model.Page)
+
     with open("display.json", "r") as f:
         pages = json.load(f)["pages"]
 

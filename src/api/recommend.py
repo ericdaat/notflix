@@ -36,16 +36,13 @@ def item(item_id):
         page_type=request.args.get("page_type")
     )
 
-    # Eventually add infos on the user
-    try:
-        user = model.User.query\
-            .filter(model.User.username == request.args.get("user_id")) \
-            .one()
-    except sqlalchemy.orm.exc.NoResultFound:
-        user = None
-
-    if user:
-        c.user = user
+    # add browsing history
+    session_id = request.args.get("session_id")
+    if session_id:
+        c.history = current_app.tracker.get_views_history(
+            "history:{0}".format(session_id),
+            n=5
+        )
 
     # Generate recommendations
     recommendations = r.recommend(context=c)

@@ -34,16 +34,32 @@
             "type": "Random",
             "display_name": "Random Selection",
             "priority": 10
+        },
+        {
+            "type": "Item2VecOnline",
+            "display_name": "Inspired by your Browsing History",
+            "priority": 3
         }
     ],
     "pages": [
         {
             "name": "home",
-            "engines": ["TopRated", "MostRecent", "UserHistory", "Random"]
+            "engines": [
+                "TopRated",
+                "MostRecent",
+                "UserHistory",
+                "Random",
+                "Item2VecOnline"
+            ]
         },
         {
             "name": "item",
-            "engines": ["OneHotMultiInput", "ItemBasedCF", "TfidfGenres"]
+            "engines": [
+                "OneHotMultiInput",
+                "ItemBasedCF",
+                "TfidfGenres",
+                "Item2VecOnline"
+            ]
         }
     ]
 }

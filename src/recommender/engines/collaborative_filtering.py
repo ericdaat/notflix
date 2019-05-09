@@ -3,13 +3,13 @@ import pandas as pd
 import logging
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.metrics import pairwise_distances
-from gensim.models import Word2Vec
+from gensim.models import Word2Vec, KeyedVectors
 
-from src.recommender.engines import OfflineEngine
+from src.recommender.engines import OfflineEngine, OnlineEngine
 from src.utils.data import (
     matrix_from_df_with_vect, recommendations_from_similarity_matrix
 )
-from config import MAX_RECOMMENDATIONS, DATASETS_PATH
+from config import MAX_RECOMMENDATIONS, DATASETS_PATH, ML_MODELS_PATH
 
 
 class ItemBasedCF(OfflineEngine):
@@ -89,3 +89,41 @@ class Item2Vec(OfflineEngine):
                 ])
 
         self.save_recommendations_to_csv(recommendations)
+
+
+class Item2VecOnline(OnlineEngine):
+    def __init__(self):
+        super(Item2VecOnline, self).__init__()
+
+    def train(self):
+        pass
+
+    def load_model(self):
+        model = KeyedVectors.load(
+            os.path.join(ML_MODELS_PATH, "bin", "Item2Vec.bin"),
+            mmap='r'
+        )
+
+        return model
+
+    def predict(self, context):
+        if context.history:
+            items = filter(
+                lambda x: x in self.model.vocab,
+                [str(item) for item in context.history]
+            )
+        else:
+            items = []
+
+        try:
+            neighbors = self.model.most_similar(
+                items,
+                topn=MAX_RECOMMENDATIONS
+            )
+        except ValueError:
+            neighbors = []
+
+        ids = [n[0] for n in neighbors]
+        scores = [n[1] for n in neighbors]
+
+        return ids, scores

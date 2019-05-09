@@ -8,7 +8,11 @@ bp = Blueprint("item", __name__)
 def index(item_id):
     res = requests.get(
         url="http://api:8000/recommend/item/{0}".format(item_id),
-        params={"page_type": "item", "user_id": session.get("username")}
+        params={
+            "page_type": "item",
+            "user_id": session.get("username"),
+            "session_id": session.get("uid")
+        }
     )
 
     if res.status_code != 200:

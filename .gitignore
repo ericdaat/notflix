@@ -117,6 +117,7 @@ dmypy.json
 *.csv
 *.tsv
 *.key
+*.bin
 .DS_Store
 datasets/imdb
 datasets/movielens

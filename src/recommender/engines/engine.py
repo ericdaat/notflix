@@ -6,6 +6,7 @@ import csv
 from config import MAX_RECOMMENDATIONS, BATCH_UPLOAD_SIZE, ML_MODELS_PATH
 from src.recommender.wrappers import Recommendations
 from src.data_interface import model
+from sqlalchemy.sql.expression import case
 
 
 class Engine(ABC):
@@ -174,12 +175,20 @@ class OnlineEngine(Engine):
     def recommend(self, context):
         r = super(OnlineEngine, self).recommend(context)
 
-        ids = self.predict(context)  # online prediction
+        ids, scores = self.predict(context)  # online prediction
 
-        recommendations = model.Movie.query\
-            .filter(model.Movie.id.in_(ids)) \
-            .filter(model.Movie.id != context.item.id) \
-            .limit(MAX_RECOMMENDATIONS).all()
+        if ids:
+            ordering = case(
+                {id: index for index, id in enumerate(ids)},
+                value=model.Movie.id
+            )
+
+            recommendations = model.Movie.query\
+                .filter(model.Movie.id.in_(ids)) \
+                .order_by(ordering) \
+                .limit(MAX_RECOMMENDATIONS).all()
+        else:
+            recommendations = []
 
         r.recommended_items = recommendations
 

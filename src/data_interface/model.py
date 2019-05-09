@@ -30,6 +30,12 @@ def insert(to_insert):
     return db.session.commit()
 
 
+def truncate_table(table):
+    db.session.query(table).delete()
+
+    return db.session.commit()
+
+
 class BaseTable(db.Model):
     __abstract__ = True
     id = db.Column(db.Integer, primary_key=True)
