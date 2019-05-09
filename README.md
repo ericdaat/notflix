@@ -84,7 +84,8 @@ Once you have all the pre-requisite set up, follow these steps:
     flask upload-engines;
     ```
 
-6. Launch the application with `make start`
+6. Launch the application with `make start` and then visit
+    `localhost:5000`.
 
 ## Usage
 
@@ -99,3 +100,44 @@ So far, Notflix exposes the following pages:
 
 The configuration for engines and pages is handled with the [display.json](./display.json) file. You can use it to change
 the engines displayed, their names and order on the page.
+
+## Repository organization
+
+The repository is organized the following way:
+
+* [.circleci](.circleci): Configuration file for CircleCI
+* [datasets](./datasets): Folder containing the datasets
+    (so far only movielens)
+* [docs](./docs): Folder containing the documentation, auto-generated
+    by [Sphinx](http://www.sphinx-doc.org/en/master/).
+* [logs](./logs): Logs file are saved here
+* [models](./models): Machine Learning models are saved here.
+  * Under [bin](./models/bin) we save the models weights.
+  * Under [csv](./models/csv) we save CSV files containing the predictions
+    made by a given engine.
+* [notebooks](./notebooks): The exploratory [Jupyter](https://jupyter.org/) notebooks
+* [src](./src): Source code
+  * [api](./src/api): Flask API, responsible of computing the
+    recommendations displayed on the web app.
+  * [data_interface](./src/data_interface): Code for interacting with the
+    cache or the database.
+  * [recommender](./src/recommender): Everything related to
+    computing recommendations.
+  * [tracker](./src/tracker): Code for tracking the user events.
+  * [utils](./src/utils): Various utility functions
+  * [web](./src/web): Code for the Flask web application
+* [tests](./tests): Unit test code
+
+## Notes
+
+* I am deliberately showing multiple engines on a web page to outline
+    the different recommendations results from an algorithm to another.
+* I am not removing the movie duplicates from an engine to another
+    for the same reason than above.
+* The Machine Learning algorithms are not very well trained yet, I spent
+    some time working on the application to make it easy to add
+    new engines later.
+
+So far, the movie page looks like this:
+
+![movie](./movie.jpg)
