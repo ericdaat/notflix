@@ -10,23 +10,31 @@ from sqlalchemy.sql.expression import case
 
 
 class Engine(ABC):
-    """ Abstract class for all engines.
+    """ Abstract class for all engines. You should not directly use this
+    class, instead use the classes that inherit from this class.
     """
     def __init__(self):
-        self.type = type(self).__name__
+        self.type = type(self).__name__  # the engine type is its class name
+
+        # ``input_id_kind`` tells what id the engine is expecting.
+        # It can be "item" if the engine is expecting an item_id,
+        # or "user" if it expects a user_id
         self.input_id_kind = None
+
         logging.debug("Creating instance of {0}".format(self.type))
 
-    @abstractmethod
-    def recommend(self, context):
-        """ Abstract method for all engines for recommending items.
+    def init_recommendations(self, context):
+        """ Create an empty ``src.recommender.wrappers.Recommendations```
+        object and fill in the engine type, display name and priority
+        based on the informations stored in DB.
 
         Args:
-            context (recommender.wrappers.Context): the context
+            context (src.recommender.wrappers.Context): Context wrapper,
+                containing useful informations for the engine.
 
         Returns:
-            recommender.wrappers.Recommendations: the recommendation object
-
+            (src.recommender.wrappers.Recommendations): Recommendations object\
+                filled with engine type, display name and priority
         """
         r = Recommendations()
         r.type = self.type
@@ -45,9 +53,31 @@ class Engine(ABC):
 
         return r
 
+    @abstractmethod
+    def recommend(self, context):
+        """ Abstract method for all engines for recommending items.
+
+        The context wrapper stores all the informations the engine might
+        need to compute the recommendations, like the current item_id,
+        the current user_id, the user browsing history, etc ...
+
+        Every engine must override this method. They have to call
+        ``self.init_recommendations`` first to create an empty
+        ``src.recommender.wrappers.Recommendations`` object and then
+        enrich it with the recommended items.
+
+        Args:
+            context (src.recommender.wrappers.Context): the context
+
+        Returns:
+            src.recommender.wrappers.Recommendations: the recommendation object
+        """
+
 
 class QueryBasedEngine(Engine):
     """ Abstract class for an engine based on a SQL query
+    performed at every call. These are engines require no training,
+    for instance an engine that will recommend random items for DB.
     """
     def __init__(self):
         super(QueryBasedEngine, self).__init__()
@@ -57,8 +87,7 @@ class QueryBasedEngine(Engine):
         """ Abstract method that computes the SQL query using SQLAlchemy
 
         Args:
-            session: SQL Alchemy Session
-            context (recommender.wrappers.Context): context
+            context (recommender.wrappers.Context): context wrapper
 
         Returns:
             query result
@@ -70,13 +99,13 @@ class QueryBasedEngine(Engine):
         """ Method for recommending items, by calling `self.compute_query`.
 
         Args:
-            context (recommender.wrappers.Context): context
+            context (recommender.wrappers.Context): context wrapper
 
         Returns:
             list(dict): recommendations as list of dict
 
         """
-        r = super(QueryBasedEngine, self).recommend(context)
+        r = self.init_recommend(context)
         recommendations = self.compute_query(context)
         r.recommended_items = recommendations
         logging.debug(r.to_string())
@@ -85,6 +114,16 @@ class QueryBasedEngine(Engine):
 
 
 class OfflineEngine(QueryBasedEngine):
+    """ These engines are a special kind of QueryBasedEngine because they
+    require a training.
+
+    Most of the offline Machine Learning algorithms will inherit from
+    this class.
+
+    The recommendations are computed offline with the ``train`` method,
+    then saved on disk with ``save_recommendations_to_csv``
+    and finally uploaded to the DB using ``upload``.
+    """
     def __init__(self):
         super(OfflineEngine, self).__init__()
         self.output_filepath = os.path.join(
@@ -92,6 +131,14 @@ class OfflineEngine(QueryBasedEngine):
         )
 
     def compute_query(self, context):
+        """Get the recommended items from the DB.
+
+        Args:
+            context (src.recommender.wrappers.Context): Context wrapper
+
+        Returns:
+            list: list of Recommendation
+        """
         recommendations = model.Movie.query\
             .filter(model.Movie.id == model.Recommendation.recommended_item_id) \
             .filter(model.Recommendation.source_item_id_kind == self.input_id_kind) \
@@ -105,9 +152,20 @@ class OfflineEngine(QueryBasedEngine):
 
     @abstractmethod
     def train(self):
+        """ Method for training the engine.
+        This method should load the dataset, compute the recommendations
+        and then persist them to disk using ``save_recommendations_to_csv``.
+        """
         pass
 
     def save_recommendations_to_csv(self, recommendations):
+        """ Save recommendations to a CSV file.
+
+        Args:
+            recommendations (list(tuple)): List of recommendation tuple\
+            corresponding to:\
+            (movie_id, recommended_movie_id, input_kind, score)
+        """
         with open(self.output_filepath, "w") as csv_file:
             writer = csv.writer(
                 csv_file,
@@ -118,6 +176,8 @@ class OfflineEngine(QueryBasedEngine):
             writer.writerows(recommendations)
 
     def upload(self):
+        """ Upload the recommendations from a CSV file to the DB.
+        """
         input_filepath = os.path.join(
             ML_MODELS_PATH,
             "csv",
@@ -148,7 +208,7 @@ class OfflineEngine(QueryBasedEngine):
                     logging.info("inserted {0} recommendations"
                                  .format(len(recommendations)))
                     del recommendations[:]
-            else:
+            else:  # last batch
                 model.insert(recommendations)
                 logging.info("inserted {0} recommendations"
                              .format(len(recommendations)))
@@ -156,28 +216,68 @@ class OfflineEngine(QueryBasedEngine):
 
 
 class OnlineEngine(Engine):
+    """ Online Machine Learning Engines that do not get their recommendations
+    from a SQL query but from a loaded model.
+
+    The model is trained with the ``train`` method, and loaded at runtime
+    with the ``load_model`` method.
+    """
     def __init__(self):
         super(OnlineEngine, self).__init__()
         self.model = self.load_model()
 
     @abstractmethod
     def load_model(self):
-        pass
+        """ Load the ML model from disk and return it
+
+        Returns:
+            The ML model to be saved as ``self.model``
+        """
+        model = None
+
+        return model
 
     @abstractmethod
     def predict(self, context):
-        pass
+        """ Predict using the loaded model and the context.
+
+        Args:
+            context (src.recommender.wrappers.Context): Context wrapper
+
+        Returns:
+            ids (list(int)): list of recommended ids\
+                sorted by descending score
+            scores (list(float)): list of scores for each recommended item
+        """
+
+        ids, scores = None, None
+
+        return ids, scores
 
     @abstractmethod
     def train(self):
+        """ Train a ML model and save it to disk
+        """
         pass
 
     def recommend(self, context):
-        r = super(OnlineEngine, self).recommend(context)
+        """ Recommend movies based on context
 
-        ids, scores = self.predict(context)  # online prediction
+        Args:
+            context (src.recommender.wrappers.Context): Context wrapper
+
+        Returns:
+            recommendations (dict): src.recommender.wrappers.Recommendations\
+                as dict
+        """
+        r = self.init_recommendations(context)
+
+        ids, _ = self.predict(context)  # online prediction
 
         if ids:
+            # considering the ids are ranked from the most relevant to
+            # the least relevant, use this to keep the order of
+            # the recommendations when querying the DB.
             ordering = case(
                 {id: index for index, id in enumerate(ids)},
                 value=model.Movie.id

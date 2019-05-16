@@ -6,6 +6,19 @@ import numpy as np
 
 
 def evaluate_recommendations(predictions, target, k):
+    """Evaluate the quality of recommendations with NDCG.
+    We compare the predictions set with the target set that should
+    reflect what items are relevant.
+
+    Args:
+        predictions (list): List of recommended items. \
+            Ordered by descending score.
+        target (list): List of relevant items.
+        k (int): Only consider the k first items in the set
+
+    Returns:
+        float: NDCG at k score
+    """
     indicator = [1 if item in target else 0
                  for item in predictions]
 

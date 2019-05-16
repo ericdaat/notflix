@@ -1,3 +1,9 @@
+""" This module contains wrappers to download various movies datasets.
+So far we are only using Movielens but we can add more if we want.
+
+Every dataset should have its wrapper class that inherits from ``Downloader``.
+"""
+
 import csv
 import json
 import os
@@ -14,7 +20,7 @@ from config import DATASETS_PATH
 
 class Downloader(ABC):
     def __init__(self):
-        # API related conf
+        # OMDB API related conf
         self.api_key = self.read_api_key("omdb.key")
         self.url = "http://private.omdbapi.com/"
 
